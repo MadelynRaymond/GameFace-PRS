@@ -1,3 +1,5 @@
+import styles from "~/styles/index.css"
+// styles is now something like /build/global-AE33KB2.css
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -13,6 +15,10 @@ export const meta: MetaFunction = () => ({
   title: "New Remix App",
   viewport: "width=device-width,initial-scale=1",
 });
+
+export function links() {
+  return [{ rel: "stylesheet", href: styles }];
+}
 
 export default function App() {
   return (
