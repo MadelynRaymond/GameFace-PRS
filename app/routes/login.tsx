@@ -24,7 +24,7 @@ export async function action({request}: ActionArgs) {
 
     if (typeof email !== "string" || email.length === 0){
       const user = await prisma.user.findUnique({where: {email: 'rachel@remix.run'}})
-      return json({errors: {email: "Email is required", password: null}}, {status: 400})
+      return json({errors: {email: user ? user.email : 'N/A', password: null}}, {status: 400})
     } 
   
     if(typeof password !== "string" || password.length === 0) {
