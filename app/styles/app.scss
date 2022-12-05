@@ -1,12 +1,6 @@
-/*UTILITY */
-.w-full {
-  width: 100%;
-}
-
-.h-full {
-  height: 100%;
-}
-
+@use './variables' as *;
+@use './utility' as *;
+@use './mixins' as *;
 
 /*NAVBAR */
 
@@ -193,6 +187,7 @@
 #login {
   min-width: 300px;
   h1 {
+    color: $blue;
     text-align: center;
     margin-bottom: 1rem;
   }
