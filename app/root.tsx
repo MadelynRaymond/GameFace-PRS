@@ -1,7 +1,8 @@
 import globals from "~/styles/index.css"
 import appStyles from '~/styles/app.css'
 // styles is now something like /build/global-AE33KB2.css
-import { json, LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {  LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -53,11 +54,11 @@ function Navbar() {
 
       <div>
         <ul>
-          <li id="login-btn">
-            <Link to="/login">Login</Link>
+          <li>
+            <Link id="login-btn" to="/login">Login</Link>
           </li>
-          <li id="register">
-            <Link to="/register">Register</Link>
+          <li>
+            <Link id="register" to="/register">Register</Link>
           </li>
         </ul>
       </div>
