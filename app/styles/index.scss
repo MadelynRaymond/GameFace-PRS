@@ -39,12 +39,9 @@ body {
 }
 
 /* A elements that don't have a class get default styles */
-a {
+a, a:visited {
   text-decoration: none;
-
-  &:visited {
-    color: inherit;
-  }
+  color: inherit;
 }
 a:not([class]) {
   text-decoration-skip-ink: auto;
@@ -85,8 +82,8 @@ select {
 input[type="text"], input[type="password"] {
   width: 100%;
   font-size: 1.2em;
+  margin: 1rem 0;
   padding: 12px;
-  margin: 0.25rem;
   background-color: rgba(230,230,230,255);
   border: none;
 }

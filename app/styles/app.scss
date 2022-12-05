@@ -185,9 +185,12 @@
   display: block;
 }
 #login {
-  min-width: 300px;
+  & > * {
+    margin: 0;
+    padding: 0;
+  }
+  width: 300px;
   h1 {
-    color: $blue;
     text-align: center;
     margin-bottom: 1rem;
   }
