@@ -11,7 +11,7 @@ import { createUserSession, getUserId } from "~/session.server";
 export async function loader({request}: LoaderArgs) {
     const userId = await getUserId(request)
     if (userId) return redirect('/user/stats/overall')
-    return null
+    return json({})
 }
 
 
@@ -20,8 +20,7 @@ export async function action({request}: ActionArgs) {
     const email = formData.get("email")
     const password = formData.get("password")
 
-    console.log(email)
-  
+
     if (typeof email !== "string" || email.length === 0){
       return json({errors: {email: "Email is required", password: null}}, {status: 400})
     } 
