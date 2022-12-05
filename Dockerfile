@@ -41,6 +41,9 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM base
 
+ENV DATABASE_URL=file:./dev.db
+ENV NODE_ENV="production"
+
 WORKDIR /myapp
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
