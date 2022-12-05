@@ -3,6 +3,7 @@ import {redirect} from '@remix-run/node'
 import { json } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import React from "react";
+import { prisma } from "~/db.server";
 import { verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/session.server";
 
@@ -22,6 +23,7 @@ export async function action({request}: ActionArgs) {
 
 
     if (typeof email !== "string" || email.length === 0){
+      const user = await prisma.user.findUnique({where: {email: 'rachel@remix.run'}})
       return json({errors: {email: "Email is required", password: null}}, {status: 400})
     } 
   
