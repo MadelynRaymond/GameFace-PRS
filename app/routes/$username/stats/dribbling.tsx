@@ -1,4 +1,4 @@
-export default function Overall() {
+export default function Dribbling() {
   return (
     <div>
       

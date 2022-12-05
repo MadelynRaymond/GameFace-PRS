@@ -55,9 +55,9 @@ async function seed() {
       },
       score: {
         create: {
-          value: "35",
-          outOf: "50",
-          unit: "fraction"
+          score: 35,
+          outOf: 50,
+          unit: "literal"
         }
       }
     }

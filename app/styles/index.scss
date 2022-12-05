@@ -35,9 +35,17 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  font-family: 'Montserrat', sans-serif
 }
 
 /* A elements that don't have a class get default styles */
+a {
+  text-decoration: none;
+
+  &:visited {
+    color: inherit;
+  }
+}
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }
@@ -71,4 +79,14 @@ select {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*default inputs */
+input[type="text"], input[type="password"] {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 12px;
+  margin: 0.25rem;
+  background-color: rgba(230,230,230,255);
+  border: none;
 }

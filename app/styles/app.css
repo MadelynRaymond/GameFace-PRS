@@ -1,0 +1,187 @@
+/*UTILITY */
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+/*NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  text-align: start;
+  font-size: 1.25rem;
+  box-shadow: 0px 4px 5px 0px rgba(255, 140, 8, 0.72);
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(255, 140, 8, 0.72);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(255, 140, 8, 0.72);
+}
+.navbar > div, .navbar > div ul {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+}
+.navbar ul {
+  margin: 0;
+  padding: 0;
+}
+.navbar ul li {
+  text-decoration: none;
+  list-style: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-grow: 0.01;
+  /* top | right | bottom | left */
+}
+.logo img {
+  object-fit: contain;
+  max-width: 80px;
+}
+
+#login-btn,
+#register {
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid black;
+  border-radius: 40px;
+  /* top | right | bottom | left */
+  padding: 5px 20px 5px 20px;
+}
+
+#register {
+  background-color: black;
+  color: white;
+}
+#register a {
+  color: white;
+}
+#register:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+#login-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  #login-btn,
+  #register {
+    display: none;
+  }
+}
+/*Stats page */
+.stats-menu__items {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  color: rgb(166, 165, 171);
+  font-weight: 500;
+}
+
+.stats-menu {
+  border-bottom: 1px solid rgba(166, 165, 171, 0.75);
+  margin: 2rem;
+  margin-bottom: 0;
+}
+.stats-menu__athlete-name {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: rgb(166, 165, 171);
+}
+.stats-menu__header {
+  font-weight: 600;
+  font-size: 2rem;
+}
+.stats-menu__item-selected {
+  color: rgb(17, 17, 18) !important;
+  font-weight: 600;
+}
+
+.stat-grid {
+  margin: 0 auto;
+  max-width: 1800px;
+  justify-content: center;
+  align-content: center;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(400px, 900px));
+  grid-template-rows: 350px 350px;
+  gap: 2rem;
+}
+
+.stat-box-group {
+  padding-left: 2rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-box {
+  flex: 0;
+  flex-basis: 200px;
+  background-color: rgba(236, 236, 236, 0.404);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.stat-box__data {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 2.75rem 3.5rem;
+}
+.stat-box__figure {
+  font-size: 3rem;
+  font-weight: 600;
+}
+.stat-box__improvement {
+  color: green;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.stat-box__regression {
+  color: red;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.stat-box__desc {
+  font-size: 0.75rem;
+}
+.stat-box .up-symbol {
+  font-size: 1rem;
+}
+
+/*Login*/
+#forgot-password {
+  display: block;
+}
+
+#login {
+  min-width: 300px;
+}
+#login h1 {
+  color: blue;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+#login input {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*# sourceMappingURL=app.css.map */
