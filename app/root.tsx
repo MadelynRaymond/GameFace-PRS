@@ -1,7 +1,7 @@
 import globals from "~/styles/index.css"
 import appStyles from '~/styles/app.css'
 // styles is now something like /build/global-AE33KB2.css
-import type { MetaFunction } from "@remix-run/node";
+import { json, LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -11,6 +11,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { getUser } from "./session.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -23,6 +24,10 @@ export function links() {
     { rel: "stylesheet", href: globals },
     { rel: "stylesheet", href: appStyles}
   ]
+}
+
+export async function loader({request}: LoaderArgs) {
+  return json({user: await getUser(request)})
 }
 
 function Navbar() {
