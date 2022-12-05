@@ -51,7 +51,7 @@ export default function Login() {
     const password = React.useRef<HTMLInputElement>(null)
 
     return (
-        <div style={{height: '85vh'}} className="login-container">
+        <div style={{height: '85vh'}} className="form-center">
             <Form method="post" id="login">
                 <h1>Login</h1>
                 <div>

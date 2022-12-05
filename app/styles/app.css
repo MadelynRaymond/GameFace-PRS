@@ -11,6 +11,12 @@
   color: red;
 }
 
+.form-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /*NAVBAR */
 .navbar {
   display: flex;
@@ -180,12 +186,6 @@
 #login input {
   display: block;
   margin-bottom: 1rem;
-}
-
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /*# sourceMappingURL=app.css.map */
