@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
@@ -64,7 +65,8 @@ model Score {
   score Int?
   outOf Int?
   //change to Time
-  elapsed DateTime? 
+  start DateTime? @db.Time
+  end DateTime? @db.Time
   //change to enum
   unit String
   entry DrillEntry @relation(fields: [entry_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
