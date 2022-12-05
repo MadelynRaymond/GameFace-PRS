@@ -47,14 +47,18 @@
   }
 }
 
-#login-btn,
-#register {
+.nav-btn {
   font-size: 1rem;
   font-weight: 500;
   border: 1px solid black;
   border-radius: 40px;
   /* top | right | bottom | left */
-  padding: 5px 20px 5px 20px;
+  padding: 5px 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
 }
 
 #register {
@@ -71,14 +75,9 @@
     }
 }
 
-#login-btn:hover {
-    background-color: rgba(0, 0, 0, 0.06);
-    cursor: pointer;
-}
 
 @media screen and (max-width: 600px){
-    #login-btn,
-    #register{
+    .nav-btn{
      display: none;
     }
  }
@@ -185,9 +184,12 @@
   display: block;
 }
 #login {
-  min-width: 300px;
+  & > * {
+    margin: 0;
+    padding: 0;
+  }
+  width: 300px;
   h1 {
-    color: $blue;
     text-align: center;
     margin-bottom: 1rem;
   }
@@ -197,11 +199,4 @@
   }
 }
 
-.login-container {
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-}
 

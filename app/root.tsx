@@ -1,8 +1,10 @@
 import globals from "~/styles/index.css"
 import appStyles from '~/styles/app.css'
 // styles is now something like /build/global-AE33KB2.css
-import { json, LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {  LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
+  Form,
   Link,
   Links,
   LiveReload,
@@ -10,6 +12,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import { getUser } from "./session.server";
 
@@ -31,6 +34,10 @@ export async function loader({request}: LoaderArgs) {
 }
 
 function Navbar() {
+
+  const {user} = useLoaderData<typeof loader>()
+
+  
   return (
     <nav className="navbar">
       <div>
@@ -52,14 +59,25 @@ function Navbar() {
       </div>
 
       <div>
-        <ul>
-          <li id="login-btn">
-            <Link to="/login">Login</Link>
-          </li>
-          <li id="register">
-            <Link to="/register">Register</Link>
-          </li>
-        </ul>
+        {user ?
+          <ul>
+            <li>
+              <Form method="post" action="/logout">
+                <button style={{backgroundColor: 'white'}} type="submit" className="nav-btn">Logout</button>
+              </Form>
+            </li>
+          </ul>
+        :
+          <ul>
+            <li>
+              <Link style={{display: "block"}} className="nav-btn" to="/login">Login</Link>
+            </li>
+            <li>
+              <Link style={{display: "block"}} className="nav-btn" id="register" to="/register">Register</Link>
+            </li>
+          </ul>
+
+        }
       </div>
 
     </nav>
