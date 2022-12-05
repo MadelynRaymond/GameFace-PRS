@@ -68,5 +68,32 @@
     display: none;
   }
 }
+/*Stats page */
+.stats-menu__items {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  color: rgb(166, 165, 171);
+  font-weight: 500;
+}
+
+.stats-menu {
+  border-bottom: 1px solid rgba(166, 165, 171, 0.75);
+  margin: 2rem;
+  margin-bottom: 0;
+}
+.stats-menu__athlete-name {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: rgb(166, 165, 171);
+}
+.stats-menu__header {
+  font-weight: 600;
+  font-size: 2rem;
+}
+.stats-menu__item-selected {
+  color: rgb(17, 17, 18) !important;
+  font-weight: 600;
+}
 
 /*# sourceMappingURL=app.css.map */
