@@ -79,5 +79,14 @@ select {
     scroll-behavior: auto !important;
   }
 }
+/*default inputs */
+input[type=text], input[type=password] {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 12px;
+  margin: 0.25rem;
+  background-color: rgb(230, 230, 230);
+  border: none;
+}
 
 /*# sourceMappingURL=index.css.map */

@@ -1,3 +1,12 @@
+/*UTILITY */
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
 /*NAVBAR */
 .navbar {
   display: flex;
@@ -149,6 +158,29 @@
 }
 .stat-box .up-symbol {
   font-size: 1rem;
+}
+
+/*Login*/
+#forgot-password {
+  display: block;
+}
+
+#login {
+  min-width: 300px;
+}
+#login h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+#login input {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=app.css.map */
