@@ -44,32 +44,45 @@ async function seed() {
     }
   })
 
-  const drillEntry = await prisma.drillEntry.create({
+  const report = await prisma.athleteReport.create({
     data: {
-      drill: {
-        connect: {
-          id: freeThrowDrill.id
-        }
-      },
       user: {
         connect: {
           id: user.id
-        }
-      },
-      score: {
-        create: {
-          score: 35,
-          outOf: 50,
-          unit: "literal"
         }
       }
     }
   })
 
 
+
+  await prisma.drillEntry.create({
+    data: {
+      drill: {
+        connect: {
+          id: freeThrowDrill.id
+        }
+      },
+      report: {
+        connect: {
+          id: report.id
+        }
+      },
+      score: {
+        create: {
+          score: 25,
+          outOf: 50,
+          unit: 'Shots made',
+        }
+      }
+    }
+  })
+
+
+
   console.log(`Database has been seeded. 🌱`);
 
-  console.log(JSON.stringify(drillEntry))
+
 }
 
 seed()
