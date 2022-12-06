@@ -25,6 +25,9 @@
   padding: 0 1rem;
   text-align: start;
   font-size: 1rem;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  font-weight: bold;
 }
 .navbar > div, .navbar > div ul {
   gap: 1rem;
@@ -55,14 +58,14 @@
   font-size: 1rem;
   font-weight: 500;
   border: 1px solid black;
-  background-color: black;
   border-radius: 40px;
   /* top | right | bottom | left */
   padding: 5px 20px;
   cursor: pointer;
-  color: white;
 }
-
+.nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
 
 #register {
   background-color: black;
@@ -71,17 +74,10 @@
 #register a {
   color: white;
 }
-#register:hover, .nav-btn:hover {
+#register:hover {
   background-color: rgba(0, 0, 0, 0.7);
   cursor: pointer;
-  color: white;
 }
-
-#register:visited, .nav-btn:visited {
-  color: white;
-}
-
-
 
 @media screen and (max-width: 600px) {
   .nav-btn {
@@ -92,7 +88,7 @@
 .stats-menu__items {
   display: flex;
   gap: 2rem;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
   color: rgb(166, 165, 171);
   font-weight: 500;
 }
@@ -139,7 +135,7 @@
 .stat-box {
   flex: 0;
   flex-basis: 200px;
-  background-color: rgb(243, 242, 247);
+  background-color: rgba(236, 236, 236, 0.404);
   border-radius: 8px;
   padding: 1rem;
 }
@@ -176,7 +172,6 @@
   display: block;
 }
 
-
 #login {
   width: 300px;
 }
@@ -193,37 +188,6 @@
   margin-bottom: 1rem;
 }
 
-
-/*STAFF ATHLETE TABLE */
-.athlete-table {
-  text-align: center;
-  width: 100%;
-  max-width: 1500px;
-  border-collapse: collapse;
-  margin: 25px auto;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-.athlete-table th, .athlete-table td {
-  padding: 12px 15px;
-}
-.athlete-table tbody tr {
-  border-bottom: thin solid #dddddd;
-}
-.athlete-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-}
-.athlete-table tbody tr:last-of-type {
-  border-bottom: 2px solid #dbb22c;
-}
-.athlete-table tbody tr.active-row {
-  font-weight: bold;
-  color: #009879;
-
-}
-
 /*Dashboard pages*/
 .pie-container {
   display: flex;
@@ -237,7 +201,7 @@
 }
 
 .stat-row {
-  background-color: rgb(243, 242, 247);
+  background-color: rgb(235, 235, 235);
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
@@ -271,7 +235,7 @@
 }
 
 .report-card-title p {
-  color:gray;
+  color: gray;
 }
 
 .button-group {
@@ -314,6 +278,35 @@
   padding: 4rem;
   padding-top: 0.5rem;
   gap: 4rem;
+}
+
+/*STAFF ATHLETE TABLE */
+.athlete-table {
+  text-align: center;
+  width: 100%;
+  max-width: 1500px;
+  border-collapse: collapse;
+  margin: 25px auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.athlete-table th, .athlete-table td {
+  padding: 12px 15px;
+}
+.athlete-table tbody tr {
+  border-bottom: thin solid #dddddd;
+}
+.athlete-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+.athlete-table tbody tr:last-of-type {
+  border-bottom: 2px solid #dbb22c;
+}
+.athlete-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
 }
 
 /*# sourceMappingURL=app.css.map */
