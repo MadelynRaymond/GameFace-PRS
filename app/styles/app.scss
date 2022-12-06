@@ -4,6 +4,8 @@
 
 /*NAVBAR */
 
+
+
 .navbar{
 
   display: flex;
@@ -11,11 +13,10 @@
   justify-content: space-between;
   padding: 0 1rem;
   text-align: start;
-  font-size: 1.25rem;
-  box-shadow: 0px 4px 5px 0px rgba(255,140,8,0.72);
-  -webkit-box-shadow: 0px 4px 5px 0px rgba(255,140,8,0.72);
-  -moz-box-shadow: 0px 4px 5px 0px rgba(255,140,8,0.72);
-
+  font-size: 1rem;
+  background-color: rgb(255, 255, 255);
+  
+  font-weight: bold;
   & > div, & > div ul {
     
     gap: 1rem;
@@ -199,6 +200,106 @@
   }
 }
 
+/*Dashboard pages*/
+.pie-container{
+  display: flex;
+}
+
+.overall-stat-table{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 2rem 4rem;
+
+}
+.stat-row{
+  background-color: rgb(235, 235, 235);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-weight: bold;
+  align-items: center;
+
+  > * {
+    width: 100%;
+  }
+  
+}
+
+.table-stat-name{
+  font-weight: lighter;
+}
+
+
+/*Helper styling classes*/
+
+.flex-r{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-c{
+  display: flex;
+  flex-direction: column;
+}
+
+.report-card-header{
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 4rem 0rem 4rem;
+
+}
+
+.report-card-title p{
+  color: gray;
+}
+
+.button-group{
+  display: flex;
+  gap: 4rem;
+}
+
+.export-button-group{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 0.5rem;
+
+}
+
+.filter-button-group{
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid black;
+  margin: 0.5rem; 
+  
+  :not(:last-child){
+    border-right: 1px solid black;
+  
+  }
+}
+.export-button{
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  gap: 1rem;
+  
+}
+
+.filter-button{
+  border:none;
+}
+
+.overall-graph-container{
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 350px;
+  padding: 4rem;
+  padding-top: 0.5rem;
+  gap: 4rem;
+}
 
 
 /*STAFF ATHLETE TABLE */
