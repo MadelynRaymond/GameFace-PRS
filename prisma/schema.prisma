@@ -18,7 +18,7 @@ model User {
   updatedAt DateTime @updatedAt
   password Password?
   profile StudentProfile?
-  drillEntries DrillEntry[]
+  reports AthleteReport[]
 }
 
 model StudentProfile {
@@ -48,17 +48,26 @@ model Drill {
   category ExerciseCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categoryId Int
   entries DrillEntry[]
+  
   @@unique([categoryId, name])
+}
+
+model AthleteReport {
+  id Int @id @default(autoincrement())
+  created_at DateTime @default(now())
+  user  User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  entries DrillEntry[]
+  userId Int
 }
 
 model DrillEntry {
   id Int @id @default(autoincrement())
   created_at DateTime @default(now())
   drill Drill @relation(fields: [drillId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user  User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  report AthleteReport @relation(fields: [reportId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   score Score?
-  userId Int
-  drillId Int @unique
+  reportId Int
+  drillId Int
 }
 
 model Score {
