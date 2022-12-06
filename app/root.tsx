@@ -51,9 +51,6 @@ function Navbar() {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>
-              <Link to={"/username/stats/overall"}>Stats</Link>
-            </li>
           </ul>
         </div>
       </div>

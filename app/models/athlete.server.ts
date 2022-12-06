@@ -29,6 +29,16 @@ export async function getAthletes() {
   })
 }
 
+export async function getAthleteById(athleteId: User["id"]) {
+  return prisma.user.findUnique({
+    where: {id: athleteId},
+    select: {
+      email: true,
+      profile: true
+    }
+  })
+}
+
 export async function getAthleteWithReports(athleteId: User["id"]) {
   return prisma.user.findUnique({
     where: {id: athleteId},
