@@ -187,37 +187,6 @@
   margin-bottom: 1rem;
 }
 
-
-/*STAFF ATHLETE TABLE */
-.athlete-table {
-  text-align: center;
-  width: 100%;
-  max-width: 1500px;
-  border-collapse: collapse;
-  margin: 25px auto;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-.athlete-table th, .athlete-table td {
-  padding: 12px 15px;
-}
-.athlete-table tbody tr {
-  border-bottom: thin solid #dddddd;
-}
-.athlete-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-}
-.athlete-table tbody tr:last-of-type {
-  border-bottom: 2px solid #dbb22c;
-}
-.athlete-table tbody tr.active-row {
-  font-weight: bold;
-  color: #009879;
-
-}
-
 /*Dashboard pages*/
 .pie-container {
   display: flex;
@@ -308,6 +277,35 @@
   padding: 4rem;
   padding-top: 0.5rem;
   gap: 4rem;
+}
+
+/*STAFF ATHLETE TABLE */
+.athlete-table {
+  text-align: center;
+  width: 100%;
+  max-width: 1500px;
+  border-collapse: collapse;
+  margin: 25px auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.athlete-table th, .athlete-table td {
+  padding: 12px 15px;
+}
+.athlete-table tbody tr {
+  border-bottom: thin solid #dddddd;
+}
+.athlete-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+.athlete-table tbody tr:last-of-type {
+  border-bottom: 2px solid #dbb22c;
+}
+.athlete-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
 }
 
 /*# sourceMappingURL=app.css.map */
