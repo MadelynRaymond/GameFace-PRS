@@ -58,7 +58,7 @@ export default function Strength() {
       <div className="stat-box-group">
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Avg. Jump (Distance)
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -71,7 +71,7 @@ export default function Strength() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Best Jump Distance
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -84,7 +84,7 @@ export default function Strength() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Avg. Squat Duration w/Weights
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>

@@ -58,7 +58,7 @@ export default function Dribbling() {
       <div className="stat-box-group">
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Avg. Consecutive Dribbles
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -71,7 +71,7 @@ export default function Dribbling() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Best # of Consecutive Dribbles
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -84,7 +84,7 @@ export default function Dribbling() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Last Session Avg. <br></br>Consecutive Dribbles
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
