@@ -42,6 +42,10 @@ export async function sendEmail(email: {subject: string, body: string}, recipien
   }
 }
 
+export async function createResetToken(userId: number) {
+  
+}
+
 export function isProbablyEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
