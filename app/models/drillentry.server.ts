@@ -11,7 +11,7 @@ type DrillEntry = {
   unit: string,
 }
 
-export async function createDrillEntry(entryDetails: DrillEntry){
+export async function createEntryOnReport(reportId: number, entryDetails: DrillEntry){
   const {userId, drillId, ...scoreDetails} = entryDetails
   return prisma.drillEntry.create({
     data: {
@@ -20,9 +20,9 @@ export async function createDrillEntry(entryDetails: DrillEntry){
           id: drillId
         }
       },
-      user: {
+      report: {
         connect: {
-          id: userId
+          id: reportId
         }
       },
       score: {
@@ -30,4 +30,4 @@ export async function createDrillEntry(entryDetails: DrillEntry){
       }
     }
   })
-} 
+}
