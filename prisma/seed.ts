@@ -41,12 +41,29 @@ async function seed() {
         },
     })
 
+    const dribbling = await prisma.exerciseCategory.create({
+        data: {
+            name: 'Dribbling',
+        },
+    })
+
     const freeThrowDrill = await prisma.drill.create({
         data: {
             name: 'Free Throws',
             category: {
                 connect: {
                     id: shooting.id,
+                },
+            },
+        },
+    })
+
+    const dribblingSpeed = await prisma.drill.create({
+        data: {
+            name: 'Dribbling Speed',
+            category: {
+                connect: {
+                    id: dribbling.id,
                 },
             },
         },
@@ -80,6 +97,8 @@ async function seed() {
             },
         },
     })
+
+    //shooting entries
 
     await prisma.drillEntry.create({
         data: {
@@ -157,6 +176,89 @@ async function seed() {
                     value: 48,
                     outOf: 50,
                     unit: 'Shots made',
+                },
+            },
+        },
+    })
+
+    //dribbling entries
+
+    await prisma.drillEntry.create({
+        data: {
+            drill: {
+                connect: {
+                    id: dribblingSpeed.id,
+                },
+            },
+            report: {
+                connect: {
+                    id: report.id,
+                },
+            },
+            user: {
+                connect: {
+                    id: user.id,
+                },
+            },
+            score: {
+                create: {
+                    value: 60,
+                    bestScore: 58,
+                    unit: 'time',
+                },
+            },
+        },
+    })
+
+    await prisma.drillEntry.create({
+        data: {
+            drill: {
+                connect: {
+                    id: dribblingSpeed.id,
+                },
+            },
+            report: {
+                connect: {
+                    id: report_two.id,
+                },
+            },
+            user: {
+                connect: {
+                    id: user.id,
+                },
+            },
+            score: {
+                create: {
+                    value: 75,
+                    bestScore: 60,
+                    unit: 'time',
+                },
+            },
+        },
+    })
+
+    await prisma.drillEntry.create({
+        data: {
+            drill: {
+                connect: {
+                    id: dribblingSpeed.id,
+                },
+            },
+            report: {
+                connect: {
+                    id: report_three.id,
+                },
+            },
+            user: {
+                connect: {
+                    id: user.id,
+                },
+            },
+            score: {
+                create: {
+                    value: 63,
+                    bestScore: 37,
+                    unit: 'time',
                 },
             },
         },

@@ -68,7 +68,7 @@ export async function loader({ request }: LoaderArgs) {
             created: report.created_at,
         }))
         .map((entry) => ({
-            created: entry.created,
+            created: entry.created.toDateString(),
             scored: entry.entries[0].score?.value,
             attempted: entry.entries[0].score?.outOf,
         })) as unknown as {
@@ -77,7 +77,7 @@ export async function loader({ request }: LoaderArgs) {
         attempted: number
     }[]
 
-    const sessionPercentChange = sessionScores.map(score => ({value: Math.floor((score.scored / score.attempted) * 100), created: score.created}))
+    const sessionPercentChange = sessionScores.map((score) => ({ value: Math.floor((score.scored / score.attempted) * 100), created: score.created }))
 
     return json({
         sessionScores,
@@ -86,11 +86,11 @@ export async function loader({ request }: LoaderArgs) {
         successPercentage,
         scoredLastMonth,
         attemptedLastMonth,
-        sessionPercentChange
+        sessionPercentChange,
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange} = useLoaderData<typeof loader>()
+    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } = useLoaderData<typeof loader>()
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
@@ -185,7 +185,7 @@ export default function Shooting() {
                     <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
                 </BarChart>
             </ResponsiveContainer>
-            
+
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                     width={730}

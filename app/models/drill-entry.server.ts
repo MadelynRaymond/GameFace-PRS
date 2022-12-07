@@ -4,10 +4,8 @@ import { prisma } from '~/db.server'
 type DrillEntry = {
     userId: number
     drillId: number
-    score: number
+    value: number
     outOf?: number
-    start?: string
-    end?: string
     unit: string
 }
 
@@ -52,6 +50,9 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
                 },
             },
         },
+        orderBy: {
+            created_at: 'asc',
+        },
         where: {
             userId,
         },
@@ -67,27 +68,6 @@ export async function getEntriesByDrillLiteral({ drillName, userId, interval = n
                     value: true,
                     outOf: true,
                     bestScore: true,
-                },
-            },
-        },
-        where: {
-            drill: {
-                name: drillName,
-            },
-            user: {
-                id: userId,
-            },
-        },
-    })
-}
-
-export async function getEntriesByDrillTime({ drillName, userId, interval = new Date() }: { drillName: Drill['name']; userId: User['id']; interval?: Date }) {
-    return prisma.drillEntry.findMany({
-        select: {
-            score: {
-                select: {
-                    time: true,
-                    bestTime: true,
                 },
             },
         },

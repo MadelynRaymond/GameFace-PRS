@@ -77,11 +77,9 @@ model DrillEntry {
 }
 
 model Score {
-  value Int?
+  value Int
   outOf Int?
   bestScore Int?
-  time String?
-  bestTime String?
   //change to enum
   unit String
   entry DrillEntry @relation(fields: [entry_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
