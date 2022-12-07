@@ -23,10 +23,44 @@ export default function AthleteDetails() {
   const {reports, profile} = useLoaderData<typeof loader>()
 
   return (
-    <div>
-      <select id="mounth">
-        <option value=""></option>
-      </select> 
+    <div className="athlete-overview-container">
+      <div className="athlete-reports">
+        
+      </div>
+      <div className="athlete-report-form">
+        <label htmlFor="time-drill">Completion time: </label>
+        <input type="text" name="" id="" />
+        <div className="flex gap-2">
+          <div>
+            <label htmlFor="score">Score</label>
+            <input type="text" name="" id="" />
+          </div>
+          <div>
+            <label htmlFor="out-f">Out of</label>
+            <input type="text" name="" id="" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div>
+            <label htmlFor="score">Score</label>
+            <input type="text" name="" id="" />
+          </div>
+          <div>
+            <label htmlFor="out-f">Out of</label>
+            <input type="text" name="" id="" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div>
+            <label htmlFor="score">Score</label>
+            <input type="text" name="" id="" />
+          </div>
+          <div>
+            <label htmlFor="out-f">Out of</label>
+            <input type="text" name="" id="" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
