@@ -58,7 +58,7 @@ export default function Passing() {
       <div className="stat-box-group">
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            # of Successful Passes
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -71,7 +71,7 @@ export default function Passing() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Overall Attempted Passes
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -84,7 +84,7 @@ export default function Passing() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Avg. Pass Success Rate
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
