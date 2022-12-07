@@ -1,13 +1,13 @@
-import { prisma } from "~/db.server";
+import { prisma } from '~/db.server'
 
 export async function createAthleteReport(athleteId: number) {
-  return prisma.athleteReport.create({
-    data: {
-      user: {
-        connect: {
-          id: athleteId
-        }
-      }
-    }
-  })
+    return prisma.athleteReport.create({
+        data: {
+            user: {
+                connect: {
+                    id: athleteId,
+                },
+            },
+        },
+    })
 }
