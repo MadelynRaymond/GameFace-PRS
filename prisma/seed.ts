@@ -53,26 +53,21 @@ async function seed() {
       }
     }
   })
-
-
-
-  await prisma.drillEntry.create({
+  const report_two = await prisma.athleteReport.create({
     data: {
-      drill: {
+      user: {
         connect: {
-          id: freeThrowDrill.id
+          id: user.id
         }
-      },
-      report: {
+      }
+    }
+  })
+
+  const report_three = await prisma.athleteReport.create({
+    data: {
+      user: {
         connect: {
-          id: report.id
-        }
-      },
-      score: {
-        create: {
-          score: 25,
-          outOf: 50,
-          unit: 'Shots made',
+          id: user.id
         }
       }
     }
@@ -91,9 +86,42 @@ async function seed() {
           id: report.id
         }
       },
+      user: {
+        connect: {
+          id: user.id
+        }
+      },
       score: {
         create: {
-          score: 25,
+          value: 25,
+          outOf: 50,
+          unit: 'Shots made',
+        }
+      }
+    }
+  })
+
+
+  await prisma.drillEntry.create({
+    data: {
+      drill: {
+        connect: {
+          id: freeThrowDrill.id
+        }
+      },
+      report: {
+        connect: {
+          id: report_two.id
+        }
+      },
+      user: {
+        connect: {
+          id: user.id
+        }
+      },
+      score: {
+        create: {
+          value: 35,
           outOf: 50,
           unit: 'Shots made',
         }
@@ -110,34 +138,17 @@ async function seed() {
       },
       report: {
         connect: {
-          id: report.id
+          id: report_three.id
+        }
+      },
+      user: {
+        connect: {
+          id: user.id
         }
       },
       score: {
         create: {
-          score: 25,
-          outOf: 50,
-          unit: 'Shots made',
-        }
-      }
-    }
-  })
-
-  await prisma.drillEntry.create({
-    data: {
-      drill: {
-        connect: {
-          id: freeThrowDrill.id
-        }
-      },
-      report: {
-        connect: {
-          id: report.id
-        }
-      },
-      score: {
-        create: {
-          score: 30,
+          value: 48,
           outOf: 50,
           unit: 'Shots made',
         }

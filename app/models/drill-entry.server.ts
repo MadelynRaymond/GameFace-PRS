@@ -26,6 +26,11 @@ export async function createEntryOnReport(reportId: number, entryDetails: DrillE
           id: reportId
         }
       },
+      user: {
+        connect: {
+          id: userId
+        }
+      },
       score: {
         create: scoreDetails
       }
@@ -33,26 +38,68 @@ export async function createEntryOnReport(reportId: number, entryDetails: DrillE
   })
 }
 
-
-export async function getEntriesForDrill({drillId, userId, interval= new Date()}: {drillId: Drill["id"], userId: User["id"], interval: Date}) {
+export async function getEntriesLastNReports({drillName, userId, sessions}: {drillName: Drill["name"], userId: User['id'], sessions: number}) {
   return prisma.athleteReport.findMany({
     select: {
+      created_at: true,
       entries: {
-        where: {
-          drillId,
-          created_at: {
-            lte: new Date(),
-            gte: interval
-          }
-        },
         select: {
           score: true
+        },
+        where: {
+          drill: {
+            name: drillName
+          }
+        }
+      },
+    },
+    where: {
+      userId
+    },
+    take: sessions
+  })
+}
+
+
+export async function getEntriesByDrillLiteral({drillName, userId, interval=new Date()}: {drillName: Drill["name"], userId: User['id'], interval?: Date}) {
+  return prisma.drillEntry.findMany({
+    select: {
+      score: {
+        select: {
+          value: true,
+          outOf: true,
+          bestScore: true
         }
       }
     },
     where: {
-      userId
+      drill: {
+        name: drillName
+      },
+      user: {
+        id: userId
+      }
     }
   })
+}
 
+export async function getEntriesByDrillTime({drillName, userId, interval=new Date()}: {drillName: Drill["name"], userId: User['id'], interval?: Date}) {
+  return prisma.drillEntry.findMany({
+    select: {
+      score: {
+        select: {
+          time: true,
+          bestTime: true
+        }
+      }
+    },
+    where: {
+      drill: {
+        name: drillName
+      },
+      user: {
+        id: userId
+      }
+    }
+  })
 }
