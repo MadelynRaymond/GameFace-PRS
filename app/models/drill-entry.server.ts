@@ -1,3 +1,4 @@
+import { Drill, User } from "@prisma/client"
 import { prisma } from "~/db.server"
 
 
@@ -30,4 +31,28 @@ export async function createEntryOnReport(reportId: number, entryDetails: DrillE
       }
     }
   })
+}
+
+
+export async function getEntriesForDrill({drillId, userId, interval= new Date()}: {drillId: Drill["id"], userId: User["id"], interval: Date}) {
+  return prisma.athleteReport.findMany({
+    select: {
+      entries: {
+        where: {
+          drillId,
+          created_at: {
+            lte: new Date(),
+            gte: interval
+          }
+        },
+        select: {
+          score: true
+        }
+      }
+    },
+    where: {
+      userId
+    }
+  })
+
 }

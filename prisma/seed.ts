@@ -79,6 +79,75 @@ async function seed() {
   })
 
 
+  await prisma.drillEntry.create({
+    data: {
+      drill: {
+        connect: {
+          id: freeThrowDrill.id
+        }
+      },
+      report: {
+        connect: {
+          id: report.id
+        }
+      },
+      score: {
+        create: {
+          score: 25,
+          outOf: 50,
+          unit: 'Shots made',
+        }
+      }
+    }
+  })
+
+  await prisma.drillEntry.create({
+    data: {
+      drill: {
+        connect: {
+          id: freeThrowDrill.id
+        }
+      },
+      report: {
+        connect: {
+          id: report.id
+        }
+      },
+      score: {
+        create: {
+          score: 25,
+          outOf: 50,
+          unit: 'Shots made',
+        }
+      }
+    }
+  })
+
+  await prisma.drillEntry.create({
+    data: {
+      drill: {
+        connect: {
+          id: freeThrowDrill.id
+        }
+      },
+      report: {
+        connect: {
+          id: report.id
+        }
+      },
+      score: {
+        create: {
+          score: 30,
+          outOf: 50,
+          unit: 'Shots made',
+        }
+      }
+    }
+  })
+
+  
+
+
 
   console.log(`Database has been seeded. 🌱`);
 
