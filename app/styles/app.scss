@@ -4,7 +4,8 @@
 
 /*NAVBAR */
 
-
+$orange-primary: #DF7861;
+$dark-primary: #0a0c10;
 
 .navbar{
 
@@ -34,6 +35,20 @@
   }
 }
 
+.btn, .login-button{
+  color: white;
+  background-color: $orange-primary;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  padding: 0.5rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+}
+
+.login-button{
+  margin: 0.5 1rem;
+}
+
 
 
 .logo  {
@@ -58,12 +73,12 @@
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: $dark-primary;
   }
 }
 
 #register {
-    background-color: black;
+    background-color: $dark-primary;
     color: white;
 
     & a {
@@ -71,7 +86,7 @@
     }
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: $dark-primary;
       cursor: pointer;
     }
 }
@@ -109,7 +124,7 @@
   }
 
   &__item-selected {
-    color: rgb(17, 17, 18) !important;
+    color: $dark-primary !important;
     font-weight: 600;
   }
 
@@ -199,6 +214,18 @@
     margin-bottom: 1rem;
   }
 }
+
+.login-btn-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.forgot-password-link{
+  text-align:end;
+  color: $orange-primary;
+}
+
 
 /*Dashboard pages*/
 .pie-container{
@@ -354,6 +381,9 @@
   justify-content: space-between;
 }
 
+.register-link{
+  text-decoration: underline;
+}
 
 .register-btn{
  display: flex;
@@ -361,7 +391,7 @@
 }
 
 .register-btn button{
-  background-color: rgba(255, 152, 100, 0.887);
+  background-color: $orange-primary;
   border: none;
   color: white;
   font-family: "Montserrat", sans-serif;
@@ -386,7 +416,7 @@
 }
 
 .registration-form-header p{
-  color: rgba(255, 152, 100, 0.887);
+  color: $orange-primary;
 
 }
 
