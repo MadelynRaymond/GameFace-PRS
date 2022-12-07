@@ -4,7 +4,8 @@
 
 /*NAVBAR */
 
-
+$orange-primary: #DF7861;
+$dark-primary: #0a0c10;
 
 .navbar{
 
@@ -15,6 +16,7 @@
   text-align: start;
   font-size: 1rem;
   background-color: rgb(255, 255, 255);
+  color: black;
   
   font-weight: bold;
   & > div, & > div ul {
@@ -32,6 +34,20 @@
       list-style: none;
     }
   }
+}
+
+.btn, .login-button{
+  color: white;
+  background-color: $orange-primary;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  padding: 0.5rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+}
+
+.login-button{
+  margin: 0.5 1rem;
 }
 
 
@@ -58,12 +74,12 @@
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: $dark-primary;
   }
 }
 
 #register {
-    background-color: black;
+    background-color: $dark-primary;
     color: white;
 
     & a {
@@ -71,7 +87,7 @@
     }
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: $dark-primary;
       cursor: pointer;
     }
 }
@@ -109,7 +125,7 @@
   }
 
   &__item-selected {
-    color: rgb(17, 17, 18) !important;
+    color: $dark-primary !important;
     font-weight: 600;
   }
 
@@ -199,6 +215,18 @@
     margin-bottom: 1rem;
   }
 }
+
+.login-btn-group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.forgot-password-link{
+  text-align:end;
+  color: $orange-primary;
+}
+
 
 /*Dashboard pages*/
 .pie-container{
@@ -355,4 +383,62 @@
 
 .athlete-report-form {
   max-width: 800px;
+
+/* Registration Page */
+
+.registration-form{
+  margin: 2rem 30rem;
+  padding:2rem 4rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  
+}
+
+
+.registration-form-row{
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.register-link{
+  text-decoration: underline;
+}
+
+.register-btn{
+ display: flex;
+ justify-content: flex-end;
+}
+
+.register-btn button{
+  background-color: $orange-primary;
+  border: none;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  padding: 0.5rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.registration-form-header {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 0.01;
+  padding-bottom: 1rem;
+}
+.registration-form-header img {
+  object-fit: contain;
+  max-width: 125px;
+}
+
+.registration-form-header h2{
+  align-self:flex-end;
+  
+}
+
+.registration-form-header p{
+  color: $orange-primary;
+
+}
+
+.registration-form-header p span{
+  text-decoration: underline;
 }

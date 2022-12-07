@@ -25,7 +25,9 @@ export const meta: MetaFunction = () => ({
 export function links() {
   return [
     { rel: "stylesheet", href: globals },
-    { rel: "stylesheet", href: appStyles}
+    { rel: "stylesheet", href: appStyles},
+    {rel: "stylesheet preload prefetch", href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap", as: 'style'}
+
   ]
 }
 
@@ -48,8 +50,8 @@ function Navbar() {
         </div>
         <div>
           <ul>
-            <li>
-              <Link to="/">Home</Link>
+          <li>
+              <a href="https://www.gameface413.org/">Home</a>
             </li>
           </ul>
         </div>

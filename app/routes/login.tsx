@@ -54,6 +54,7 @@ export default function Login() {
         <div style={{height: '85vh'}} className="form-center">
             <Form method="post" id="login">
                 <h1>Login</h1>
+                <div className="register-link"><Link to="/register">New here? Create an account!</Link></div>
                 <div>
                     <input ref={email} type="text" name="email" id="email" placeholder="Email"/>
                     <span className="error-text">{actionData?.errors?.email}</span>
@@ -62,11 +63,13 @@ export default function Login() {
                     <input ref={password} type="Password" name="password" id="password" placeholder="Password"/>
                     <span className="error-text">{actionData?.errors?.password}</span>
                 </div>
-                <input type="submit" name="login"value="Login"/>
-                
-                <span>Remember me</span>
-                <input style={{display: 'inline'}} type="checkbox" id="check"/>
-                <Link to="/forgot-password">Forgot password?</Link>
+                <div className="login-btn-group">
+                  <input className="login-button"type="submit" name="login"value="Login"/>
+                  <Link className="forgot-password-link" to="/forgot-password">Forgot password?</Link>
+
+                 </div>
+
+
             </Form>
         </div>
     )

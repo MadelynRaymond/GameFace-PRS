@@ -58,7 +58,7 @@ export default function Jumping() {
       <div className="stat-box-group">
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Avg. Jump (Height)
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -71,7 +71,7 @@ export default function Jumping() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Overall Highest Jump
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
@@ -84,7 +84,7 @@ export default function Jumping() {
 
         <div className="stat-box">
           <p className="stat-box__title">
-            Shots Attempted
+            Last Session: Avg. Jump (Height)
           </p>
           <div className="stat-box__data">
             <p className="stat-box__figure">3,028</p>
