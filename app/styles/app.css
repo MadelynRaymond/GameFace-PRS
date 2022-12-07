@@ -11,6 +11,42 @@
   color: red;
 }
 
+.flex {
+  display: flex;
+}
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+.gap-3 {
+  gap: 2rem;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
 .form-center {
   display: flex;
   align-items: center;
@@ -333,6 +369,24 @@
   color: #009879;
 }
 
+/*DRILL ENTRY PAGE */
+.athlete-overview-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.athlete-reports {
+  height: 800px;
+  width: 800px;
+  background-color: gray;
+}
+
+.athlete-report-form {
+  max-width: 800px;
+}
 /* Registration Page */
 .registration-form {
   margin: 2rem 30rem;

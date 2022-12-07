@@ -19,6 +19,7 @@ model User {
   password Password?
   profile StudentProfile?
   reports AthleteReport[]
+  resetToken Token?
 }
 
 model StudentProfile {
@@ -80,5 +81,12 @@ model Score {
   unit String
   entry DrillEntry @relation(fields: [entry_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   entry_id Int @unique
+}
+
+model Token {
+  userEmail String @unique
+  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade, onUpdate: Cascade)
+  token String
+  @@unique([userEmail, token])
 }
 

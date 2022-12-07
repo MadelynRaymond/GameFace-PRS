@@ -16,7 +16,6 @@ export async function action({request}: ActionArgs) {
       return json({error: "Please enter a valid email"}, {status: 400})
     }
 
-    await sendEmail({subject: 'Reset Password', body: 'Reset password'}, email)
 
     return redirect(email)
 }

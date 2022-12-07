@@ -53,9 +53,6 @@ function Navbar() {
           <li>
               <a href="https://www.gameface413.org/">Home</a>
             </li>
-            <li>
-              <Link to={"/username/stats/overall"}>Stats</Link>
-            </li>
           </ul>
         </div>
       </div>

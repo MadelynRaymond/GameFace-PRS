@@ -365,6 +365,23 @@ $dark-primary: #0a0c10;
 }
 
 
+/*DRILL ENTRY PAGE */
+.athlete-overview-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.athlete-reports {
+  height: 800px;
+  width: 800px;
+  background-color: gray;
+}
+
+.athlete-report-form {
+  max-width: 800px;
 
 /* Registration Page */
 

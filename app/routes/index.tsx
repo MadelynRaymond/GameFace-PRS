@@ -1,13 +1,13 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { getUser } from "~/session.server";
+import { getUser, logout } from "~/session.server";
 
 export async function loader({request}: LoaderArgs) {
   const user = await getUser(request)
 
-  if (user) return redirect(`/${user.email}/stats/overall`)
+  if (user) return redirect(`/${user.email}/stats`)
 
-  return null
+  throw await logout(request)
 }
 export default function Index() {
   return (

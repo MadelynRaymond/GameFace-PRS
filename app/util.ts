@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer'
+import jwt from 'jsonwebtoken'
+import { getUserByEmail } from './models/user.server';
 
 export function add(a: number, b: number): number {
   return a + b
@@ -40,6 +42,16 @@ export async function sendEmail(email: {subject: string, body: string}, recipien
       return new Error("unknown error")
     }
   }
+}
+
+//TODO: change secret
+export async function createResetToken(userEmail: string): Promise<string | undefined> {
+  const user = await getUserByEmail(userEmail)
+  if(!user) {
+    return undefined
+  }
+  
+  return jwt.sign({data: {userId: user.id}}, 'SECRET', { expiresIn: '10m' });
 }
 
 export function isProbablyEmail(email: unknown): email is string {
