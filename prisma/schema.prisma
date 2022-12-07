@@ -19,6 +19,7 @@ model User {
   password Password?
   profile StudentProfile?
   reports AthleteReport[]
+  entries DrillEntry[]
   resetToken Token?
 }
 
@@ -66,17 +67,21 @@ model DrillEntry {
   created_at DateTime @default(now())
   drill Drill @relation(fields: [drillId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   report AthleteReport @relation(fields: [reportId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   score Score?
+  userId Int
   reportId Int
   drillId Int
+
+  @@unique([reportId, drillId])
 }
 
 model Score {
-  score Int?
+  value Int?
   outOf Int?
   bestScore Int?
   time String?
-  bestTime String
+  bestTime String?
   //change to enum
   unit String
   entry DrillEntry @relation(fields: [entry_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
