@@ -84,9 +84,9 @@ model Score {
 }
 
 model Token {
-  userId Int @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userEmail String @unique
+  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade, onUpdate: Cascade)
   token String
-  @@unique([token, userId])
+  @@unique([userEmail, token])
 }
 
