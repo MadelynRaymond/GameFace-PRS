@@ -6,6 +6,7 @@ type DrillEntry = {
     drillId: number
     value: number
     outOf?: number
+    bestScore?: number
     unit: string
 }
 
@@ -28,9 +29,7 @@ export async function createEntryOnReport(reportId: number, entryDetails: DrillE
                     id: userId,
                 },
             },
-            score: {
-                create: scoreDetails,
-            },
+            ...scoreDetails,
         },
     })
 }
@@ -41,7 +40,10 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
             created_at: true,
             entries: {
                 select: {
-                    score: true,
+                    value: true,
+                    outOf: true,
+                    unit: true,
+                    bestScore: true,
                 },
                 where: {
                     drill: {
@@ -63,13 +65,10 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
 export async function getEntriesByDrillLiteral({ drillName, userId, interval = new Date() }: { drillName: Drill['name']; userId: User['id']; interval?: Date }) {
     return prisma.drillEntry.findMany({
         select: {
-            score: {
-                select: {
-                    value: true,
-                    outOf: true,
-                    bestScore: true,
-                },
-            },
+            value: true,
+            outOf: true,
+            unit: true,
+            bestScore: true,
         },
         where: {
             drill: {

@@ -10,8 +10,8 @@ export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
 
     const entries = await getEntriesByDrillLiteral({ drillName: 'Dribbling Speed', userId })
-    const times = entries.map((entry) => entry.score?.value as number)
-    const bestTimes = entries.map((entry) => entry.score?.bestScore as number)
+    const times = entries.map((entry) => entry.value as number)
+    const bestTimes = entries.map((entry) => entry.bestScore as number)
     const averageTimeMonth = dbTimeToString(Math.floor(times.reduce((sum, score) => score + sum, 0) / entries.length))
     const bestTimeMonth = dbTimeToString(Math.min(...bestTimes))
 
@@ -28,8 +28,8 @@ export async function loader({ request }: LoaderArgs) {
         }))
         .map((entry) => ({
             created: entry.created.toDateString(),
-            time: entry.entries[0].score?.value,
-            best: entry.entries[0].score?.bestScore,
+            time: entry.entries[0].value,
+            best: entry.entries[0].bestScore,
         })) as unknown as {
         created: string
         time: number

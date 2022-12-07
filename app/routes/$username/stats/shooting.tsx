@@ -26,8 +26,8 @@ export async function loader({ request }: LoaderArgs) {
 
     const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
         .flatMap((entry) => ({
-            value: entry.score?.value as number,
-            outOf: entry.score?.outOf as number,
+            value: entry.value as number,
+            outOf: entry.outOf as number,
         }))
         .reduce(
             (result, curr) => {
@@ -44,8 +44,8 @@ export async function loader({ request }: LoaderArgs) {
 
     const { scored: scoredLastMonth, attempted: attemptedLastMonth } = freeThrowsLastMonth
         .flatMap((entry) => ({
-            value: entry.score?.value as number,
-            outOf: entry.score?.outOf as number,
+            value: entry.value as number,
+            outOf: entry.outOf as number,
         }))
         .reduce(
             (result, curr) => {
@@ -69,8 +69,8 @@ export async function loader({ request }: LoaderArgs) {
         }))
         .map((entry) => ({
             created: entry.created.toDateString(),
-            scored: entry.entries[0].score?.value,
-            attempted: entry.entries[0].score?.outOf,
+            scored: entry.entries[0].value,
+            attempted: entry.entries[0].outOf,
         })) as unknown as {
         created: string
         scored: number
