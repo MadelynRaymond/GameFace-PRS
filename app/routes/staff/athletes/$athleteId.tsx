@@ -24,8 +24,9 @@ export default function AthleteDetails() {
 
   return (
     <div>
-      <pre>{JSON.stringify(reports)}</pre>
-      <pre>{JSON.stringify(profile)}</pre>
+      <select id="mounth">
+        <option value=""></option>
+      </select> 
     </div>
   );
 }
