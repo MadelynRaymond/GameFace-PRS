@@ -69,13 +69,15 @@ export async function loader({ request }: LoaderArgs) {
         }))
         .map((entry) => ({
             created: entry.created,
-            value: entry.entries[0].score?.value,
-            outOf: entry.entries[0].score?.outOf,
+            scored: entry.entries[0].score?.value,
+            attempted: entry.entries[0].score?.outOf,
         })) as unknown as {
         created: string
-        value: number
-        outOf: number
+        scored: number
+        attempted: number
     }[]
+
+    const sessionPercentChange = sessionScores.map(score => ({value: Math.floor((score.scored / score.attempted) * 100), created: score.created}))
 
     return json({
         sessionScores,
@@ -84,10 +86,11 @@ export async function loader({ request }: LoaderArgs) {
         successPercentage,
         scoredLastMonth,
         attemptedLastMonth,
+        sessionPercentChange
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth } = useLoaderData<typeof loader>()
+    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange} = useLoaderData<typeof loader>()
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
@@ -113,12 +116,6 @@ export default function Shooting() {
             fill: '#ECB390',
         },
     ]
-
-    const scoresOverSessions = sessionScores.map((score) => ({
-        name: score.created,
-        scored: score.value,
-        attempted: score.outOf,
-    }))
 
     return (
         <div className="stat-grid">
@@ -178,9 +175,9 @@ export default function Shooting() {
             </div>
 
             <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={scoresOverSessions}>
+                <BarChart width={500} height={300} data={sessionScores}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="created" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
@@ -188,12 +185,12 @@ export default function Shooting() {
                     <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
                 </BarChart>
             </ResponsiveContainer>
-
+            
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                     width={730}
                     height={250}
-                    data={scoresOverSessions}
+                    data={sessionPercentChange}
                     margin={{
                         top: 10,
                         right: 30,
@@ -211,13 +208,12 @@ export default function Shooting() {
                             <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="created" />
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Area type="monotone" dataKey="scored" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                    <Area type="monotone" dataKey="attempted" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
+                    <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
                 </AreaChart>
             </ResponsiveContainer>
         </div>
