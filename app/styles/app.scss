@@ -337,3 +337,59 @@
 }
 
 
+
+/* Registration Page */
+
+.registration-form{
+  margin: 2rem 30rem;
+  padding:2rem 4rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  
+}
+
+
+.registration-form-row{
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+
+.register-btn{
+ display: flex;
+ justify-content: flex-end;
+}
+
+.register-btn button{
+  background-color: rgba(255, 152, 100, 0.887);
+  border: none;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  padding: 0.5rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.registration-form-header {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 0.01;
+  padding-bottom: 1rem;
+}
+.registration-form-header img {
+  object-fit: contain;
+  max-width: 125px;
+}
+
+.registration-form-header h2{
+  align-self:flex-end;
+  
+}
+
+.registration-form-header p{
+  color: rgba(255, 152, 100, 0.887);
+
+}
+
+.registration-form-header p span{
+  text-decoration: underline;
+}
