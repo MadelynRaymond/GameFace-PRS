@@ -35,6 +35,7 @@ async function seed() {
         },
     })
 
+    //category: Speed, Dribbling, etc.
     const shooting = await prisma.exerciseCategory.create({
         data: {
             name: 'Shooting',
@@ -46,6 +47,14 @@ async function seed() {
             name: 'Dribbling',
         },
     })
+
+    const speed = await prisma.exerciseCategory.create({
+        data: {
+            name: 'Speed',
+        },
+    })
+
+    //step two: add drill
 
     const freeThrowDrill = await prisma.drill.create({
         data: {
@@ -69,6 +78,18 @@ async function seed() {
         },
     })
 
+    const speedDrill = await prisma.drill.create({
+        data: {
+            name: 'Speed Drill',
+            category: {
+                connect: {
+                    id: speed.id,
+                },
+            },
+        },
+    })
+
+    //dont touch
     const report = await prisma.athleteReport.create({
         data: {
             user: {
@@ -104,7 +125,9 @@ async function seed() {
         data: [
             {
                 drillId: freeThrowDrill.id,
+                //for instance: shots made
                 value: 35,
+                //for instance: shots attempted
                 outOf: 50,
                 userId: user.id,
                 reportId: report.id,
@@ -135,7 +158,9 @@ async function seed() {
         data: [
             {
                 drillId: dribblingSpeed.id,
+                //value -> time (seconds)
                 value: 75,
+                //bestScore -> best time for entry
                 bestScore: 55,
                 userId: user.id,
                 reportId: report.id,
