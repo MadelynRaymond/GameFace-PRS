@@ -1,23 +1,25 @@
-import type { User } from "@prisma/client";
+import type { Token, User } from "@prisma/client";
 import { prisma } from "~/db.server";
 import { createResetToken } from "~/util";
 
-export async function createTokenForUser(userId: User["id"]) {
+export async function createTokenForUser(email: User["email"]): Promise<Token | null> {
   const existing = await prisma.token.findUnique({
-    where: {userId}
+    where: {userEmail: email}
   })
 
   if (existing) {
     await prisma.token.delete({
-      where: {userId}
+      where: {userEmail: email}
     })
   }
 
-  const token = createResetToken(userId)
+  const token = await createResetToken(email)
+
+  if(!token) return null
 
   return prisma.token.create({
     data: {
-      userId,
+      userEmail: email,
       token
     }
   })
