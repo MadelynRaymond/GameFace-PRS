@@ -49,6 +49,7 @@ model Drill {
   name String
   category ExerciseCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categoryId Int
+  drillUnit String
   entries DrillEntry[]
   
   @@unique([categoryId, name])

@@ -82,6 +82,7 @@ async function seed() {
                     id: shooting.id,
                 },
             },
+            drillUnit: "integral"
         },
     })
 
@@ -93,6 +94,7 @@ async function seed() {
                     id: dribbling.id,
                 },
             },
+            drillUnit: "time"
         },
     })
 
@@ -104,6 +106,7 @@ async function seed() {
                     id: strength.id,
                 },
             },
+            drillUnit: "time"
         },
     })
 
@@ -115,6 +118,7 @@ async function seed() {
                     id: strength.id,
                 },
             },
+            drillUnit: "decimal"
         },
     })
 
@@ -126,6 +130,7 @@ async function seed() {
                     id: speed.id,
                 },
             },
+            drillUnit: "time"
         },
     })
 
@@ -137,6 +142,7 @@ async function seed() {
                     id: passing.id,
                 },
             },
+            drillUnit: "integral"
         },
     })
 
@@ -148,6 +154,7 @@ async function seed() {
                     id: jumping.id,
                 },
             },
+            drillUnit: "decimal"
         },
     })
 

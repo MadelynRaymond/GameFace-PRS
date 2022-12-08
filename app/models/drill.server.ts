@@ -10,3 +10,13 @@ export async function getDrillsInCategory({ categoryId }: { categoryId: Exercise
         }
     })
 }
+
+export async function getDrills() {
+    return prisma.drill.findMany({
+        orderBy: {
+            category: {
+                name: 'asc'
+            }
+        }
+    })
+}
