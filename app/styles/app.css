@@ -186,6 +186,7 @@
 }
 
 .stat-box-group {
+  margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
@@ -195,11 +196,12 @@
 .stat-box {
   background-color: rgba(236, 236, 236, 0.404);
   min-width: 250px;
+  max-height: 250px;
   border-radius: 8px;
   padding: 1rem;
 }
 .stat-box__title {
-  height: 2.5rem;
+  height: 2rem;
 }
 .stat-box__data {
   display: flex;
