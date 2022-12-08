@@ -32,7 +32,7 @@ export default function Register() {
                     </div>
                     <div>
                         <label>Password</label>
-                        <input type="text"></input>
+                        <input type="password"></input>
                     </div>
                 </div>
                 <label>Email</label>
@@ -49,6 +49,16 @@ export default function Register() {
                 </div>
                 <label>School</label>
                 <input type="text"  placeholder="First Coast High School"></input>
+                <div className="registration-form-row">
+                    <div>
+                        <label>Emergency Contact Name</label>
+                        <input type="text" placeholder="Jane Doe"></input>
+                    </div>
+                    <div>
+                        <label>Emergency Contact Email</label>
+                        <input type="text"  placeholder="janedoe11@yahoo.com"></input>
+                    </div>
+                </div>
                 <div className="register-btn">
                 <button className="register-btn">Register</button>
                 </div>
