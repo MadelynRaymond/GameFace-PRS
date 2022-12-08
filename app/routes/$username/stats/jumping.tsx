@@ -88,7 +88,7 @@ export default function Jumping() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Average Jump Height (Lifetime)</p>
+                <p>Lifetime Overview: Average Jump Height</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -102,7 +102,7 @@ export default function Jumping() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Best Jump Height (Lifetime)</p>
+                <p>Lifetime Overview: Best Jump Height</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -116,7 +116,7 @@ export default function Jumping() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Best Jump Height (Last 7 Sessions)</p>
+                <p>Last Seven Sessions: Best Jump Height</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}

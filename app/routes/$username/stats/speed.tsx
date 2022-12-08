@@ -47,7 +47,7 @@ export default function Speed() {
         <div className="stat-grid">
             <div className="stat-box-group">
                 <div className="stat-box">
-                    <p className="stat-box__title">Avg. Dribbling Speed Drill Completion</p>
+                    <p className="stat-box__title">Overall Avg. Speed</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{averageTimeMonth}</p>
                         <p className="stat-box__regression">
@@ -58,7 +58,7 @@ export default function Speed() {
                 </div>
 
                 <div className="stat-box">
-                    <p className="stat-box__title">Best Dribbling Speed Drill Completion</p>
+                    <p className="stat-box__title">Best Speed</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{bestTimeMonth}</p>
                         <p className="stat-box__regression">
@@ -71,8 +71,8 @@ export default function Speed() {
 
                 <div className="stat-box">
                     <p className="stat-box__title">
-                        Last Session Avg. <br></br>
-                        Dribbling Drill Speed
+                        Last Session Avg. Speed
+                        
                     </p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{lastSessionAverage}</p>
@@ -86,7 +86,7 @@ export default function Speed() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Chart Title</p>
+                <p>Last 30 Days: Avg. Speed</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
@@ -116,7 +116,7 @@ export default function Speed() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Chart Title</p>
+                <p>Lifetime Overview: Best Speed per Session</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
@@ -146,7 +146,7 @@ export default function Speed() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Chart title</p>
+                <p>Last Seven Sessions: Avg. vs. Best Speed</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         width={500}

@@ -100,13 +100,13 @@ export default function Strength() {
             </div>
 
             <div className='flex align-center flex-col gap-1'>
-                <p>Lifetime Average Jump Distance</p>
+                <p>Lifetime Overview: Average Jump Distance</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={730} height={400} data={sessionScoresJumpDistance}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="created"></XAxis>
                         <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
-                        <Bar dataKey="value" fill="#8884d8">
+                        <Bar dataKey="value" fill="#DF7861">
                             <Label value="Session Date" position="top" />
                         </Bar>
                     </BarChart>
@@ -114,7 +114,7 @@ export default function Strength() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Monthly Average Squat with Weights</p>
+                <p>Last 30 Days: Avg. Squat Duration w/Weight</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={730} height={250} data={sessionScoresSquat}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -128,7 +128,7 @@ export default function Strength() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Best Squat with Weights (Yearly)</p>
+                <p>Lifetime Overview: Best Squat Duration w/Weights</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}

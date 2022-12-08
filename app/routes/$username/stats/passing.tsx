@@ -121,7 +121,7 @@ export default function Shooting() {
         <div className="stat-grid">
             <div className="stat-box-group">
                 <div className="stat-box">
-                    <p className="stat-box__title">Shots Scored</p>
+                    <p className="stat-box__title">Successful Passes</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{scoredLifeTime}</p>
                         <p className="stat-box__regression">
@@ -133,7 +133,7 @@ export default function Shooting() {
                 </div>
 
                 <div className="stat-box">
-                    <p className="stat-box__title">Shots Attempted</p>
+                    <p className="stat-box__title">Attepted Passes</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{attemptedLifeTime}</p>
                         <p className="stat-box__regression">
@@ -145,7 +145,7 @@ export default function Shooting() {
                 </div>
 
                 <div className="stat-box">
-                    <p className="stat-box__title">Success Rate</p>
+                    <p className="stat-box__title">Avg. Pass Success Rate</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{successPercentage}</p>
                         <p className="stat-box__regression">
@@ -159,7 +159,7 @@ export default function Shooting() {
 
             <div className="flex">
                 <div className='flex flex-col align-center gap-1 h-full w-full'>
-                    <p>Chart title</p>
+                    <p>Last 30 Days: Missed vs. Landed</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
                             <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
@@ -169,7 +169,7 @@ export default function Shooting() {
                     </ResponsiveContainer>
                 </div>
                 <div className='flex flex-col align-center gap-1 h-full w-full'>
-                    <p>Chart title</p>
+                    <p>Lifetime: Missed vs. Landed</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
                             <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
@@ -181,7 +181,7 @@ export default function Shooting() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Chart Title</p>
+                <p>Last Seven Sessions: Pass Success Rate</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={500} height={300} data={sessionScores}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -196,7 +196,7 @@ export default function Shooting() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Chart title</p>
+                <p>Lifetime Overview: Pass Success Rate</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
