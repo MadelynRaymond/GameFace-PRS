@@ -300,7 +300,7 @@ async function seed() {
                 userId: user.id,
                 reportId: report_three.id,
                 unit: 'time',
-            }
+            },
         ],
     })
 
@@ -393,12 +393,9 @@ async function seed() {
                 userId: user.id,
                 reportId: report_three.id,
                 unit: 'decimal',
-            }
-    
-        ]
-
+            },
+        ],
     })
-
 
     console.log(`Database has been seeded. 🌱`)
 }

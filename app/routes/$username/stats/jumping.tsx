@@ -1,19 +1,19 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
-import { curveCardinal } from 'd3-shape'
-import { json, LoaderArgs } from '@remix-run/node'
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
+import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { useLoaderData } from '@remix-run/react'
 
-export async function loader({request}: LoaderArgs) {
+export async function loader({ request }: LoaderArgs) {
     const today = new Date()
     const priorDate = new Date(new Date().setDate(today.getDate() - 30))
     const userId = await requireUserId(request)
-    
+
     const jumpHeightEntries = await getEntriesByDrillLiteral({
         drillName: 'Jump Height Drill',
         userId,
-        interval: priorDate
+        interval: priorDate,
     })
 
     const jumpHeights = jumpHeightEntries.map((entry) => entry.value as number)
@@ -37,21 +37,17 @@ export async function loader({request}: LoaderArgs) {
             best: entry.entries[0].bestScore,
         })) as unknown as {
         created: string
-        height: number,
+        height: number
         best: number
     }[]
 
-
     const lastSessionAverage = sessionScoresJumpHeight[sessionScoresJumpHeight.length - 1].height
 
-    return json({averageJumpHeightMonth, bestJump, lastSessionAverage, sessionScoresJumpHeight})
-
-    
+    return json({ averageJumpHeightMonth, bestJump, lastSessionAverage, sessionScoresJumpHeight })
 }
 export default function Jumping() {
-    const cardinal = curveCardinal.tension(0.2)
 
-    const {bestJump, averageJumpHeightMonth, lastSessionAverage, sessionScoresJumpHeight} = useLoaderData<typeof loader>()
+    const { bestJump, averageJumpHeightMonth, lastSessionAverage, sessionScoresJumpHeight } = useLoaderData<typeof loader>()
     return (
         <div className="stat-grid">
             <div className="stat-box-group">
@@ -91,58 +87,67 @@ export default function Jumping() {
                 </div>
             </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="created" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="height" stackId="a" fill="#DF7861" />
-                </BarChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Average Jump Height (Lifetime)</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="height" stackId="a" fill="#DF7861" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="height" stackId="a" fill="#ECB390" />
-                </BarChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Best Jump Height (Lifetime)</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="height" stackId="a" fill="#ECB390" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    width={730}
-                    height={250}
-                    data={sessionScoresJumpHeight}
-                    margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <defs>
-                        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="created" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Best Jump Height (Last 7 Sessions)</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        width={730}
+                        height={250}
+                        data={sessionScoresJumpHeight}
+                        margin={{
+                            top: 10,
+                            right: 30,
+                            left: 0,
+                            bottom: 0,
+                        }}
+                    >
+                        <defs>
+                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                            </linearGradient>
+                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     )
 }

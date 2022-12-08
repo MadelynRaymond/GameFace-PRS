@@ -1,6 +1,6 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
-import { curveCardinal } from 'd3-shape'
-import { json, LoaderArgs } from '@remix-run/node'
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
+import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { useLoaderData } from '@remix-run/react'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
@@ -85,81 +85,90 @@ export default function Dribbling() {
                 </div>
             </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    width={730}
-                    height={250}
-                    data={sessionScores}
-                    margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <defs>
-                        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="created" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Average Dribbling Drill Completion Time</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        width={730}
+                        height={250}
+                        data={sessionScores}
+                        margin={{
+                            top: 10,
+                            right: 30,
+                            left: 0,
+                            bottom: 0,
+                        }}
+                    >
+                        <defs>
+                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    width={730}
-                    height={250}
-                    data={sessionScores}
-                    margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <defs>
-                        <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="created" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Average Dribbling Drill Completion Time</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        width={730}
+                        height={250}
+                        data={sessionScores}
+                        margin={{
+                            top: 10,
+                            right: 30,
+                            left: 0,
+                            bottom: 0,
+                        }}
+                    >
+                        <defs>
+                            <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                    width={500}
-                    height={300}
-                    data={sessionScores}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="created" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="best" fill="#8884d8" />
-                    <Bar dataKey="time" fill="#82ca9d" />
-                </BarChart>
-            </ResponsiveContainer>
+            <div className='flex flex-col align-center gap-1'>
+                <p>Average vs Best Dribbling Drill Completion Time</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                        width={500}
+                        height={300}
+                        data={sessionScores}
+                        margin={{
+                            top: 5,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="best" fill="#8884d8" />
+                        <Bar dataKey="time" fill="#82ca9d" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     )
 }

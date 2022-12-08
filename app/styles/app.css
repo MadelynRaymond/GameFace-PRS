@@ -47,6 +47,10 @@
   align-items: center;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .form-center {
   display: flex;
   align-items: center;
@@ -250,10 +254,6 @@
 }
 
 /*Dashboard pages*/
-.pie-container {
-  display: flex;
-}
-
 .overall-stat-table {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
