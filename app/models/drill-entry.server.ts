@@ -1,4 +1,4 @@
-import { Drill, User } from '@prisma/client'
+import type { Drill, User } from '@prisma/client'
 import { prisma } from '~/db.server'
 
 type DrillEntry = {
