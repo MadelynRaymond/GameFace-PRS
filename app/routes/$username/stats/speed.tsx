@@ -164,8 +164,8 @@ export default function Speed() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="best" fill="#8884d8" />
-                        <Bar dataKey="time" fill="#82ca9d" />
+                        <Bar dataKey="best" fill="#DF7861" />
+                        <Bar dataKey="time" fill="#ECB390" />
                     </BarChart>
                 </ResponsiveContainer>
             </div>
