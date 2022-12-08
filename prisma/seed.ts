@@ -54,6 +54,24 @@ async function seed() {
         },
     })
 
+    const passing = await prisma.exerciseCategory.create({
+        data: {
+            name: 'Passing',
+        },
+    })
+
+    const strength = await prisma.exerciseCategory.create({
+        data: {
+            name: 'Strength',
+        },
+    })
+
+    const jumping = await prisma.exerciseCategory.create({
+        data: {
+            name: 'Jumping',
+        },
+    })
+
     //step two: add drill
 
     const freeThrowDrill = await prisma.drill.create({
@@ -78,12 +96,56 @@ async function seed() {
         },
     })
 
+    const squatDrill = await prisma.drill.create({
+        data: {
+            name: 'Squat Drill',
+            category: {
+                connect: {
+                    id: strength.id,
+                },
+            },
+        },
+    })
+
+    const jumpDistanceDrill = await prisma.drill.create({
+        data: {
+            name: 'Jump Distance Drill',
+            category: {
+                connect: {
+                    id: strength.id,
+                },
+            },
+        },
+    })
+
     const speedDrill = await prisma.drill.create({
         data: {
             name: 'Speed Drill',
             category: {
                 connect: {
                     id: speed.id,
+                },
+            },
+        },
+    })
+
+    const PassingDrill = await prisma.drill.create({
+        data: {
+            name: 'Passing Drill',
+            category: {
+                connect: {
+                    id: passing.id,
+                },
+            },
+        },
+    })
+
+    const jumpHeightDrill = await prisma.drill.create({
+        data: {
+            name: 'Jump Height Drill',
+            category: {
+                connect: {
+                    id: jumping.id,
                 },
             },
         },
@@ -184,6 +246,159 @@ async function seed() {
             },
         ],
     })
+
+    await prisma.drillEntry.createMany({
+        data: [
+            {
+                drillId: jumpDistanceDrill.id,
+                //value -> time (seconds)
+                value: 3,
+                //bestScore -> best time for entry
+                bestScore: 4,
+                userId: user.id,
+                reportId: report.id,
+                unit: 'decimal',
+            },
+            {
+                drillId: jumpDistanceDrill.id,
+                value: 3,
+                bestScore: 3,
+                userId: user.id,
+                reportId: report_two.id,
+                unit: 'decimal',
+            },
+            {
+                drillId: jumpDistanceDrill.id,
+                value: 2,
+                bestScore: 4,
+                userId: user.id,
+                reportId: report_three.id,
+                unit: 'decimal',
+            },
+            {
+                drillId: squatDrill.id,
+                //value -> time (seconds)
+                value: 15,
+                //bestScore -> best time for entry
+                bestScore: 26,
+                userId: user.id,
+                reportId: report.id,
+                unit: 'time',
+            },
+            {
+                drillId: squatDrill.id,
+                value: 18,
+                bestScore: 25,
+                userId: user.id,
+                reportId: report_two.id,
+                unit: 'time',
+            },
+            {
+                drillId: squatDrill.id,
+                value: 22,
+                bestScore: 25,
+                userId: user.id,
+                reportId: report_three.id,
+                unit: 'time',
+            }
+        ],
+    })
+
+    await prisma.drillEntry.createMany({
+        data: [
+            {
+                drillId: PassingDrill.id,
+                //value -> time (seconds)
+                value: 24,
+                //bestScore -> best time for entry
+                outOf: 35,
+                userId: user.id,
+                reportId: report.id,
+                unit: 'integral',
+            },
+            {
+                drillId: PassingDrill.id,
+                value: 80,
+                outOf: 90,
+                userId: user.id,
+                reportId: report_two.id,
+                unit: 'integral',
+            },
+            {
+                drillId: PassingDrill.id,
+                value: 60,
+                outOf: 94,
+                userId: user.id,
+                reportId: report_three.id,
+                unit: 'integral',
+            },
+        ],
+    })
+
+    await prisma.drillEntry.createMany({
+        data: [
+            {
+                drillId: speedDrill.id,
+                //value -> time (seconds)
+                value: 75,
+                //bestScore -> best time for entry
+                bestScore: 55,
+                userId: user.id,
+                reportId: report.id,
+                unit: 'time',
+            },
+            {
+                drillId: speedDrill.id,
+                value: 80,
+                bestScore: 45,
+                userId: user.id,
+                reportId: report_two.id,
+                unit: 'time',
+            },
+            {
+                drillId: speedDrill.id,
+                value: 60,
+                bestScore: 39,
+                userId: user.id,
+                reportId: report_three.id,
+                unit: 'time',
+            },
+        ],
+    })
+
+    await prisma.drillEntry.createMany({
+        data: [
+            {
+                drillId: jumpHeightDrill.id,
+                //value -> time (seconds)
+                value: 2,
+                //bestScore -> best time for entry
+                bestScore: 4,
+                userId: user.id,
+                reportId: report.id,
+                unit: 'decimal',
+            },
+            {
+                drillId: jumpHeightDrill.id,
+                value: 3,
+                bestScore: 3,
+                userId: user.id,
+                reportId: report_two.id,
+                unit: 'decimal',
+            },
+            {
+                drillId: jumpHeightDrill.id,
+                value: 2,
+                bestScore: 3,
+                userId: user.id,
+                reportId: report_three.id,
+                unit: 'decimal',
+            }
+    
+        ]
+
+    })
+
 
     console.log(`Database has been seeded. 🌱`)
 }

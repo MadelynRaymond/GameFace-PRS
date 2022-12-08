@@ -1,76 +1,66 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import { curveCardinal } from 'd3-shape'
+import { json, LoaderArgs } from '@remix-run/node'
+import { requireUserId } from '~/session.server'
+import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { useLoaderData } from '@remix-run/react'
+
+export async function loader({request}: LoaderArgs) {
+    const today = new Date()
+    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
+    const userId = await requireUserId(request)
+    
+    const jumpHeightEntries = await getEntriesByDrillLiteral({
+        drillName: 'Jump Height Drill',
+        userId,
+        interval: priorDate
+    })
+
+    const jumpHeights = jumpHeightEntries.map((entry) => entry.value as number)
+    const averageJumpHeightMonth = (jumpHeights.reduce((sum, score) => score + sum, 0) / jumpHeightEntries.length).toFixed(2)
+    const bestJump = Math.max(...jumpHeights)
+
+    const monthlySessionJumpHeight = await getEntriesLastNReports({
+        drillName: 'Jump Height Drill',
+        userId,
+        sessions: 30,
+    })
+
+    const sessionScoresJumpHeight = monthlySessionJumpHeight
+        .flatMap((report) => ({
+            entries: report.entries,
+            created: report.created_at,
+        }))
+        .map((entry) => ({
+            created: entry.created.toDateString(),
+            height: entry.entries[0].value,
+            best: entry.entries[0].bestScore,
+        })) as unknown as {
+        created: string
+        height: number,
+        best: number
+    }[]
+
+
+    const lastSessionAverage = sessionScoresJumpHeight[sessionScoresJumpHeight.length - 1].height
+
+    return json({averageJumpHeightMonth, bestJump, lastSessionAverage, sessionScoresJumpHeight})
+
+    
+}
 export default function Jumping() {
     const cardinal = curveCardinal.tension(0.2)
 
-    const pie = [
-        {
-            name: 'Shots Attempted',
-            value: 55,
-            fill: '#DF7861',
-        },
-        {
-            name: 'Shots Scored',
-            value: 25,
-            fill: '#ECB390',
-        },
-    ]
-
-    const data = [
-        {
-            name: 'Page A',
-            uv: 4000,
-            pv: 2400,
-            amt: 2400,
-        },
-        {
-            name: 'Page B',
-            uv: 3000,
-            pv: 1398,
-            amt: 2210,
-        },
-        {
-            name: 'Page C',
-            uv: 2000,
-            pv: 9800,
-            amt: 2290,
-        },
-        {
-            name: 'Page D',
-            uv: 2780,
-            pv: 3908,
-            amt: 2000,
-        },
-        {
-            name: 'Page E',
-            uv: 1890,
-            pv: 4800,
-            amt: 2181,
-        },
-        {
-            name: 'Page F',
-            uv: 2390,
-            pv: 3800,
-            amt: 2500,
-        },
-        {
-            name: 'Page G',
-            uv: 3490,
-            pv: 4300,
-            amt: 2100,
-        },
-    ]
-
+    const {bestJump, averageJumpHeightMonth, lastSessionAverage, sessionScoresJumpHeight} = useLoaderData<typeof loader>()
     return (
         <div className="stat-grid">
             <div className="stat-box-group">
                 <div className="stat-box">
                     <p className="stat-box__title">Avg. Jump (Height)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">3,028</p>
+                        <p className="stat-box__figure">{averageJumpHeightMonth}</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -79,7 +69,7 @@ export default function Jumping() {
                 <div className="stat-box">
                     <p className="stat-box__title">Overall Highest Jump</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">3,028</p>
+                        <p className="stat-box__figure">{bestJump}</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
                             4.1%
@@ -91,7 +81,7 @@ export default function Jumping() {
                 <div className="stat-box">
                     <p className="stat-box__title">Last Session: Avg. Jump (Height)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">3,028</p>
+                        <p className="stat-box__figure">{lastSessionAverage}</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
                             4.1%
@@ -102,24 +92,24 @@ export default function Jumping() {
             </div>
 
             <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={data}>
+                <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="created" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="pv" stackId="a" fill="#DF7861" />
+                    <Bar dataKey="height" stackId="a" fill="#DF7861" />
                 </BarChart>
             </ResponsiveContainer>
 
             <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={data}>
+                <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="uv" stackId="a" fill="#ECB390" />
+                    <Bar dataKey="height" stackId="a" fill="#ECB390" />
                 </BarChart>
             </ResponsiveContainer>
 
@@ -127,7 +117,7 @@ export default function Jumping() {
                 <AreaChart
                     width={730}
                     height={250}
-                    data={data}
+                    data={sessionScoresJumpHeight}
                     margin={{
                         top: 10,
                         right: 30,
@@ -145,13 +135,12 @@ export default function Jumping() {
                             <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
                         </linearGradient>
                     </defs>
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="created" />
                     <YAxis />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Area type="monotone" dataKey="uv" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                    <Area type="monotone" dataKey="pv" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
+                    <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
                 </AreaChart>
             </ResponsiveContainer>
         </div>
