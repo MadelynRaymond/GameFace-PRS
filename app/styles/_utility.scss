@@ -11,6 +11,14 @@
   color: red;
 }
 
+.bold {
+  font-weight: 700;
+}
+
+.semi-bold {
+  font-weight: 500;
+}
+
 .flex {
   display: flex;
 }
@@ -46,6 +54,10 @@
 
 .align-center {
   align-items: center;
+}
+
+.flex-col {
+  flex-direction: column;
 }
 
 

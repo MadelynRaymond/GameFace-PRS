@@ -139,38 +139,41 @@ $dark-primary: #0a0c10;
   padding: 0 1rem;
   display: grid;
   grid-template-columns: repeat(2, minmax(400px, 900px));
-  grid-template-rows: 350px 350px;
+  grid-template-rows: repeat(2, minmax(350px, 375px));
   gap: 2rem;
 
 
 }
 
 .stat-box-group {
-  padding-left: 2rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  justify-content: space-between;
-  align-items: center;
+  padding: 2rem;
 }
 
 .stat-box {
-  flex: 0;
-  flex-basis: 200px;
   background-color: rgba(236, 236, 236, 0.404);
+  min-width: 250px;
   border-radius: 8px;
   padding: 1rem;
 
 
+  &__title {
+    height: 2.5rem;
+  }
+
+
   &__data {
     display: flex;
-    justify-content: center;
-    flex-direction: column;
     align-items: center;
-    margin: 2.75rem 3.5rem;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: 2rem;
   }
 
   &__figure {
-    font-size: 3rem;
+    font-size: 2.75rem;
     font-weight: 600;
   }
 
@@ -229,9 +232,6 @@ $dark-primary: #0a0c10;
 
 
 /*Dashboard pages*/
-.pie-container{
-  display: flex;
-}
 
 .overall-stat-table{
   display: grid;
@@ -369,20 +369,24 @@ $dark-primary: #0a0c10;
 .athlete-overview-container {
   display: flex;
   width: 100%;
-  justify-content: space-between;
   gap: 1rem;
-  max-width: 1400px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
 .athlete-reports {
   height: 800px;
-  width: 800px;
+  width: 600px;
   background-color: gray;
 }
 
 .athlete-report-form {
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 800px;
+  overflow-y: auto;
+  padding: 0 1rem;
 }
 /* Registration Page */
 

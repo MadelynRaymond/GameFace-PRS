@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
@@ -26,8 +26,8 @@ export async function loader({ request }: LoaderArgs) {
 
     const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
         .flatMap((entry) => ({
-            value: entry.score?.value as number,
-            outOf: entry.score?.outOf as number,
+            value: entry.value as number,
+            outOf: entry.outOf as number,
         }))
         .reduce(
             (result, curr) => {
@@ -44,8 +44,8 @@ export async function loader({ request }: LoaderArgs) {
 
     const { scored: scoredLastMonth, attempted: attemptedLastMonth } = freeThrowsLastMonth
         .flatMap((entry) => ({
-            value: entry.score?.value as number,
-            outOf: entry.score?.outOf as number,
+            value: entry.value as number,
+            outOf: entry.outOf as number,
         }))
         .reduce(
             (result, curr) => {
@@ -68,14 +68,16 @@ export async function loader({ request }: LoaderArgs) {
             created: report.created_at,
         }))
         .map((entry) => ({
-            created: entry.created,
-            value: entry.entries[0].score?.value,
-            outOf: entry.entries[0].score?.outOf,
+            created: entry.created.toDateString(),
+            scored: entry.entries[0].value,
+            attempted: entry.entries[0].outOf,
         })) as unknown as {
         created: string
-        value: number
-        outOf: number
+        scored: number
+        attempted: number
     }[]
+
+    const sessionPercentChange = sessionScores.map((score) => ({ value: Math.floor((score.scored / score.attempted) * 100), created: score.created }))
 
     return json({
         sessionScores,
@@ -84,10 +86,11 @@ export async function loader({ request }: LoaderArgs) {
         successPercentage,
         scoredLastMonth,
         attemptedLastMonth,
+        sessionPercentChange,
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth } = useLoaderData<typeof loader>()
+    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } = useLoaderData<typeof loader>()
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
@@ -113,12 +116,6 @@ export default function Shooting() {
             fill: '#ECB390',
         },
     ]
-
-    const scoresOverSessions = sessionScores.map((score) => ({
-        name: score.created,
-        scored: score.value,
-        attempted: score.outOf,
-    }))
 
     return (
         <div className="stat-grid">
@@ -160,66 +157,77 @@ export default function Shooting() {
                 </div>
             </div>
 
-            <div className="pie-container">
+            <div className='flex'>
+                <div className='flex flex-col align-center gap-1 h-full w-full'>
+                    <p>Last 30 Days: Shots Landed/Attempted</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart width={800} height={400}>
+                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" align="center" />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1 h-full w-full">
+                    <p>Lifetime Overview: Shots Landed/Attempted</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart width={800} height={400}>
+                            <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" align="center" />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+
+            <div className="flex flex-col align-center gap-1">
+                <p>Last Seven Sessions: Shots Landed vs. Attempted</p>
                 <ResponsiveContainer width="100%" height="100%">
-                    <PieChart width={800} height={400}>
-                        <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                    <BarChart width={500} height={300} data={sessionScores}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="created" />
+                        <YAxis />
                         <Tooltip />
-                        <Legend verticalAlign="bottom" align="center" />
-                    </PieChart>
-                </ResponsiveContainer>
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart width={800} height={400}>
-                        <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
-                        <Tooltip />
-                        <Legend verticalAlign="bottom" align="center" />
-                    </PieChart>
+                        <Legend />
+                        <Bar dataKey="scored" stackId="a" fill="#DF7861" />
+                        <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
 
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart width={500} height={300} data={scoresOverSessions}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="scored" stackId="a" fill="#DF7861" />
-                    <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
-                </BarChart>
-            </ResponsiveContainer>
-
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    width={730}
-                    height={250}
-                    data={scoresOverSessions}
-                    margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <defs>
-                        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    <Area type="monotone" dataKey="scored" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                    <Area type="monotone" dataKey="attempted" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col align-center gap-1">
+                <p>Lifetime Overview: Shots over Time</p>
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        width={730}
+                        height={250}
+                        data={sessionPercentChange}
+                        margin={{
+                            top: 10,
+                            right: 30,
+                            left: 0,
+                            bottom: 0,
+                        }}
+                    >
+                        <defs>
+                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                            </linearGradient>
+                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="created" />
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     )
 }
