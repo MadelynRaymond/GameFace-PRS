@@ -86,7 +86,7 @@ export default function Dribbling() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Average Dribbling Drill Completion Time</p>
+                <p>Last Seven Sessions: Avg. Dribbling Drill Completion Time</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
@@ -116,7 +116,7 @@ export default function Dribbling() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Average Dribbling Drill Completion Time</p>
+                <p>Last 30 Days: Avg. Dribbling Drill Completion Time</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
@@ -146,7 +146,7 @@ export default function Dribbling() {
             </div>
 
             <div className='flex flex-col align-center gap-1'>
-                <p>Average vs Best Dribbling Drill Completion Time</p>
+                <p>Lifetime Overview: Avg. vs. Best Dribbling Drill Completion Time</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         width={500}
@@ -164,8 +164,8 @@ export default function Dribbling() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="best" fill="#8884d8" />
-                        <Bar dataKey="time" fill="#82ca9d" />
+                        <Bar dataKey="best" fill="#DF7861" />
+                        <Bar dataKey="time" fill="#ECB390" />
                     </BarChart>
                 </ResponsiveContainer>
             </div>

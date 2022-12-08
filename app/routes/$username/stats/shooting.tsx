@@ -159,7 +159,7 @@ export default function Shooting() {
 
             <div className='flex'>
                 <div className='flex flex-col align-center gap-1 h-full w-full'>
-                    <p>Chart title</p>
+                    <p>Last 30 Days: Shots Landed/Attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
                             <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
@@ -169,7 +169,7 @@ export default function Shooting() {
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 h-full w-full">
-                    <p>Chart title</p>
+                    <p>Lifetime Overview: Shots Landed/Attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
                             <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
@@ -181,7 +181,7 @@ export default function Shooting() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Chart Title</p>
+                <p>Last Seven Sessions: Shots Landed vs. Attempted</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={500} height={300} data={sessionScores}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -196,7 +196,7 @@ export default function Shooting() {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-                <p>Chart title</p>
+                <p>Lifetime Overview: Shots over Time</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         width={730}
