@@ -402,6 +402,10 @@ $dark-primary: #0a0c10;
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+
+  > div {
+    flex: 1;
+  }
 }
 
 .register-link{

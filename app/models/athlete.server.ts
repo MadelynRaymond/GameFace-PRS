@@ -35,6 +35,7 @@ export async function getAthleteById(athleteId: User['id']) {
             id: athleteId,
         },
         select: {
+            id: true,
             email: true,
             profile: true,
         },

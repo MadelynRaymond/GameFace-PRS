@@ -414,6 +414,9 @@
   gap: 1rem;
   justify-content: space-between;
 }
+.registration-form-row > div {
+  flex: 1;
+}
 
 .register-link {
   text-decoration: underline;
