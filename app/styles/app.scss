@@ -424,3 +424,44 @@ $dark-primary: #0a0c10;
 .registration-form-header p span{
   text-decoration: underline;
 }
+
+.profile-container{
+  margin: 2rem 25rem;
+  padding:4rem 3rem;
+  margin-top: 0;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4rem;  
+
+}
+
+.profile-container-row{
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  
+}
+
+
+
+
+
+
+.profile-banner{
+  margin: 0rem 25rem;
+  padding:4rem 3rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  background-color: #DF7861;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-banner button{
+  margin-bottom: 1rem;
+  background-color: black;
+  color: white;
+  border-radius: 3px;
+}
