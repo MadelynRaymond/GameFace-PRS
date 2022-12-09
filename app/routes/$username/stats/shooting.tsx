@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { useLoaderData } from '@remix-run/react'
+import { useCatch, useLoaderData } from '@remix-run/react'
 
 export async function loader({ request }: LoaderArgs) {
     const today = new Date()
@@ -23,6 +23,12 @@ export async function loader({ request }: LoaderArgs) {
         userId,
         interval: priorDate,
     })
+
+    const insufficientData = [lastSevenSessions, freeThrowsLastMonth, freeThrowsLifeTime].some(stat => stat.length === 0)
+
+    if (insufficientData) {
+        throw new Response("Not enough data", {status: 404})
+    }
 
     const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
         .flatMap((entry) => ({
@@ -230,4 +236,16 @@ export default function Shooting() {
             </div>
         </div>
     )
+}
+
+export function CatchBoundary() {
+    const caught = useCatch();
+  
+    if (caught.status === 404) {
+      return <div className='flex justify-center'>
+        <h2>Not enough data</h2>
+      </div>;
+    }
+  
+    throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }

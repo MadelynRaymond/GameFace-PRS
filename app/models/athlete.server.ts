@@ -48,6 +48,7 @@ export async function getAthleteWithReports(athleteId: User['id']) {
             id: athleteId,
         },
         select: {
+            id: true,
             reports: {
                 select: {
                     id: true,
