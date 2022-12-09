@@ -14,19 +14,18 @@ export async function loader({ request, params }: LoaderArgs) {
     }
 
     return json({
-        profile: athlete.profile,
-        email: athlete.email,
+        username: athlete.username
     })
 }
 export default function Stats() {
-    const { email } = useLoaderData<typeof loader>()
+    const { username } = useLoaderData<typeof loader>()
     const location = useLocation()
 
     return (
         <>
             <div className="stats-menu">
                 <div className="stats-menu__items">
-                    <NavLink className={location.pathname === `/${email}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${email}/stats`}>
+                    <NavLink className={location.pathname === `/${username}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${username}/stats`}>
                         Overall
                     </NavLink>
                     {['Speed', 'Shooting', 'Dribbling', 'Passing', 'Strength', 'Jumping'].map((category, i) => (
