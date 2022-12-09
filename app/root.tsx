@@ -5,7 +5,7 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Form, Link, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
 import { getUser } from './session.server'
-import Basketball from "~/assets/basketballprofilepic.png"
+import Basketball from '~/assets/basketballprofilepic.png'
 
 export const meta: MetaFunction = () => ({
     charset: 'utf-8',
@@ -45,7 +45,10 @@ function Navbar() {
             <div>
                 <div className="logo">
                     <Link to={'/'}>
-                        <img src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_564,h_564,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png" alt="" />
+                        <img
+                            src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_564,h_564,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png"
+                            alt=""
+                        />
                     </Link>
                 </div>
                 <div>
@@ -53,10 +56,11 @@ function Navbar() {
                         <li>
                             <a href="https://www.gameface413.org/">Home</a>
                         </li>
-                        <li>
-                            <Link to={`${user?.username}/stats`}>My Stats</Link>
-                        </li>
-
+                        {user && (
+                            <li>
+                                <Link to={`${user?.username}/stats`}>My Stats</Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
