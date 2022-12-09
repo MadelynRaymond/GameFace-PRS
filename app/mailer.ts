@@ -55,6 +55,6 @@ export async function createResetToken(userEmail: string): Promise<string | unde
           },
       },
       'SECRET',
-      { expiresIn: '10m' }
+      { expiresIn: '5m' }
   )
 }

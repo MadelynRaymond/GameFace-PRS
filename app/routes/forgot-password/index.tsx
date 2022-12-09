@@ -1,7 +1,10 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, useActionData } from '@remix-run/react'
-import { isProbablyEmail, sendEmail } from '~/util'
+import { Form, useActionData, useTransition } from '@remix-run/react'
+import { sendEmail } from '~/mailer'
+import { createTokenForUser } from '~/models/token.server'
+import { getUserByEmail } from '~/models/user.server'
+import { isProbablyEmail } from '~/util'
 
 export async function action({ request }: ActionArgs) {
     const formData = await request.formData()
@@ -24,12 +27,32 @@ export async function action({ request }: ActionArgs) {
             { status: 400 }
         )
     }
+    const user = await getUserByEmail(email)
+
+    if (!user) {
+        throw new Response("Not Found", {status: 404})
+    }
+    const token = await createTokenForUser(email)
+
+    if (!token) {
+        throw new Response("Unexpected Error Occured", {status: 500})
+    }
+    
+    const resetLink = `http://10.0.0.246:3000/reset-password/link?id=${user.id}&token=${token.token}`
+    await sendEmail(
+        {
+            subject: 'Reset Password',
+            body: resetLink,
+        },
+        email
+    )
 
     return redirect(email)
 }
 
 export default function Index() {
     const actionData = useActionData<typeof action>()
+    const transition = useTransition();
     return (
         <div
             style={{
@@ -41,7 +64,7 @@ export default function Index() {
                 <h1>Forgot Password</h1>
                 <input type="text" name="email" id="email" placeholder="Account Email" />
                 <span className="error-text">{actionData?.error}</span>
-                <input type="submit" value="Send reset link" />
+                <input disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
             </Form>
         </div>
     )

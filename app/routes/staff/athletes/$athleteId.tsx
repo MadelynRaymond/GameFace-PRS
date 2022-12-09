@@ -1,4 +1,5 @@
-import { ActionArgs, LoaderArgs, redirect } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs} from '@remix-run/node';
+import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import React from 'react'
