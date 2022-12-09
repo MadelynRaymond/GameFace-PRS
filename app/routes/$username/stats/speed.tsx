@@ -3,13 +3,16 @@ import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { useCatch, useLoaderData } from '@remix-run/react'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { getEntriesAverage, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dbTimeToString } from '~/util'
 
 export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
+    const today = new Date()
+    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
 
-    const entries = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId })
+    const dbAverageTimeMonth = await getEntriesAverage({drillName: 'Speed Drill', userId, interval: priorDate})
+    const dbBestTimeMonth = await getEntriesMin({drillName: 'Speed Drill', userId, interval: priorDate})
 
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Speed Drill',
@@ -17,16 +20,14 @@ export async function loader({ request }: LoaderArgs) {
         sessions: 7,
     })
 
-    const insufficientData = [entries, lastSevenSessions].some(entry => entry.length === 0)
+    const insufficientData = [lastSevenSessions].some(entry => entry.length === 0)
 
     if (insufficientData) {
         throw new Response("Not enough data", {status: 404})
     }
 
-    const times = entries.map((entry) => entry.value as number)
-    const bestTimes = entries.map((entry) => entry.bestScore as number)
-    const averageTimeMonth = dbTimeToString(Math.floor(times.reduce((sum, score) => score + sum, 0) / entries.length))
-    const bestTimeMonth = dbTimeToString(Math.min(...bestTimes))
+    const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
+    const bestTimeMonth = dbTimeToString(dbBestTimeMonth._min.bestScore)
 
     const sessionScores = lastSevenSessions
         .flatMap((report) => ({
@@ -48,13 +49,13 @@ export async function loader({ request }: LoaderArgs) {
     return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage })
 }
 export default function Speed() {
-    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage } = useLoaderData<typeof loader>()
+    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage} = useLoaderData<typeof loader>()
 
     return (
         <div className="stat-grid">
             <div className="stat-box-group">
                 <div className="stat-box">
-                    <p className="stat-box__title">Overall Avg. Speed</p>
+                    <p className="stat-box__title">Overall (Avg time)</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{averageTimeMonth}</p>
                         <p className="stat-box__regression">
