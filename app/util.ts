@@ -29,9 +29,12 @@ export function validateGrade(grade: unknown): grade is number {
     return typeof grade === 'number' && grade >= 6
 } 
 
-export function dbTimeToString(dbTime: number): string {
-    const minutes = Math.floor(dbTime / 60)
-    const seconds = dbTime % 60
+export function dbTimeToString(dbTime: number | null): string {
+    if (dbTime === null) return 'No Data'
+    
+    const normalized = Math.floor(dbTime)
+    const minutes = Math.floor(Math.floor(normalized) / 60)
+    const seconds = normalized % 60
 
     return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`
 }

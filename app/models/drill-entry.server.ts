@@ -12,17 +12,15 @@ type DrillEntry = {
 
 export async function createEntryOnReport(reportId: number, entries: DrillEntry[]) {
     return prisma.drillEntry.createMany({
-        data: entries.map(entry => {
+        data: entries.map((entry) => {
             const { userId, drillId, ...score } = entry
-            return (
-                {
-                    userId,
-                    drillId,
-                    reportId,
-                    ...score
-                }
-            )
-        })
+            return {
+                userId,
+                drillId,
+                reportId,
+                ...score,
+            }
+        }),
     })
 }
 
@@ -54,7 +52,15 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
     })
 }
 
-export async function getEntriesByDrillLiteral({ drillName, userId, interval = new Date() }: { drillName: Drill['name']; userId: User['id']; interval?: Date }) {
+export async function getEntriesByDrillLiteral({
+    drillName,
+    userId,
+    interval = new Date(),
+}: {
+    drillName: Drill['name']
+    userId: User['id']
+    interval?: Date
+}) {
     return prisma.drillEntry.findMany({
         select: {
             value: true,
@@ -70,5 +76,95 @@ export async function getEntriesByDrillLiteral({ drillName, userId, interval = n
                 id: userId,
             },
         },
+    })
+}
+
+export async function getEntriesAverage({
+    drillName,
+    userId,
+    interval = new Date(),
+}: {
+    drillName: Drill['name']
+    userId: User['id']
+    interval?: Date
+}) {
+    
+    return prisma.drillEntry.aggregate({
+        _avg: {
+            value: true,
+            bestScore: true
+        },
+        where: {
+            user: {
+                id: userId
+            },
+            drill: {
+                name: drillName
+            },
+            created_at: {
+                gte: interval,
+                lte: new Date()
+            }
+        }
+    })
+}
+
+export async function getEntriesMax({
+    drillName,
+    userId,
+    interval = new Date(),
+}: {
+    drillName: Drill['name']
+    userId: User['id']
+    interval?: Date
+}) {
+    
+    return prisma.drillEntry.aggregate({
+        _max: {
+            value: true,
+            bestScore: true
+        },
+        where: {
+            user: {
+                id: userId
+            },
+            drill: {
+                name: drillName
+            },
+            created_at: {
+                gte: interval,
+                lte: new Date()
+            }
+        }
+    })
+}
+
+export async function getEntriesMin({
+    drillName,
+    userId,
+    interval = new Date(),
+}: {
+    drillName: Drill['name']
+    userId: User['id']
+    interval?: Date
+}) {
+    
+    return prisma.drillEntry.aggregate({
+        _min: {
+            value: true,
+            bestScore: true
+        },
+        where: {
+            user: {
+                id: userId
+            },
+            drill: {
+                name: drillName
+            },
+            created_at: {
+                gte: interval,
+                lte: new Date()
+            }
+        }
     })
 }

@@ -13,7 +13,7 @@ type Profile = {
 }
 
 export async function getUserById(id: User['id']) {
-    return prisma.user.findUnique({ where: { id } })
+    return prisma.user.findUnique({ where: { id }, include: {profile: true} })
 }
 
 export async function getUserByEmail(email: User['email']) {

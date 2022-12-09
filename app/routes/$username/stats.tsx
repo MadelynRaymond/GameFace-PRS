@@ -3,34 +3,29 @@ import { json, Response } from '@remix-run/node'
 import { NavLink, Outlet, useCatch, useLoaderData, useLocation } from '@remix-run/react'
 import invariant from 'tiny-invariant'
 import { getAthleteById } from '~/models/athlete.server'
-import { requireUserId } from '~/session.server'
+import { requireUser, requireUserId } from '~/session.server'
 
 export async function loader({ request, params }: LoaderArgs) {
-    const userId = await requireUserId(request)
+    const athlete = await requireUser(request)
     invariant(params.username, "username not found")
-    const athlete = await getAthleteById(userId)
 
     if (!athlete) {
         throw new Response('Not Found', { status: 404 })
     }
 
-    if(params.username !== athlete.username) {
-        throw new Response("Not Authorized", {status: 400})
-    }
     return json({
-        profile: athlete.profile,
-        email: athlete.email,
+        username: athlete.username
     })
 }
 export default function Stats() {
-    const { profile, email } = useLoaderData<typeof loader>()
+    const { username } = useLoaderData<typeof loader>()
     const location = useLocation()
 
     return (
         <>
             <div className="stats-menu">
                 <div className="stats-menu__items">
-                    <NavLink className={location.pathname === `/${email}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${email}/stats`}>
+                    <NavLink className={location.pathname === `/${username}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${username}/stats`}>
                         Overall
                     </NavLink>
                     {['Speed', 'Shooting', 'Dribbling', 'Passing', 'Strength', 'Jumping'].map((category, i) => (
