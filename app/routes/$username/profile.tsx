@@ -42,14 +42,6 @@ export default function Profile() {
                     <h3>School:</h3>
                     <p>{profile?.school}</p>
                 </div>
-                <div>
-                    <h3>Emergency Contact</h3>
-                    <p>Jane Doe</p>
-                </div>
-                <div>
-                    <h3>Emergency Contact Email</h3>
-                    <p>janedoe11@yahoo</p>
-                </div>
             </div>
         </div>
     )
