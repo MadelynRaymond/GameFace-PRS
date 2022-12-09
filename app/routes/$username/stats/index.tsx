@@ -1,7 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { getEntriesAverage, getEntriesMax, getEntriesMin, getEntriesTotal } from '~/models/drill-entry.server'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getEntriesAverage, getEntriesLastNReports, getEntriesMax, getEntriesMin, getEntriesTotal } from '~/models/drill-entry.server'
 import { requireUserId } from '~/session.server'
 import { dbTimeToString } from '~/util'
 
@@ -50,6 +51,48 @@ export async function loader({ request }: LoaderArgs) {
     const highestJump = dbJumpHeightBest._max.bestScore
     const averageJump = dbJumpHeightAverage._avg.value
 
+    const sessionLifeTimeSquat = await getEntriesLastNReports({
+        drillName: 'Squat Drill',
+        userId,
+        sessions: 100,
+    })
+
+    const sessionScoresSquat = sessionLifeTimeSquat
+        .flatMap((report) => ({
+            entries: report.entries,
+            created: report.created_at,
+        }))
+        .map((entry) => ({
+            created: entry.created.toDateString(),
+            time: entry.entries[0].value,
+            best: entry.entries[0].bestScore,
+        })) as unknown as {
+        created: string
+        time: number
+        best: number
+    }[]
+
+    const sessionBestSpeed = await getEntriesLastNReports({
+        drillName: 'Speed Drill',
+        userId,
+        sessions: 100,
+    })
+
+    const sessionScoresSpeed = sessionBestSpeed
+        .flatMap((report) => ({
+            entries: report.entries,
+            created: report.created_at,
+        }))
+        .map((entry) => ({
+            created: entry.created.toDateString(),
+            time: entry.entries[0].value,
+            best: entry.entries[0].bestScore,
+        })) as unknown as {
+        created: string
+        time: number
+        best: number
+    }[]
+
     return json({
         fastestSpeed,
         averageSpeed,
@@ -63,6 +106,8 @@ export async function loader({ request }: LoaderArgs) {
         averageJump,
         squatAverage,
         squatBest,
+        sessionScoresSquat,
+        sessionScoresSpeed,
     })
 }
 
@@ -79,8 +124,23 @@ export default function Overall() {
         highestJump,
         averageJump,
         squatAverage,
-        squatBest
+        squatBest,
+        sessionScoresSquat,
+        sessionScoresSpeed,
     } = useLoaderData<typeof loader>()
+
+    const lifetimePie = [
+        {
+            name: 'Shots Attempted (lifetime)',
+            value: shotsAttempted,
+            fill: '#DF7861',
+        },
+        {
+            name: 'Shots Scored (lifetime)',
+            value: shotsMade,
+            fill: '#ECB390',
+        },
+    ]
 
     return (
         <div>
@@ -89,15 +149,15 @@ export default function Overall() {
                     <h2>Training Report Card</h2>
                     <p>Current Year (2022)</p>
                 </div>
-                <div className="button-group">
+                <div style={{visibility: 'hidden'}} className="button-group">
                     <div className="filter-button-group">
                         <button className="filter-button">Month</button>
                         <button className="filter-button">Year</button>
                         <button className="filter-button">Lifetime</button>
                     </div>
                     <div className="export-button-group">
-                        <button className="export-button">Print Icon</button>
-                        <button className="export-button">Export Icon</button>
+                        <button style={{visibility: 'visible'}} className="export-button">Print Icon</button>
+                        <button style={{display: 'none'}}className="export-button">Export Icon</button>
                     </div>
                 </div>
             </div>
@@ -170,7 +230,60 @@ export default function Overall() {
                     </div>
                 </div>
             </div>
-            <div className="overall-graph-container"></div>
+            <div className="overall-graph-container">
+                <div className="flex flex-col align-center gap-1">
+                    <p>Avg. Squat Lifetime</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={730} height={250} data={sessionScoresSquat}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="time" stackId="a" fill="#ECB390" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1">
+                    <p>Shots Made vs Attempted (lifetime)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart width={800} height={400}>
+                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" align="center" />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1">
+                    <p>Lifetime Overview: Best Speed Drill</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                            width={730}
+                            height={250}
+                            data={sessionScoresSpeed}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <defs>
+                                <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Legend />
+                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
         </div>
     )
 }

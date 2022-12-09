@@ -265,12 +265,14 @@
 /*Dashboard pages*/
 .overall-stat-table {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  align-items: flex-end;
   gap: 1rem;
   margin: 2rem 4rem;
 }
 
 .stat-row {
+  height: 100%;
   background-color: rgb(235, 235, 235);
   border-radius: 0.5rem;
   padding: 1.25rem;
@@ -278,6 +280,7 @@
   grid-template-columns: repeat(3, 1fr);
   font-weight: bold;
   align-items: center;
+  align-content: center;
 }
 .stat-row > * {
   width: 100%;
