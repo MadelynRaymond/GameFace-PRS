@@ -33,6 +33,8 @@ async function seed() {
                     grade: '9',
                     firstName: 'Rachel',
                     lastName: 'Wilson',
+                    school: "Port St Lucie High",
+                    age: "14"
                 },
             },
         },
