@@ -1,6 +1,6 @@
 import type { Token, User } from '@prisma/client'
 import { prisma } from '~/db.server'
-import { createResetToken } from '~/util'
+import { createResetToken } from '~/mailer'
 
 export async function createTokenForUser(email: User['email']): Promise<Token | null> {
     const existing = await prisma.token.findUnique({
