@@ -59,7 +59,7 @@ export async function action({ request }: ActionArgs) {
         request,
         userId: user.id,
         remember: true,
-        redirectTo: `/${user.email}/stats`,
+        redirectTo: `/${user.username}/stats`,
     })
 }
 
