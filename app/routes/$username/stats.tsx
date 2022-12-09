@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { NavLink, Outlet, useLoaderData, useLocation } from '@remix-run/react'
+import { NavLink, Outlet, useCatch, useLoaderData, useLocation } from '@remix-run/react'
 import { getAthleteById } from '~/models/athlete.server'
 import { requireUserId } from '~/session.server'
 

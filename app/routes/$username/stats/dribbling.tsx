@@ -2,7 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
-import { useLoaderData } from '@remix-run/react'
+import { useCatch, useLoaderData } from '@remix-run/react'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { dbTimeToString } from '~/util'
 
@@ -20,6 +20,12 @@ export async function loader({ request }: LoaderArgs) {
         userId,
         sessions: 7,
     })
+
+    const insufficientData = [entries, lastSevenSessions].some(entry => entry.length === 0)
+
+    if (insufficientData) {
+        throw new Response("Not enough data", {status: 404})
+    }
 
     const sessionScores = lastSevenSessions
         .flatMap((report) => ({
@@ -173,3 +179,14 @@ export default function Dribbling() {
     )
 }
 
+export function CatchBoundary() {
+    const caught = useCatch();
+  
+    if (caught.status === 404) {
+      return <div className='flex justify-center'>
+        <h2>Not enough data</h2>
+      </div>;
+    }
+  
+    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+}

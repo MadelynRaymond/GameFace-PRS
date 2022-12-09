@@ -3,7 +3,7 @@ import { requireUserId } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useCatch, useLoaderData } from '@remix-run/react'
 
 export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
@@ -11,6 +11,12 @@ export async function loader({ request }: LoaderArgs) {
     const jumpDistanceentries = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId })
     const squatEntries = await getEntriesByDrillLiteral({ drillName: 'Squat Drill', userId })
     const distances = jumpDistanceentries.map((entry) => entry.value as number)
+
+    const insufficientData = [squatEntries, jumpDistanceentries].some(entry => entry.length === 0)
+
+    if (insufficientData) {
+        throw new Response("Not enough data", {status: 404})
+    }
 
     const bestDistancesMonth = jumpDistanceentries.map((entry) => entry.bestScore as number)
     const bestDistance = Math.max(...bestDistancesMonth)
@@ -157,4 +163,16 @@ export default function Strength() {
             </div>
         </div>
     )
+}
+
+export function CatchBoundary() {
+    const caught = useCatch();
+  
+    if (caught.status === 404) {
+      return <div className='flex justify-center'>
+        <h2>Not enough data</h2>
+      </div>;
+    }
+  
+    throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }
