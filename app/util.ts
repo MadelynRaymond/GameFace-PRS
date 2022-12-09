@@ -9,6 +9,26 @@ export function isProbablyEmail(email: unknown): email is string {
     return typeof email === 'string' && email.length > 3 && email.includes('@')
 }
 
+export function validateName(name: unknown): name is string {
+    return typeof name === 'string' && name.length >= 3
+}
+
+export function validatePassword(password: unknown, expectedLength: number): password is string {
+    return typeof password === 'string' && password.length >= expectedLength
+}
+
+export function validateAge(age: unknown): age is number {
+    return typeof age === 'number' && age >= 10
+}
+
+export function validateRequired(field: unknown): field is string {
+    return typeof field === 'string' && field.length > 0
+}
+
+export function validateGrade(grade: unknown): grade is number {
+    return typeof grade === 'number' && grade >= 6
+} 
+
 export function dbTimeToString(dbTime: number): string {
     const minutes = Math.floor(dbTime / 60)
     const seconds = dbTime % 60

@@ -17,14 +17,13 @@ $dark-primary: #0a0c10;
   font-size: 1rem;
   background-color: rgb(255, 255, 255);
   color: black;
-  
-  font-weight: bold;
+
   & > div, & > div ul {
     
-    gap: 1rem;
+    gap: 2rem;
     display: flex;
     align-items: center;
-  }
+  } 
 
   ul {
     margin: 0;
@@ -451,4 +450,62 @@ $dark-primary: #0a0c10;
 
 .registration-form-header p span{
   text-decoration: underline;
+}
+
+        
+.profile-container{
+  margin: 2rem 25rem;
+  padding:4rem 3rem;
+  margin-top: 0;
+  border: 2px solid $dark-primary;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4rem;  
+
+}
+
+.profile-container-row{
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  
+}
+
+
+.profile-banner{
+  margin: 0rem 25rem;
+  padding:4rem 3rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  background-color: #DF7861;
+  border: 2px solid $dark-primary;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-banner button{
+  margin-bottom: 1rem;
+  background-color: black;
+  color: white;
+  border-radius: 3px;
+}
+
+.profile-btn-group{
+  display: flex;
+  gap: 1rem;
+}
+
+.pfp  {
+  display: flex;
+  align-items: center;
+  flex-grow: 0.01;
+  margin-right: 1rem;
+  /* top | right | bottom | left */
+
+  & img {
+    object-fit: contain;
+    max-width: 50px;
+  }
 }

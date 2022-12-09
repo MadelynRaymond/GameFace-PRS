@@ -78,7 +78,7 @@ select {
   }
 }
 /*default inputs */
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=number] {
   width: 100%;
   font-size: 1.2em;
   margin: 1rem 0;

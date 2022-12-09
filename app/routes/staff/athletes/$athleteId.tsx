@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from '@remix-run/node'
+import { ActionArgs, LoaderArgs, redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import React from 'react'
@@ -7,6 +7,8 @@ import { getAthleteWithReports } from '~/models/athlete.server'
 import { getDrills } from '~/models/drill.server'
 import { getExerciseCategories } from '~/models/exercise-category.server'
 import qs from 'qs'
+import { createEntryOnReport } from '~/models/drill-entry.server'
+import { createAthleteReport } from '~/models/athlete-report.server'
 
 export async function loader({ request, params }: LoaderArgs) {
     invariant(params.athleteId, 'Not athlete id in params')
@@ -21,20 +23,43 @@ export async function loader({ request, params }: LoaderArgs) {
 
     return json({
         reports: athlete.reports,
-        profile: athlete.profile,
+        athlete,
         categories,
         drills,
     })
 }
-export async function action({request}: ActionArgs) {
-    const text = await request.text()
-    return qs.parse(text)
+export async function action({ request, params }: ActionArgs) {
+    invariant(params.athleteId, 'No athlete Id')
 
+    const athleteId = parseInt(params.athleteId)
+    const text = await request.text()
+    const formData = qs.parse(text) as unknown as {
+        entries: Array<{ unit: string; value: string; bestScore?: string; outOf?: string; drillId: string; userId: string }>
+    }
+
+    if (formData.entries.some((field) => Object.values(field).some((prop) => prop === ''))) {
+        return json({ error: 'Please make sure all fields are filled' })
+    }
+
+    const report = await createAthleteReport(athleteId)
+
+    const normalizedEntries = formData.entries.map((entry) => ({
+        ...entry,
+        value: parseInt(entry.value),
+        userId: parseInt(entry.userId),
+        drillId: parseInt(entry.drillId),
+        bestScore: entry.bestScore ? parseInt(entry.bestScore) : undefined,
+        outOf: entry.outOf ? parseInt(entry.outOf) : undefined,
+    }))
+
+    await createEntryOnReport(report.id, normalizedEntries)
+
+    return redirect('/staff/athletes')
 }
 type DrillUnit = 'integral' | 'decimal' | 'time'
 
 export default function AthleteDetails() {
-    const { profile, drills, categories } = useLoaderData<typeof loader>()
+    const { athlete, drills, categories } = useLoaderData<typeof loader>()
     const [category, setCategory] = React.useState<number>(0)
     const fetcher = useFetcher()
 
@@ -42,7 +67,7 @@ export default function AthleteDetails() {
         <div className="athlete-overview-container">
             <div className="athlete-reports">
                 <h2>
-                    {profile?.firstName} {profile?.lastName}
+                    {athlete.profile?.firstName} {athlete.profile?.lastName}
                 </h2>
                 <pre>{JSON.stringify(fetcher.data || {}, null, 2)}</pre>
             </div>
@@ -55,16 +80,18 @@ export default function AthleteDetails() {
                         </option>
                     ))}
                 </select>
-                <fetcher.Form method='post'>
+                <fetcher.Form method="post">
                     {drills.map((drill, i) => (
                         <EntryField
                             visible={drill.categoryId === category || category === 0}
                             key={drill.id}
-                            id={i}
+                            id={drill.id}
+                            index={i}
                             drillName={drill.name}
                             drillUnit={drill.drillUnit as DrillUnit}
                         />
                     ))}
+
                     <button type="submit">Submit</button>
                 </fetcher.Form>
             </div>
@@ -72,9 +99,10 @@ export default function AthleteDetails() {
     )
 }
 
-function EntryField({ drillName, drillUnit, visible, id }: { drillName: string; drillUnit: DrillUnit; visible: boolean; id: number }) {
+function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: string; drillUnit: DrillUnit; visible: boolean; id: number, index: number }) {
     const value = React.useRef<HTMLInputElement | null>(null)
     const second = React.useRef<HTMLInputElement | null>(null)
+    const { athlete } = useLoaderData<typeof loader>()
 
     const normalizeLabels = () => {
         const labelMap = {
@@ -101,15 +129,17 @@ function EntryField({ drillName, drillUnit, visible, id }: { drillName: string; 
     return (
         <div style={{ display: `${visible ? 'block' : 'none'}` }}>
             <p className="bold">{drillName}</p>
-            <input type="hidden" name={`entries[${id}][unit]`} value={drillUnit} />
+            <input type="hidden" name={`entries[${index}][userId]`} value={athlete.id} />
+            <input type="hidden" name={`entries[${index}][unit]`} value={drillUnit} />
+            <input type="hidden" name={`entries[${index}][drillId]`} value={id} />
             <div className="flex gap-2">
                 <div className="w-full">
                     <label htmlFor="score">{fieldOne}</label>
-                    <input ref={value} type="text" name={`entries[${id}][${valueOne}]`} id="" />
+                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} id="" />
                 </div>
                 <div className="w-full">
                     <label htmlFor="out-of">{fieldTwo}</label>
-                    <input ref={second} type="text" name={`entries[${id}][${valueTwo}]`} id="" />
+                    <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} id="" />
                 </div>
             </div>
         </div>

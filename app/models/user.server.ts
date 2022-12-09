@@ -4,6 +4,14 @@ import { prisma } from '~/db.server'
 
 export type { User } from '@prisma/client'
 
+type Profile = {
+    firstName: string
+    lastName: string
+    grade: string
+    age: string
+    school: string,
+}
+
 export async function getUserById(id: User['id']) {
     return prisma.user.findUnique({ where: { id } })
 }
@@ -12,17 +20,28 @@ export async function getUserByEmail(email: User['email']) {
     return prisma.user.findUnique({ where: { email } })
 }
 
-export async function createUser(email: User['email'], password: string) {
+export async function createUser({username, email, password, profile}: {username: User["username"],  email: User["email"], password: string, profile: Profile}) {
     const hashedPassword = await bcrypt.hash(password, 10)
+    const {grade, school, age, firstName, lastName} = profile
 
     return prisma.user.create({
         data: {
+            username,
             email,
             password: {
                 create: {
                     hash: hashedPassword,
                 },
             },
+            profile: {
+                create: {
+                    firstName,
+                    lastName,
+                    grade,
+                    school,
+                    age
+                }
+            }
         },
     })
 }

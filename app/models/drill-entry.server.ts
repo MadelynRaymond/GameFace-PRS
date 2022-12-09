@@ -10,27 +10,19 @@ type DrillEntry = {
     unit: string
 }
 
-export async function createEntryOnReport(reportId: number, entryDetails: DrillEntry) {
-    const { userId, drillId, ...scoreDetails } = entryDetails
-    return prisma.drillEntry.create({
-        data: {
-            drill: {
-                connect: {
-                    id: drillId,
-                },
-            },
-            report: {
-                connect: {
-                    id: reportId,
-                },
-            },
-            user: {
-                connect: {
-                    id: userId,
-                },
-            },
-            ...scoreDetails,
-        },
+export async function createEntryOnReport(reportId: number, entries: DrillEntry[]) {
+    return prisma.drillEntry.createMany({
+        data: entries.map(entry => {
+            const { userId, drillId, ...score } = entry
+            return (
+                {
+                    userId,
+                    drillId,
+                    reportId,
+                    ...score
+                }
+            )
+        })
     })
 }
 

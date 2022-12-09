@@ -2,7 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
-import { useLoaderData } from '@remix-run/react'
+import { useCatch, useLoaderData } from '@remix-run/react'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { dbTimeToString } from '~/util'
 
@@ -10,16 +10,23 @@ export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
 
     const entries = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId })
-    const times = entries.map((entry) => entry.value as number)
-    const bestTimes = entries.map((entry) => entry.bestScore as number)
-    const averageTimeMonth = dbTimeToString(Math.floor(times.reduce((sum, score) => score + sum, 0) / entries.length))
-    const bestTimeMonth = dbTimeToString(Math.min(...bestTimes))
 
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Speed Drill',
         userId,
         sessions: 7,
     })
+
+    const insufficientData = [entries, lastSevenSessions].some(entry => entry.length === 0)
+
+    if (insufficientData) {
+        throw new Response("Not enough data", {status: 404})
+    }
+
+    const times = entries.map((entry) => entry.value as number)
+    const bestTimes = entries.map((entry) => entry.bestScore as number)
+    const averageTimeMonth = dbTimeToString(Math.floor(times.reduce((sum, score) => score + sum, 0) / entries.length))
+    const bestTimeMonth = dbTimeToString(Math.min(...bestTimes))
 
     const sessionScores = lastSevenSessions
         .flatMap((report) => ({
@@ -171,4 +178,16 @@ export default function Speed() {
             </div>
         </div>
     )
+}
+
+export function CatchBoundary() {
+    const caught = useCatch();
+  
+    if (caught.status === 404) {
+      return <div className='flex justify-center'>
+        <h2>Not enough data</h2>
+      </div>;
+    }
+  
+    throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }
