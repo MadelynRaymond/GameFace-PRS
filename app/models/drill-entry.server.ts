@@ -82,7 +82,7 @@ export async function getEntriesByDrillLiteral({
 export async function getEntriesAverage({
     drillName,
     userId,
-    interval = new Date(),
+    interval,
 }: {
     drillName: Drill['name']
     userId: User['id']
@@ -103,7 +103,6 @@ export async function getEntriesAverage({
             },
             created_at: {
                 gte: interval,
-                lte: new Date()
             }
         }
     })
@@ -112,7 +111,7 @@ export async function getEntriesAverage({
 export async function getEntriesMax({
     drillName,
     userId,
-    interval = new Date(),
+    interval,
 }: {
     drillName: Drill['name']
     userId: User['id']
@@ -133,7 +132,6 @@ export async function getEntriesMax({
             },
             created_at: {
                 gte: interval,
-                lte: new Date()
             }
         }
     })
@@ -142,7 +140,7 @@ export async function getEntriesMax({
 export async function getEntriesMin({
     drillName,
     userId,
-    interval = new Date(),
+    interval,
 }: {
     drillName: Drill['name']
     userId: User['id']
@@ -163,7 +161,36 @@ export async function getEntriesMin({
             },
             created_at: {
                 gte: interval,
-                lte: new Date()
+            }
+        }
+    })
+}
+
+export async function getEntriesTotal({
+    drillName,
+    userId,
+    interval,
+}: {
+    drillName: Drill['name']
+    userId: User['id']
+    interval?: Date
+}) {
+    
+    return prisma.drillEntry.aggregate({
+        _sum: {
+            value: true,
+            bestScore: true,
+            outOf: true
+        },
+        where: {
+            user: {
+                id: userId
+            },
+            drill: {
+                name: drillName
+            },
+            created_at: {
+                gte: interval,
             }
         }
     })

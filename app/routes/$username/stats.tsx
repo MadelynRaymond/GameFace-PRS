@@ -1,9 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { NavLink, Outlet, useCatch, useLoaderData, useLocation } from '@remix-run/react'
+import { NavLink, Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import invariant from 'tiny-invariant'
-import { getAthleteById } from '~/models/athlete.server'
-import { requireUser, requireUserId } from '~/session.server'
+import { requireUser } from '~/session.server'
 
 export async function loader({ request, params }: LoaderArgs) {
     const athlete = await requireUser(request)
@@ -23,7 +22,7 @@ export default function Stats() {
 
     return (
         <>
-            <div className="stats-menu">
+            <div className="stats-menu no-print">
                 <div className="stats-menu__items">
                     <NavLink className={location.pathname === `/${username}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${username}/stats`}>
                         Overall

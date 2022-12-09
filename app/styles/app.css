@@ -265,12 +265,14 @@
 /*Dashboard pages*/
 .overall-stat-table {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  align-items: flex-end;
   gap: 1rem;
   margin: 2rem 4rem;
 }
 
 .stat-row {
+  height: 100%;
   background-color: rgb(235, 235, 235);
   border-radius: 0.5rem;
   padding: 1.25rem;
@@ -278,6 +280,7 @@
   grid-template-columns: repeat(3, 1fr);
   font-weight: bold;
   align-items: center;
+  align-content: center;
 }
 .stat-row > * {
   width: 100%;
@@ -363,7 +366,7 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .athlete-table th, .athlete-table td {
-  padding: 12px 15px;
+  padding: 24px 15px;
 }
 .athlete-table tbody tr {
   border-bottom: thin solid #dddddd;
@@ -372,7 +375,7 @@
   background-color: #f3f3f3;
 }
 .athlete-table tbody tr:last-of-type {
-  border-bottom: 2px solid #dbb22c;
+  border-bottom: 4px solid #DF7861;
 }
 .athlete-table tbody tr.active-row {
   font-weight: bold;
@@ -384,7 +387,7 @@
   display: flex;
   width: 100%;
   gap: 1rem;
-  max-width: 1500px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -512,6 +515,27 @@
 .pfp img {
   object-fit: contain;
   max-width: 50px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  @page {
+    margin: 0;
+  }
+}
+@media print and (color) {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .overall-stat-table {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .overall-graph-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /*# sourceMappingURL=app.css.map */

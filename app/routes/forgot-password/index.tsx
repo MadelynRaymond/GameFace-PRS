@@ -64,7 +64,7 @@ export default function Index() {
                 <h1>Forgot Password</h1>
                 <input type="text" name="email" id="email" placeholder="Account Email" />
                 <span className="error-text">{actionData?.error}</span>
-                <input disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
+                <input className='btn' disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
             </Form>
         </div>
     )
