@@ -2,8 +2,8 @@ import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import invariant from 'tiny-invariant'
+import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
-import { sendEmail } from '~/util'
 
 export async function loader({ request, params }: LoaderArgs) {
     invariant(params.email, 'No email provided')
