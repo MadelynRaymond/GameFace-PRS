@@ -5,6 +5,7 @@ import type { LoaderArgs, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Form, Link, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
 import { getUser } from './session.server'
+import Basketball from "~/assets/basketballprofilepic.png"
 
 export const meta: MetaFunction = () => ({
     charset: 'utf-8',
@@ -52,6 +53,10 @@ function Navbar() {
                         <li>
                             <a href="https://www.gameface413.org/">Home</a>
                         </li>
+                        <li>
+                            <Link to={`${user?.username}/stats`}>My Stats</Link>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -71,6 +76,12 @@ function Navbar() {
                                     Logout
                                 </button>
                             </Form>
+                        </li>
+
+                        <li className="pfp">
+                            <Link to={`${user?.username}/profile`}>
+                                <img src={Basketball}></img>
+                            </Link>
                         </li>
                     </ul>
                 ) : (
