@@ -521,8 +521,8 @@
   .no-print {
     display: none !important;
   }
-  @page {
-    margin: 0;
+  body {
+    font-size: 10pt;
   }
 }
 @media print and (color) {
@@ -533,8 +533,15 @@
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
   }
+  .stat-row {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
   .overall-graph-container {
     grid-template-columns: repeat(2, 1fr);
+  }
+  button {
+    visibility: hidden !important;
   }
 }
 

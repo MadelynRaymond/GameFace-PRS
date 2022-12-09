@@ -518,10 +518,9 @@ $dark-primary: #0a0c10;
     display: none !important;
   }
 
-  @page {
-    margin: 0;
- }
-
+  body {
+    font-size: 10pt;
+  }
  
 }
 
@@ -535,8 +534,18 @@ $dark-primary: #0a0c10;
     grid-template-columns: repeat(2, 1fr);
   }
 
+
+  .stat-row {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
   .overall-graph-container {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  button {
+    visibility: hidden !important;
   }
 
 
