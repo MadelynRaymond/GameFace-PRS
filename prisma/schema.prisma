@@ -66,7 +66,7 @@ model AthleteReport {
 model DrillEntry {
   id Int @id @default(autoincrement())
   created_at DateTime @default(now())
-  value Int
+  value Float
   outOf Int?
   bestScore Int?
   unit String
