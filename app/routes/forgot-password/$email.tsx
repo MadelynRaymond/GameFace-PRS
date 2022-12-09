@@ -5,20 +5,8 @@ import invariant from 'tiny-invariant'
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 
-export async function loader({ request, params }: LoaderArgs) {
-    invariant(params.email, 'No email provided')
-    const token = await createTokenForUser(params.email)
-    if (!token) {
-        throw new Response('not found', { status: 404 })
-    }
-    const resetLink = `http://10.0.0.246:3000/reset-password/${params.email}&${token.token}`
-    await sendEmail(
-        {
-            subject: 'Reset Password',
-            body: resetLink,
-        },
-        params.email
-    )
+
+export async function loader({ params }: LoaderArgs) {
 
     return json({
         email: params.email,
