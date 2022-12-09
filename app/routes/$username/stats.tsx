@@ -1,9 +1,8 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { NavLink, Outlet, useCatch, useLoaderData, useLocation } from '@remix-run/react'
+import { NavLink, Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import invariant from 'tiny-invariant'
-import { getAthleteById } from '~/models/athlete.server'
-import { requireUser, requireUserId } from '~/session.server'
+import { requireUser } from '~/session.server'
 
 export async function loader({ request, params }: LoaderArgs) {
     const athlete = await requireUser(request)
