@@ -41,7 +41,7 @@ function Navbar() {
     const { user } = useLoaderData<typeof loader>()
 
     return (
-        <nav className="navbar">
+        <nav className="navbar no-print">
             <div>
                 <div className="logo">
                     <Link to={'/'}>
@@ -84,7 +84,7 @@ function Navbar() {
 
                         <li className="pfp">
                             <Link to={`${user?.username}/profile`}>
-                                <img src={Basketball}></img>
+                                <img src={Basketball} alt="Profile"></img>
                             </Link>
                         </li>
                     </ul>

@@ -156,7 +156,7 @@ export default function Overall() {
                         <button className="filter-button">Lifetime</button>
                     </div>
                     <div className="export-button-group">
-                        <button style={{visibility: 'visible'}} className="export-button">Print Icon</button>
+                        <button onClick={() => window.print()} style={{visibility: 'visible'}} className="export-button">Print</button>
                         <button style={{display: 'none'}}className="export-button">Export Icon</button>
                     </div>
                 </div>

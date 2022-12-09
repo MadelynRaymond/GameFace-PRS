@@ -22,7 +22,7 @@ export default function Stats() {
 
     return (
         <>
-            <div className="stats-menu">
+            <div className="stats-menu no-print">
                 <div className="stats-menu__items">
                     <NavLink className={location.pathname === `/${username}/stats` ? 'stats-menu__item-selected' : undefined} to={`/${username}/stats`}>
                         Overall

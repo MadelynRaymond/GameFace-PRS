@@ -512,3 +512,32 @@ $dark-primary: #0a0c10;
     max-width: 50px;
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  @page {
+    margin: 0;
+ }
+
+ 
+}
+
+@media print and (color) {
+  * {
+     -webkit-print-color-adjust: exact;
+     print-color-adjust: exact;
+  }
+
+  .overall-stat-table {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .overall-graph-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+}
