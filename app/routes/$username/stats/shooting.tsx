@@ -130,9 +130,9 @@ export default function Shooting() {
                     <p className="stat-box__title">Shots Scored</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{scoredLifeTime}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.1%
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            2.7%
                         </p>
                         <p className="stat-box__desc">last 30 days</p>
                     </div>
@@ -142,9 +142,9 @@ export default function Shooting() {
                     <p className="stat-box__title">Shots Attempted</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{attemptedLifeTime}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.1%
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            3.9%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -153,10 +153,10 @@ export default function Shooting() {
                 <div className="stat-box">
                     <p className="stat-box__title">Success Rate</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{successPercentage}</p>
+                        <p className="stat-box__figure">{successPercentage}%</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            5.5%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>

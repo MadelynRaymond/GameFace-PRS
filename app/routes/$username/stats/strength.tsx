@@ -69,24 +69,24 @@ export default function Strength() {
         <div className="stat-grid">
             <div className="stat-box-group">
                 <div className="stat-box">
-                    <p className="stat-box__title">Avg. Jump (Distance)</p>
+                    <p className="stat-box__title">Best Jump (Distance)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageDistanceMonth}</p>
+                        <p className="stat-box__figure">{averageDistanceMonth}ft</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            2.4%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
                 </div>
 
                 <div className="stat-box">
-                    <p className="stat-box__title">Best Jump Distance</p>
+                    <p className="stat-box__title">Avg. Jump (Distance)</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{bestDistance}</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            1.1%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -95,10 +95,10 @@ export default function Strength() {
                 <div className="stat-box">
                     <p className="stat-box__title">Avg. Squat Duration w/Weights</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageSquatMonth}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.1%
+                        <p className="stat-box__figure">{averageSquatMonth}s</p>
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            8.3%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>

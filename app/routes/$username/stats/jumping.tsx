@@ -61,9 +61,9 @@ export default function Jumping() {
                 <div className="stat-box">
                     <p className="stat-box__title">Avg. Jump (Height)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageJumpHeightMonth}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
+                        <p className="stat-box__figure">{averageJumpHeightMonth}ft</p>
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>1.3%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -72,7 +72,7 @@ export default function Jumping() {
                 <div className="stat-box">
                     <p className="stat-box__title">Overall Highest Jump</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{bestJump}</p>
+                        <p className="stat-box__figure">{bestJump}ft</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
                             4.1%
@@ -84,10 +84,10 @@ export default function Jumping() {
                 <div className="stat-box">
                     <p className="stat-box__title">Last Session: Avg. Jump (Height)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{lastSessionAverage}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.1%
+                        <p className="stat-box__figure">{lastSessionAverage}ft</p>
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            3.1%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
