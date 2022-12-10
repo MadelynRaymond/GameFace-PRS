@@ -38,7 +38,7 @@ export async function action({ request }: ActionArgs) {
         throw new Response("Unexpected Error Occured", {status: 500})
     }
     
-    const resetLink = `http://10.0.0.246:3000/reset-password/link?id=${user.id}&token=${token.token}`
+    const resetLink = `http://localhost:3000/reset-password/link?id=${user.id}&token=${token.token}`
     await sendEmail(
         {
             subject: 'Reset Password',
