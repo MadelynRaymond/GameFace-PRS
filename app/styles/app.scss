@@ -6,6 +6,7 @@
 
 $orange-primary: #DF7861;
 $dark-primary: #0a0c10;
+$gray-primary: #f0f0f0;
 
 .navbar{
 
@@ -140,6 +141,7 @@ $dark-primary: #0a0c10;
   grid-template-columns: repeat(2, minmax(400px, 900px));
   grid-template-rows: repeat(2, minmax(350px, 375px));
   gap: 2rem;
+  margin-top: 1.5rem;
 
 
 }
@@ -153,7 +155,7 @@ $dark-primary: #0a0c10;
 }
 
 .stat-box {
-  background-color: rgba(236, 236, 236, 0.404);
+  background-color: $gray-primary;
   min-width: 250px;
   max-height: 250px;
   border-radius: 8px;
@@ -244,7 +246,7 @@ $dark-primary: #0a0c10;
 }
 .stat-row{
   height: 100%;
-  background-color: rgb(235, 235, 235);
+  background-color: $gray-primary;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
@@ -549,4 +551,8 @@ $dark-primary: #0a0c10;
   }
 
 
+}
+
+.invis{
+  display: none;
 }

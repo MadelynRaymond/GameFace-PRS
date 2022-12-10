@@ -57,9 +57,10 @@ export default function Speed() {
                 <div className="stat-box">
                     <p className="stat-box__title">Overall (Avg time)</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageTimeMonth}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">3.3▼</span>
+                    <p className="stat-box__figure">{averageTimeMonth}s</p>
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            2.1%
                         </p>
                         <p className="stat-box__desc">(last 30 days)</p>
                     </div>
@@ -68,10 +69,10 @@ export default function Speed() {
                 <div className="stat-box">
                     <p className="stat-box__title">Best Speed</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{bestTimeMonth}</p>
+                        <p className="stat-box__figure">{bestTimeMonth}s</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            3.4%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -83,10 +84,10 @@ export default function Speed() {
                         
                     </p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{lastSessionAverage}</p>
+                        <p className="stat-box__figure">{lastSessionAverage}s</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            1.7%
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>

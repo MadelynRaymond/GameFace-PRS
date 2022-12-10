@@ -55,9 +55,10 @@ export default function Dribbling() {
                 <div className="stat-box">
                     <p className="stat-box__title">Avg. Dribbling Speed Drill Completion</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageTimeMonth}</p>
+                        <p className="stat-box__figure">{averageTimeMonth}s</p>
                         <p className="stat-box__regression">
-                            <span className="up-symbol">3.3▼</span>
+                            <span className="up-symbol">▼</span>
+                            1.6s
                         </p>
                         <p className="stat-box__desc">(last 30 days)</p>
                     </div>
@@ -66,10 +67,10 @@ export default function Dribbling() {
                 <div className="stat-box">
                     <p className="stat-box__title">Best Dribbling Speed Drill Completion</p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{bestTimeMonth}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.1%
+                        <p className="stat-box__figure">{bestTimeMonth}s</p>
+                        <p className="stat-box__improvement">
+                            <span className="up-symbol">▲</span>
+                            1.6s
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
@@ -81,10 +82,10 @@ export default function Dribbling() {
                         Dribbling Drill Speed
                     </p>
                     <div className="stat-box__data">
-                        <p className="stat-box__figure">{lastSessionAverage}</p>
+                        <p className="stat-box__figure">{lastSessionAverage}s</p>
                         <p className="stat-box__regression">
                             <span className="up-symbol">▼</span>
-                            4.1%
+                            1.2s
                         </p>
                         <p className="stat-box__desc">in last 30 days</p>
                     </div>
