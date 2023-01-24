@@ -44,7 +44,7 @@ export async function action({ request }: ActionArgs) {
         }
     }
 
-    return null
+    return redirect('/login')
 
 
 }
