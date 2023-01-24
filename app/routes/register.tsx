@@ -3,52 +3,54 @@ import { redirect } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Form, Link, useActionData } from '@remix-run/react'
 import { createUser, getUserByEmail } from '~/models/user.server'
-import { isProbablyEmail, validateAge, validateGrade, validateName, validatePassword, validateRequired } from '~/util'
+import {z} from 'zod'
 
-interface RegistrationFormData {
-    username: string
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    grade: string
-    age: string
-    school: string
+const RegisterSchema = z.object({
+    username: z.string().min(5, "Username must be at least 5 characters").max(15, "Username must be at most 15 characters"),
+    email: z.string().email("Email must be a valid email"),
+    password: z.string().min(8, "Password must be at least 8 characters").max(16, "Password must be less than 16 characters"),
+    firstName: z.string().min(2, "First name must be at least 2 characters").max(25, "First name must be less than 25 characters"),
+    lastName: z.string().min(2, "Last name must be at least 2 characters").max(25, "Last name must be less than 25 characters"),
+    grade: z.enum(["6", "7", "8", "9", "10", "11", "12"], {errorMap: () => ({message: "Grade must be between 6 and 12"})}),
+    age: z.number().min(10).max(18).transform(val => val.toString()),
+    school: z.string().min(1, "School is required")
+})
+type RegisterFields = z.infer<typeof RegisterSchema>
+type RegisterErrors = z.inferFlattenedErrors<typeof RegisterSchema>
+type ActionData = {
+    errors?: RegisterErrors,
+    createError?: {message: string}
 }
 
 export async function action({ request }: ActionArgs) {
     const formData = await request.formData()
-    const entries = Object.fromEntries(formData)
+    const entries = Object.fromEntries(formData) as RegisterFields
 
-    const errors = {
-        firstName: !validateName(entries.firstName) ? 'First name must be at least 3 characters' : null,
-        lastName: !validateName(entries.lastName) ? 'Last name must be at least 3 characters' : null,
-        email: !isProbablyEmail(entries.email) ? 'Email must be a valid email' : null,
-        password: !validatePassword(entries.password, 8) ? 'Password must be at least 8 characters' : null,
-        age: !validateAge(parseInt(entries.age as string)) ? 'You must be at least 10 to make an account' : null,
-        username: !validateRequired(entries.username) ? 'Username is required' : null,
-        school: !validateRequired(entries.school) ? 'School is required' : null,
-        grade: !validateGrade(parseInt(entries.grade as string)) ? 'Grade must be 6th or higher' : null,
+    try {
+        const newStudent = RegisterSchema.parse({...entries, age: parseInt(entries.age)})
+        const {username, password, email, ...profile} = newStudent
+
+        const existing = await getUserByEmail(email)
+
+        if (existing) {
+            return json({createError: {message: `User with email ${existing.email} already exists`}})
+        }
+
+        await createUser({username, password, email, profile})
+    }
+    catch (error) {
+        if (error instanceof z.ZodError) {
+            return json({errors: error.flatten() as RegisterErrors})
+        }
     }
 
-    if (Object.values(errors).some(Boolean)) {
-        return json({ errors })
-    }
+    return null
 
-    const existing = await getUserByEmail(entries.email as string)
 
-    if (existing) {
-        return json({ errors: { create: 'A user with this email already exists' } })
-    }
-
-    const { username, password, email, ...profile } = entries as unknown as RegistrationFormData
-    await createUser({ username, email, password, profile })
-
-    return redirect('/login')
 }
 
 export default function Register() {
-    const actionData = useActionData()
+    const actionData = useActionData<ActionData>()
     return (
         <div>
             <div className="registration-form">
@@ -73,50 +75,52 @@ export default function Register() {
                         <div>
                             <label>Athlete First Name</label>
                             <input type="text" placeholder="Ex. John" name="firstName"></input>
-                            {actionData?.errors.firstName && <span className="error-text">{actionData.errors.firstName}</span>}
+                            {actionData?.errors?.fieldErrors.firstName && <span className="error-text">{actionData.errors.fieldErrors.firstName[0]}</span>}
                         </div>
                         <div>
                             <label>Athlete Last Name</label>
                             <input type="text" placeholder="Ex. Smith" name="lastName"></input>
-                            {actionData?.errors.lastName && <span className="error-text">{actionData.errors.lastName}</span>}
+                            {actionData?.errors?.fieldErrors.lastName && <span className="error-text">{actionData.errors.fieldErrors.lastName[0]}</span>}
                         </div>
                     </div>
                     <div className="registration-form-row">
                         <div>
                             <label>Username</label>
                             <input type="text" placeholder="Ex. jsmith123" name="username"></input>
-                            {actionData?.errors.username && <span className="error-text">{actionData.errors.username}</span>}
+                            {actionData?.errors?.fieldErrors.username && <span className="error-text">{actionData.errors.fieldErrors.username[0]}</span>}
                         </div>
                         <div>
                             <label>Password</label>
                             <input type="password" name="password"></input>
-                            {actionData?.errors.password && <span className="error-text">{actionData.errors.password}</span>}
+                            {actionData?.errors?.fieldErrors.password && <span className="error-text">{actionData.errors.fieldErrors.password[0]}</span>}
                         </div>
                     </div>
                     <label>Email</label>
                     <input type="text" placeholder="Ex. johnsmith@gmail.com" name="email"></input>
-                    {actionData?.errors.email && <span className="error-text">{actionData.errors.email}</span>}
+                    {actionData?.errors?.fieldErrors.email && <span className="error-text">{actionData.errors.fieldErrors.email[0]}</span>}
 
                     <div className="registration-form-row">
                         <div>
                             <label>Age</label>
                             <input type="number" placeholder="14" name="age"></input>
-                            {actionData?.errors.age && <span className="error-text">{actionData.errors.age}</span>}
+                            {actionData?.errors?.fieldErrors.age && <span className="error-text">{actionData.errors.fieldErrors.age[0]}</span>}
                         </div>
                         <div>
                             <label>Grade</label>
-                            <input type="number" placeholder="9th" name="grade"></input>
-                            {actionData?.errors.grade && <span className="error-text">{actionData.errors.grade}</span>}
+                            <input type="text" placeholder="9th" name="grade"></input>
+                            {actionData?.errors?.fieldErrors.grade && <span className="error-text">{actionData.errors.fieldErrors.grade[0]}</span>}
                         </div>
                     </div>
                     <label>School</label>
                     <input type="text" placeholder="First Coast High School" name="school"></input>
-                    {actionData?.errors.school && <span className="error-text">{actionData.errors.school}</span>}
+                    {actionData?.errors?.fieldErrors.school && <span className="error-text">{actionData.errors.fieldErrors.school[0]}</span>}
+
                     <div className="register-btn">
                         <button style={{ cursor: 'pointer' }} type="submit" className="register-btn">
                             Register
                         </button>
                     </div>
+                    {actionData?.createError?.message && <span className='error-text'>{actionData.createError.message}</span>}
                 </Form>
             </div>
         </div>
