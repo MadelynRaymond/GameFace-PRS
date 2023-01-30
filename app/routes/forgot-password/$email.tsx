@@ -5,9 +5,7 @@ import invariant from 'tiny-invariant'
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 
-
 export async function loader({ params }: LoaderArgs) {
-
     return json({
         email: params.email,
     })

@@ -1,9 +1,6 @@
-
 export function add(a: number, b: number): number {
     return a + b
 }
-
-
 
 export function isProbablyEmail(email: unknown): email is string {
     return typeof email === 'string' && email.length > 3 && email.includes('@')
@@ -19,7 +16,7 @@ export function validateAge(age: unknown): age is number {
 
 export function dbTimeToString(dbTime: number | null): string {
     if (dbTime === null) return 'No Data'
-    
+
     const normalized = Math.floor(dbTime)
     const minutes = Math.floor(Math.floor(normalized) / 60)
     const seconds = normalized % 60

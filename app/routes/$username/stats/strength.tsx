@@ -1,7 +1,7 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Label } from 'recharts'
 import { requireUserId } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useCatch, useLoaderData } from '@remix-run/react'
 
@@ -12,10 +12,10 @@ export async function loader({ request }: LoaderArgs) {
     const squatEntries = await getEntriesByDrillLiteral({ drillName: 'Squat Drill', userId })
     const distances = jumpDistanceentries.map((entry) => entry.value as number)
 
-    const insufficientData = [squatEntries, jumpDistanceentries].some(entry => entry.length === 0)
+    const insufficientData = [squatEntries, jumpDistanceentries].some((entry) => entry.length === 0)
 
     if (insufficientData) {
-        throw new Response("Not enough data", {status: 404})
+        throw new Response('Not enough data', { status: 404 })
     }
 
     const bestDistancesMonth = jumpDistanceentries.map((entry) => entry.bestScore as number)
@@ -63,7 +63,6 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Strength() {
-
     const { bestDistance, averageDistanceMonth, sessionScoresSquat, sessionScoresJumpDistance, averageSquatMonth } = useLoaderData<typeof loader>()
     return (
         <div className="stat-grid">
@@ -105,7 +104,7 @@ export default function Strength() {
                 </div>
             </div>
 
-            <div className='flex align-center flex-col gap-1'>
+            <div className="flex align-center flex-col gap-1">
                 <p>Lifetime Overview: Average Jump Distance</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart width={730} height={400} data={sessionScoresJumpDistance}>
@@ -136,11 +135,7 @@ export default function Strength() {
             <div className="flex flex-col align-center gap-1">
                 <p>Lifetime Overview: Best Squat Duration w/Weights</p>
                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={sessionScoresSquat}
-                    >
+                    <AreaChart width={730} height={250} data={sessionScoresSquat}>
                         <defs>
                             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
@@ -166,13 +161,15 @@ export default function Strength() {
 }
 
 export function CatchBoundary() {
-    const caught = useCatch();
-  
+    const caught = useCatch()
+
     if (caught.status === 404) {
-      return <div className='flex justify-center'>
-        <h2>Not enough data</h2>
-      </div>;
+        return (
+            <div className="flex justify-center">
+                <h2>Not enough data</h2>
+            </div>
+        )
     }
-  
-    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }

@@ -1,5 +1,5 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { useCatch, useLoaderData } from '@remix-run/react'
@@ -11,8 +11,8 @@ export async function loader({ request }: LoaderArgs) {
     const today = new Date()
     const priorDate = new Date(new Date().setDate(today.getDate() - 30))
 
-    const dbAverageTimeMonth = await getEntriesAverage({drillName: 'Speed Drill', userId, interval: priorDate})
-    const dbBestTimeMonth = await getEntriesMin({drillName: 'Speed Drill', userId, interval: priorDate})
+    const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval: priorDate })
+    const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval: priorDate })
 
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Speed Drill',
@@ -20,10 +20,10 @@ export async function loader({ request }: LoaderArgs) {
         sessions: 7,
     })
 
-    const insufficientData = [lastSevenSessions].some(entry => entry.length === 0)
+    const insufficientData = [lastSevenSessions].some((entry) => entry.length === 0)
 
     if (insufficientData) {
-        throw new Response("Not enough data", {status: 404})
+        throw new Response('Not enough data', { status: 404 })
     }
 
     const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderArgs) {
     return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage })
 }
 export default function Speed() {
-    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage} = useLoaderData<typeof loader>()
+    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage } = useLoaderData<typeof loader>()
 
     return (
         <div className="stat-grid">
@@ -57,7 +57,7 @@ export default function Speed() {
                 <div className="stat-box">
                     <p className="stat-box__title">Overall (Avg time)</p>
                     <div className="stat-box__data">
-                    <p className="stat-box__figure">{averageTimeMonth}s</p>
+                        <p className="stat-box__figure">{averageTimeMonth}s</p>
                         <p className="stat-box__improvement">
                             <span className="up-symbol">▲</span>
                             2.1%
@@ -79,10 +79,7 @@ export default function Speed() {
                 </div>
 
                 <div className="stat-box">
-                    <p className="stat-box__title">
-                        Last Session Avg. Speed
-                        
-                    </p>
+                    <p className="stat-box__title">Last Session Avg. Speed</p>
                     <div className="stat-box__data">
                         <p className="stat-box__figure">{lastSessionAverage}s</p>
                         <p className="stat-box__regression">
@@ -94,7 +91,7 @@ export default function Speed() {
                 </div>
             </div>
 
-            <div className='flex flex-col align-center gap-1'>
+            <div className="flex flex-col align-center gap-1">
                 <p>Last 30 Days: Avg. Speed</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
@@ -124,7 +121,7 @@ export default function Speed() {
                 </ResponsiveContainer>
             </div>
 
-            <div className='flex flex-col align-center gap-1'>
+            <div className="flex flex-col align-center gap-1">
                 <p>Lifetime Overview: Best Speed per Session</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
@@ -154,7 +151,7 @@ export default function Speed() {
                 </ResponsiveContainer>
             </div>
 
-            <div className='flex flex-col align-center gap-1'>
+            <div className="flex flex-col align-center gap-1">
                 <p>Last Seven Sessions: Avg. vs. Best Speed</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -183,13 +180,15 @@ export default function Speed() {
 }
 
 export function CatchBoundary() {
-    const caught = useCatch();
-  
+    const caught = useCatch()
+
     if (caught.status === 404) {
-      return <div className='flex justify-center'>
-        <h2>Not enough data</h2>
-      </div>;
+        return (
+            <div className="flex justify-center">
+                <h2>Not enough data</h2>
+            </div>
+        )
     }
-  
-    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }

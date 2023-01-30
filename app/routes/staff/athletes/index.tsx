@@ -21,7 +21,7 @@ export default function Athletes() {
 
     return (
         <div>
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
                 <h2>Student-Athletes</h2>
             </div>
             <table className="athlete-table">

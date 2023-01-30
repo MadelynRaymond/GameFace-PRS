@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs} from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
@@ -66,7 +66,6 @@ export default function AthleteDetails() {
 
     return (
         <div className="athlete-overview-container">
-            
             <div className="athlete-report-form">
                 <select style={{ marginBottom: '1rem' }} onChange={(e) => setCategory(parseInt(e.currentTarget.value))} name="" id="">
                     <option value="0">Filter Category</option>
@@ -95,7 +94,7 @@ export default function AthleteDetails() {
     )
 }
 
-function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: string; drillUnit: DrillUnit; visible: boolean; id: number, index: number }) {
+function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: string; drillUnit: DrillUnit; visible: boolean; id: number; index: number }) {
     const value = React.useRef<HTMLInputElement | null>(null)
     const second = React.useRef<HTMLInputElement | null>(null)
     const { athlete } = useLoaderData<typeof loader>()

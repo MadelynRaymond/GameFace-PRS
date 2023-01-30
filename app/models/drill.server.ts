@@ -5,9 +5,9 @@ export async function getDrillsInCategory({ categoryId }: { categoryId: Exercise
     return prisma.drill.findMany({
         where: {
             category: {
-                id: categoryId
-            }
-        }
+                id: categoryId,
+            },
+        },
     })
 }
 
@@ -15,8 +15,8 @@ export async function getDrills() {
     return prisma.drill.findMany({
         orderBy: {
             category: {
-                name: 'asc'
-            }
-        }
+                name: 'asc',
+            },
+        },
     })
 }

@@ -149,15 +149,19 @@ export default function Overall() {
                     <h2>Training Report Card</h2>
                     <p>Current Year (2022)</p>
                 </div>
-                <div style={{visibility: 'hidden'}} className="button-group">
+                <div style={{ visibility: 'hidden' }} className="button-group">
                     <div className="filter-button-group">
                         <button className="filter-button">Month</button>
                         <button className="filter-button">Year</button>
                         <button className="filter-button">Lifetime</button>
                     </div>
                     <div className="export-button-group">
-                        <button onClick={() => window.print()} style={{visibility: 'visible'}} className="export-button no-print">Print</button>
-                        <button style={{display: 'none'}}className="export-button">Export Icon</button>
+                        <button onClick={() => window.print()} style={{ visibility: 'visible' }} className="export-button no-print">
+                            Print
+                        </button>
+                        <button style={{ display: 'none' }} className="export-button">
+                            Export Icon
+                        </button>
                     </div>
                 </div>
             </div>
