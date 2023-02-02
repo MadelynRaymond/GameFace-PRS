@@ -10,7 +10,7 @@ import { getExerciseCategories } from '~/models/exercise-category.server'
 import qs from 'qs'
 import { createEntryOnReport } from '~/models/drill-entry.server'
 import { createAthleteReport } from '~/models/athlete-report.server'
-import { z } from 'zod'
+import { z, ZodError } from 'zod'
 
 const EntrySchema = z.object({
     unit: z.string(),
@@ -55,7 +55,9 @@ export async function action({ request, params }: ActionArgs) {
     const result = await EntriesSchema.safeParseAsync(jsonData)
 
     if (!result.success) {
-        return json({ error: "Internal server error" })
+        if (result.error instanceof ZodError) {
+            return json({errors: "Please fill all required fields"})
+        }
     }
 
     invariant(result.success, "This should not happen")
@@ -96,8 +98,8 @@ export default function AthleteDetails() {
                             drillUnit={drill.drillUnit as DrillUnit}
                         />
                     ))}
-
                     <button type="submit">Submit</button>
+                    <span className='error-text'>{actionData?.errors}</span>
                 </Form>
             </div>
         </div>
@@ -112,8 +114,8 @@ function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: s
     const normalizeLabels = () => {
         const labelMap = {
             integral: ['Score', 'Out Of'],
-            decimal: ['Score (Avg)', 'Best'],
-            time: ['Time (Avg)', 'Best'],
+            decimal: ['Score', 'none'],
+            time: ['Time', 'none'],
         }
         return labelMap[drillUnit]
     }
@@ -121,8 +123,8 @@ function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: s
     const normalizeValues = () => {
         const valueMap = {
             integral: ['value', 'outOf'],
-            decimal: ['value', 'bestScore'],
-            time: ['value', 'bestScore'],
+            decimal: ['value', 'none'],
+            time: ['value', 'none'],
         }
 
         return valueMap[drillUnit]
@@ -142,10 +144,12 @@ function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: s
                     <label htmlFor="score">{fieldOne}</label>
                     <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} id="" />
                 </div>
-                <div className="w-full">
-                    <label htmlFor="out-of">{fieldTwo}</label>
-                    <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} id="" />
-                </div>
+                {fieldTwo !== 'none' &&
+                    <div className="w-full">
+                        <label htmlFor="out-of">{fieldTwo}</label>
+                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} id="" />
+                    </div>
+                }
             </div>
         </div>
     )
