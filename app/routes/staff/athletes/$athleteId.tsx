@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { Form, useActionData,  useLoaderData } from '@remix-run/react'
 import React from 'react'
 import invariant from 'tiny-invariant'
 import { getAthleteWithReports } from '~/models/athlete.server'
@@ -10,6 +10,22 @@ import { getExerciseCategories } from '~/models/exercise-category.server'
 import qs from 'qs'
 import { createEntryOnReport } from '~/models/drill-entry.server'
 import { createAthleteReport } from '~/models/athlete-report.server'
+import { z } from 'zod'
+
+const EntrySchema = z.object({
+    unit: z.string(),
+    value: z.coerce.number().gt(0),
+    outOf: z.optional(z.coerce.number().gt(0)),
+    drillId: z.coerce.number(),
+    userId: z.coerce.number()
+})
+
+const EntriesSchema = z.object({
+    entries: z.array(EntrySchema)
+})
+
+//type Entry = z.infer<typeof EntrySchema>
+//type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
 export async function loader({ request, params }: LoaderArgs) {
     invariant(params.athleteId, 'Not athlete id in params')
@@ -34,35 +50,29 @@ export async function action({ request, params }: ActionArgs) {
 
     const athleteId = parseInt(params.athleteId)
     const text = await request.text()
-    const formData = qs.parse(text) as unknown as {
-        entries: Array<{ unit: string; value: string; bestScore?: string; outOf?: string; drillId: string; userId: string }>
+    const jsonData = qs.parse(text) as unknown
+
+    const result = await EntriesSchema.safeParseAsync(jsonData)
+
+    if (!result.success) {
+        return json({ error: "Internal server error" })
     }
 
-    if (formData.entries.some((field) => Object.values(field).some((prop) => prop === ''))) {
-        return json({ error: 'Please make sure all fields are filled' })
-    }
+    invariant(result.success, "This should not happen")
 
+    const formData = result.data
     const report = await createAthleteReport(athleteId)
-
-    const normalizedEntries = formData.entries.map((entry) => ({
-        ...entry,
-        value: parseInt(entry.value),
-        userId: parseInt(entry.userId),
-        drillId: parseInt(entry.drillId),
-        bestScore: entry.bestScore ? parseInt(entry.bestScore) : undefined,
-        outOf: entry.outOf ? parseInt(entry.outOf) : undefined,
-    }))
-
-    await createEntryOnReport(report.id, normalizedEntries)
+    await createEntryOnReport(report.id, formData.entries)
 
     return redirect('/staff/athletes')
 }
 type DrillUnit = 'integral' | 'decimal' | 'time'
 
 export default function AthleteDetails() {
-    const { athlete, drills, categories } = useLoaderData<typeof loader>()
+    const { drills, categories } = useLoaderData<typeof loader>()
+    const actionData = useActionData<typeof action>()
+
     const [category, setCategory] = React.useState<number>(0)
-    const fetcher = useFetcher()
 
     return (
         <div className="athlete-overview-container">
@@ -75,7 +85,7 @@ export default function AthleteDetails() {
                         </option>
                     ))}
                 </select>
-                <fetcher.Form method="post">
+                <Form method="post">
                     {drills.map((drill, i) => (
                         <EntryField
                             visible={drill.categoryId === category || category === 0}
@@ -88,7 +98,7 @@ export default function AthleteDetails() {
                     ))}
 
                     <button type="submit">Submit</button>
-                </fetcher.Form>
+                </Form>
             </div>
         </div>
     )
