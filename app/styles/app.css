@@ -357,26 +357,26 @@
 /*STAFF ATHLETE TABLE */
 .athlete-table {
   text-align: center;
+  border-collapse: collapse;
   width: 100%;
   max-width: 1500px;
-  border-collapse: collapse;
   margin: 25px auto;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid black;
+  box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
+  -webkit-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
+  -moz-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
+}
+.athlete-table thead tr {
+  background-color: #DF7861;
 }
 .athlete-table th, .athlete-table td {
   padding: 24px 15px;
 }
-.athlete-table tbody tr {
-  border-bottom: thin solid #dddddd;
-}
-.athlete-table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-}
-.athlete-table tbody tr:last-of-type {
-  border-bottom: 4px solid #DF7861;
+.athlete-table tr {
+  border-bottom: 2px solid black;
 }
 .athlete-table tbody tr.active-row {
   font-weight: bold;
@@ -544,9 +544,6 @@
   button {
     visibility: hidden !important;
   }
-}
-.invis {
-  display: none;
 }
 
 /*# sourceMappingURL=app.css.map */
