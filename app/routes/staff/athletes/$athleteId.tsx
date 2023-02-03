@@ -78,6 +78,9 @@ export default function AthleteDetails() {
 
     return (
         <div className="athlete-overview-container">
+            <div className='athlete-reports'>
+
+            </div>
             <div className="athlete-report-form">
                 <select style={{ marginBottom: '1rem' }} onChange={(e) => setCategory(parseInt(e.currentTarget.value))} name="" id="">
                     <option value="0">Filter Category</option>
