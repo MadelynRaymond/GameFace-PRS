@@ -26,6 +26,7 @@ const EntriesSchema = z.object({
 })
 
 type Entry = z.infer<typeof EntrySchema>
+type FormActivity = { mode: 'edit' | 'new'; selectedReportId?: number }
 //type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -78,23 +79,37 @@ export default function AthleteDetails() {
     const [category, setCategory] = React.useState<number>(0)
     const reportQuery = useFetcher()
 
-    const populateReport = async (reportId: number) => {
+    function formModeReducer(state: FormActivity, action: { type: 'change_mode'; payload?: number }): FormActivity {
+        if (action.type === 'change_mode' && action.payload) {
+            return action.payload === state.selectedReportId ? { mode: 'new', selectedReportId: undefined } : { mode: 'edit', selectedReportId: action.payload }
+        }
+
+        throw Error('Unknown action')
+    }
+
+    const [state, dispatch] = React.useReducer(formModeReducer, { mode: 'new' })
+
+    function populateReport(reportId: number) {
         reportQuery.submit({ id: reportId.toString() }, { method: 'post', action: `/staff/athletes/${athlete.id}/fetch` })
+        dispatch({ type: 'change_mode', payload: reportId })
     }
 
     return (
         <div className="athlete-overview-container">
             <div className="athlete-reports">
                 <button>Add Report</button>
+                <span>{state.mode}</span>
                 <div>
                     {reports.map((report) => (
-                        <div onClick={() => populateReport(report.id)} className="athlete-report" key={report.id}>
-                            <p>{report.id}</p>
-                            <p>
-                                {athlete.profile?.firstName} {athlete.profile?.lastName}
-                            </p>
-                            <p>{toDateString(report.created_at)}</p>
-                        </div>
+                        <Report
+                            key={report.id}
+                            id={report.id}
+                            createdAt={report.created_at}
+                            athleteFirstName={athlete.profile?.firstName}
+                            athleteLastName={athlete.profile?.lastName}
+                            populateReport={populateReport}
+                            selected={state.selectedReportId === report.id ? true : false}
+                        />
                     ))}
                 </div>
             </div>
@@ -128,6 +143,33 @@ export default function AthleteDetails() {
     )
 }
 
+function Report({
+    id,
+    createdAt,
+    athleteFirstName,
+    athleteLastName,
+    populateReport,
+    selected
+}: {
+    id: number
+    athleteFirstName?: string
+    athleteLastName?: string
+    createdAt: string
+    populateReport: (id: number) => void,
+    selected: boolean
+}) {
+    return (
+        <div onClick={() => populateReport(id)} className="athlete-report">
+            <p>{id}</p>
+            <p>
+                {athleteFirstName} {athleteLastName}
+            </p>
+            <p>{toDateString(createdAt)}</p>
+            <span>{selected.toString()}</span>
+        </div>
+    )
+}
+
 function EntryField({
     drillName,
     drillUnit,
@@ -135,14 +177,14 @@ function EntryField({
     id,
     index,
     valueDefault,
-    outOfDefault
+    outOfDefault,
 }: {
     drillName: string
     drillUnit: DrillUnit
     visible: boolean
     id: number
     index: number
-    valueDefault?: string | number,
+    valueDefault?: string | number
     outOfDefault?: string | number
 }) {
     const value = React.useRef<HTMLInputElement | null>(null)
