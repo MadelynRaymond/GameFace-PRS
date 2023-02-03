@@ -1,8 +1,8 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
-import React from 'react'
+import { Form, useActionData, useFetcher, useLoaderData } from '@remix-run/react'
+import React, { useEffect } from 'react'
 import invariant from 'tiny-invariant'
 import { getAthleteWithReports } from '~/models/athlete.server'
 import { getDrills } from '~/models/drill.server'
@@ -25,7 +25,7 @@ const EntriesSchema = z.object({
     entries: z.array(EntrySchema),
 })
 
-//type Entry = z.infer<typeof EntrySchema>
+type Entry = z.infer<typeof EntrySchema>
 //type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -76,6 +76,11 @@ export default function AthleteDetails() {
     const actionData = useActionData<typeof action>()
 
     const [category, setCategory] = React.useState<number>(0)
+    const reportQuery = useFetcher()
+
+    const populateReport = async (reportId: number) => {
+        reportQuery.submit({ id: reportId.toString() }, { method: 'post', action: `/staff/athletes/${athlete.id}/fetch` })
+    }
 
     return (
         <div className="athlete-overview-container">
@@ -83,8 +88,11 @@ export default function AthleteDetails() {
                 <button>Add Report</button>
                 <div>
                     {reports.map((report) => (
-                        <div className="athlete-report" key={report.id}>
-                            <p>{athlete.profile?.firstName} {athlete.profile?.lastName}</p>
+                        <div onClick={() => populateReport(report.id)} className="athlete-report" key={report.id}>
+                            <p>{report.id}</p>
+                            <p>
+                                {athlete.profile?.firstName} {athlete.profile?.lastName}
+                            </p>
                             <p>{toDateString(report.created_at)}</p>
                         </div>
                     ))}
@@ -108,6 +116,8 @@ export default function AthleteDetails() {
                             index={i}
                             drillName={drill.name}
                             drillUnit={drill.drillUnit as DrillUnit}
+                            valueDefault={reportQuery.data?.entries.find((e: Entry) => e.drillId === drill.id).value || undefined}
+                            outOfDefault={reportQuery.data?.entries.find((e: Entry) => e.drillId === drill.id).outOf || undefined}
                         />
                     ))}
                     <button type="submit">Submit</button>
@@ -118,7 +128,23 @@ export default function AthleteDetails() {
     )
 }
 
-function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: string; drillUnit: DrillUnit; visible: boolean; id: number; index: number }) {
+function EntryField({
+    drillName,
+    drillUnit,
+    visible,
+    id,
+    index,
+    valueDefault,
+    outOfDefault
+}: {
+    drillName: string
+    drillUnit: DrillUnit
+    visible: boolean
+    id: number
+    index: number
+    valueDefault?: string | number,
+    outOfDefault?: string | number
+}) {
     const value = React.useRef<HTMLInputElement | null>(null)
     const second = React.useRef<HTMLInputElement | null>(null)
     const { athlete } = useLoaderData<typeof loader>()
@@ -154,12 +180,12 @@ function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: s
             <div className="flex gap-2">
                 <div className="w-full">
                     <label htmlFor="score">{fieldOne}</label>
-                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} id="" />
+                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} defaultValue={valueDefault} id="" />
                 </div>
                 {fieldTwo !== 'none' && (
                     <div className="w-full">
                         <label htmlFor="out-of">{fieldTwo}</label>
-                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} id="" />
+                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} defaultValue={outOfDefault} id="" />
                     </div>
                 )}
             </div>

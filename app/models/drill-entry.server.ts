@@ -1,4 +1,4 @@
-import type { Drill, User } from '@prisma/client'
+import type { AthleteReport, Drill, User } from '@prisma/client'
 import { prisma } from '~/db.server'
 
 type DrillEntry = {
@@ -185,4 +185,9 @@ export async function getEntriesAggregate({ drillName, userId, interval }: { dri
     })
 
     return { min: aggregations._min.value, max: aggregations._max.value, average: aggregations._avg.value }
+}
+
+
+export async function getEntriesOnReport(reportId: AthleteReport['id'] ) {
+    return await prisma.drillEntry.findMany({where: {reportId}})
 }
