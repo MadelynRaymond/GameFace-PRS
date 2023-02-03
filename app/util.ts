@@ -24,6 +24,12 @@ export function dbTimeToString(dbTime: number | null): string {
     return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`
 }
 
+export function toDateString(dbDate: string): string {
+  const dateObj = new Date(dbDate)
+
+  return `${dateObj.getMonth()}/${dateObj.getDate()}/${dateObj.getFullYear()}`
+}
+
 /*export function useContainsClick(ref: React.RefObject<HTMLElement>) {
     useEffect(() => {
         

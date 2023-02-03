@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { Form, useActionData,  useLoaderData } from '@remix-run/react'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import React from 'react'
 import invariant from 'tiny-invariant'
 import { getAthleteWithReports } from '~/models/athlete.server'
@@ -11,17 +11,18 @@ import qs from 'qs'
 import { createEntryOnReport } from '~/models/drill-entry.server'
 import { createAthleteReport } from '~/models/athlete-report.server'
 import { z, ZodError } from 'zod'
+import { toDateString } from '~/util'
 
 const EntrySchema = z.object({
     unit: z.string(),
     value: z.coerce.number().gt(0),
     outOf: z.optional(z.coerce.number().gt(0)),
     drillId: z.coerce.number(),
-    userId: z.coerce.number()
+    userId: z.coerce.number(),
 })
 
 const EntriesSchema = z.object({
-    entries: z.array(EntrySchema)
+    entries: z.array(EntrySchema),
 })
 
 //type Entry = z.infer<typeof EntrySchema>
@@ -56,11 +57,11 @@ export async function action({ request, params }: ActionArgs) {
 
     if (!result.success) {
         if (result.error instanceof ZodError) {
-            return json({errors: "Please fill all required fields"})
+            return json({ errors: 'Please fill all required fields' })
         }
     }
 
-    invariant(result.success, "This should not happen")
+    invariant(result.success, 'This should not happen')
 
     const formData = result.data
     const report = await createAthleteReport(athleteId)
@@ -71,15 +72,23 @@ export async function action({ request, params }: ActionArgs) {
 type DrillUnit = 'integral' | 'decimal' | 'time'
 
 export default function AthleteDetails() {
-    const { drills, categories } = useLoaderData<typeof loader>()
+    const { drills, categories, reports, athlete } = useLoaderData<typeof loader>()
     const actionData = useActionData<typeof action>()
 
     const [category, setCategory] = React.useState<number>(0)
 
     return (
         <div className="athlete-overview-container">
-            <div className='athlete-reports'>
-
+            <div className="athlete-reports">
+                <button>Add Report</button>
+                <div>
+                    {reports.map((report) => (
+                        <div className="athlete-report" key={report.id}>
+                            <p>{athlete.profile?.firstName} {athlete.profile?.lastName}</p>
+                            <p>{toDateString(report.created_at)}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="athlete-report-form">
                 <select style={{ marginBottom: '1rem' }} onChange={(e) => setCategory(parseInt(e.currentTarget.value))} name="" id="">
@@ -102,7 +111,7 @@ export default function AthleteDetails() {
                         />
                     ))}
                     <button type="submit">Submit</button>
-                    <span className='error-text'>{actionData?.errors}</span>
+                    <span className="error-text">{actionData?.errors}</span>
                 </Form>
             </div>
         </div>
@@ -147,12 +156,12 @@ function EntryField({ drillName, drillUnit, visible, id, index }: { drillName: s
                     <label htmlFor="score">{fieldOne}</label>
                     <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} id="" />
                 </div>
-                {fieldTwo !== 'none' &&
+                {fieldTwo !== 'none' && (
                     <div className="w-full">
                         <label htmlFor="out-of">{fieldTwo}</label>
                         <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} id="" />
                     </div>
-                }
+                )}
             </div>
         </div>
     )
