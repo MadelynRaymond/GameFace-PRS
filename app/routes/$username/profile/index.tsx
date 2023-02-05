@@ -1,21 +1,21 @@
-import type { LoaderArgs} from "@remix-run/node";
-import { json, Response } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { requireUser } from "~/session.server";
+import type { LoaderArgs } from '@remix-run/node'
+import { json, Response } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
+import { requireUser } from '~/session.server'
 
-export async function loader({request}: LoaderArgs) {
+export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
 
-    if(!user) {
-        throw new Response("Not Found", {status: 404})
+    if (!user) {
+        throw new Response('Not Found', { status: 404 })
     }
 
-    const {profile, email} = user
+    const { profile, email } = user
 
-    return json({profile, email})
+    return json({ profile, email })
 }
 export default function Profile() {
-    const {profile, email} = useLoaderData<typeof loader>()
+    const { profile, email } = useLoaderData<typeof loader>()
     return (
         <div>
             <div className="profile-banner">

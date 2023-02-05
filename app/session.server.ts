@@ -55,7 +55,17 @@ export async function requireUser(request: Request) {
     throw await logout(request)
 }
 
-export async function createUserSession({ request, userId, remember, redirectTo }: { request: Request; userId: number; remember: boolean; redirectTo: string }) {
+export async function createUserSession({
+    request,
+    userId,
+    remember,
+    redirectTo,
+}: {
+    request: Request
+    userId: number
+    remember: boolean
+    redirectTo: string
+}) {
     const session = await getSession(request)
     session.set(USER_SESSION_KEY, userId)
     return redirect(redirectTo, {

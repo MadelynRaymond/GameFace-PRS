@@ -1,5 +1,5 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { useCatch, useLoaderData } from '@remix-run/react'
@@ -21,10 +21,10 @@ export async function loader({ request }: LoaderArgs) {
         sessions: 7,
     })
 
-    const insufficientData = [entries, lastSevenSessions].some(entry => entry.length === 0)
+    const insufficientData = [entries, lastSevenSessions].some((entry) => entry.length === 0)
 
     if (insufficientData) {
-        throw new Response("Not enough data", {status: 404})
+        throw new Response('Not enough data', { status: 404 })
     }
 
     const sessionScores = lastSevenSessions
@@ -152,7 +152,7 @@ export default function Dribbling() {
                 </ResponsiveContainer>
             </div>
 
-            <div className='flex flex-col align-center gap-1'>
+            <div className="flex flex-col align-center gap-1">
                 <p>Lifetime Overview: Avg. vs. Best Dribbling Drill Completion Time</p>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
@@ -181,13 +181,15 @@ export default function Dribbling() {
 }
 
 export function CatchBoundary() {
-    const caught = useCatch();
-  
+    const caught = useCatch()
+
     if (caught.status === 404) {
-      return <div className='flex justify-center'>
-        <h2>Not enough data</h2>
-      </div>;
+        return (
+            <div className="flex justify-center">
+                <h2>Not enough data</h2>
+            </div>
+        )
     }
-  
-    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }

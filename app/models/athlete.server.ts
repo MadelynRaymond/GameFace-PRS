@@ -20,6 +20,7 @@ export async function getAthletes() {
             id: true,
             email: true,
             profile: true,
+            status: true
         },
         orderBy: {
             profile: {
@@ -38,7 +39,7 @@ export async function getAthleteById(athleteId: User['id']) {
             id: true,
             email: true,
             profile: true,
-            username: true
+            username: true,
         },
     })
 }

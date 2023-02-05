@@ -84,7 +84,10 @@ input[type=text], input[type=password], input[type=number] {
   margin: 1rem 0;
   padding: 12px;
   background-color: rgb(230, 230, 230);
-  border: none;
+  border: 1px solid black;
+  box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
 }
 
 /*# sourceMappingURL=index.css.map */

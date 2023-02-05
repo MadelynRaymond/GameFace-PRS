@@ -1,5 +1,5 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUserId } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
@@ -21,17 +21,15 @@ export async function loader({ request }: LoaderArgs) {
         sessions: 30,
     })
 
-    const insufficientData = [jumpHeightEntries, monthlySessionJumpHeight].some(entry => entry.length === 0)
+    const insufficientData = [jumpHeightEntries, monthlySessionJumpHeight].some((entry) => entry.length === 0)
 
     if (insufficientData) {
-        throw new Response("Not enough data", {status: 404})
+        throw new Response('Not enough data', { status: 404 })
     }
 
     const jumpHeights = jumpHeightEntries.map((entry) => entry.value as number)
     const averageJumpHeightMonth = (jumpHeights.reduce((sum, score) => score + sum, 0) / jumpHeightEntries.length).toFixed(2)
     const bestJump = Math.max(...jumpHeights)
-
-
 
     const sessionScoresJumpHeight = monthlySessionJumpHeight
         .flatMap((report) => ({
@@ -53,7 +51,6 @@ export async function loader({ request }: LoaderArgs) {
     return json({ averageJumpHeightMonth, bestJump, lastSessionAverage, sessionScoresJumpHeight })
 }
 export default function Jumping() {
-
     const { bestJump, averageJumpHeightMonth, lastSessionAverage, sessionScoresJumpHeight } = useLoaderData<typeof loader>()
     return (
         <div className="stat-grid">
@@ -160,13 +157,15 @@ export default function Jumping() {
 }
 
 export function CatchBoundary() {
-    const caught = useCatch();
-  
+    const caught = useCatch()
+
     if (caught.status === 404) {
-      return <div className='flex justify-center'>
-        <h2>Not enough data</h2>
-      </div>;
+        return (
+            <div className="flex justify-center">
+                <h2>Not enough data</h2>
+            </div>
+        )
     }
-  
-    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }

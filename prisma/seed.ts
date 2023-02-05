@@ -16,7 +16,7 @@ async function seed() {
         .catch(() => {
             // no worries if it doesn't exist yet
         })
-    
+
     const username = 'rachel49'
 
     const user = await prisma.user.create({
@@ -33,8 +33,8 @@ async function seed() {
                     grade: '9',
                     firstName: 'Rachel',
                     lastName: 'Wilson',
-                    school: "Port St Lucie High",
-                    age: "14"
+                    school: 'Port St Lucie High',
+                    age: '14',
                 },
             },
         },
@@ -87,7 +87,7 @@ async function seed() {
                     id: shooting.id,
                 },
             },
-            drillUnit: "integral"
+            drillUnit: 'integral',
         },
     })
 
@@ -99,7 +99,7 @@ async function seed() {
                     id: dribbling.id,
                 },
             },
-            drillUnit: "time"
+            drillUnit: 'time',
         },
     })
 
@@ -111,7 +111,7 @@ async function seed() {
                     id: strength.id,
                 },
             },
-            drillUnit: "time"
+            drillUnit: 'time',
         },
     })
 
@@ -123,7 +123,7 @@ async function seed() {
                     id: strength.id,
                 },
             },
-            drillUnit: "decimal"
+            drillUnit: 'decimal',
         },
     })
 
@@ -135,7 +135,7 @@ async function seed() {
                     id: speed.id,
                 },
             },
-            drillUnit: "time"
+            drillUnit: 'time',
         },
     })
 
@@ -147,7 +147,7 @@ async function seed() {
                     id: passing.id,
                 },
             },
-            drillUnit: "integral"
+            drillUnit: 'integral',
         },
     })
 
@@ -159,7 +159,7 @@ async function seed() {
                     id: jumping.id,
                 },
             },
-            drillUnit: "decimal"
+            drillUnit: 'decimal',
         },
     })
 

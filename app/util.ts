@@ -1,9 +1,6 @@
-
 export function add(a: number, b: number): number {
     return a + b
 }
-
-
 
 export function isProbablyEmail(email: unknown): email is string {
     return typeof email === 'string' && email.length > 3 && email.includes('@')
@@ -19,12 +16,18 @@ export function validateAge(age: unknown): age is number {
 
 export function dbTimeToString(dbTime: number | null): string {
     if (dbTime === null) return 'No Data'
-    
+
     const normalized = Math.floor(dbTime)
     const minutes = Math.floor(Math.floor(normalized) / 60)
     const seconds = normalized % 60
 
     return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`
+}
+
+export function toDateString(dbDate: string): string {
+  const dateObj = new Date(dbDate)
+
+  return `${dateObj.getMonth()}/${dateObj.getDate()}/${dateObj.getFullYear()}`
 }
 
 /*export function useContainsClick(ref: React.RefObject<HTMLElement>) {

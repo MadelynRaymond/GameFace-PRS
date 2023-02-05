@@ -9,20 +9,30 @@ type Profile = {
     lastName: string
     grade: string
     age: string
-    school: string,
+    school: string
 }
 
 export async function getUserById(id: User['id']) {
-    return prisma.user.findUnique({ where: { id }, include: {profile: true} })
+    return prisma.user.findUnique({ where: { id }, include: { profile: true } })
 }
 
 export async function getUserByEmail(email: User['email']) {
     return prisma.user.findUnique({ where: { email } })
 }
 
-export async function createUser({username, email, password, profile}: {username: User["username"],  email: User["email"], password: string, profile: Profile}) {
+export async function createUser({
+    username,
+    email,
+    password,
+    profile,
+}: {
+    username: User['username']
+    email: User['email']
+    password: string
+    profile: Profile
+}) {
     const hashedPassword = await bcrypt.hash(password, 10)
-    const {grade, school, age, firstName, lastName} = profile
+    const { grade, school, age, firstName, lastName } = profile
 
     return prisma.user.create({
         data: {
@@ -39,26 +49,24 @@ export async function createUser({username, email, password, profile}: {username
                     lastName,
                     grade,
                     school,
-                    age
-                }
-            }
+                    age,
+                },
+            },
         },
     })
 }
 
-export async function changePassword({userId, password}: {userId: User["id"], password: string}) {
+export async function changePassword({ userId, password }: { userId: User['id']; password: string }) {
     const hash = await bcrypt.hash(password, 10)
 
     return prisma.password.update({
         where: {
-            userId
+            userId,
         },
         data: {
-            hash
-        }
+            hash,
+        },
     })
-
-
 }
 
 export async function deleteUserByEmail(email: User['email']) {

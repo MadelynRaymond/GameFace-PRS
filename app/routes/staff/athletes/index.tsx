@@ -21,7 +21,7 @@ export default function Athletes() {
 
     return (
         <div>
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
                 <h2>Student-Athletes</h2>
             </div>
             <table className="athlete-table">
@@ -45,7 +45,7 @@ export default function Athletes() {
     )
 }
 
-function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | null; id: User['id'] } }) {
+function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | null; id: User['id'], status: User['status'] } }) {
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -55,7 +55,7 @@ function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | nul
             <td>{athlete.profile?.lastName}</td>
             <td>{athlete.profile?.school}</td>
             <td>{athlete.profile?.grade}</td>
-            <td>Active</td>
+            <td>{athlete.status}</td>
             <td>...</td>
         </tr>
     )

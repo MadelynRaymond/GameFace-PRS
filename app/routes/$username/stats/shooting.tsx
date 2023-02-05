@@ -24,10 +24,10 @@ export async function loader({ request }: LoaderArgs) {
         interval: priorDate,
     })
 
-    const insufficientData = [lastSevenSessions, freeThrowsLastMonth, freeThrowsLifeTime].some(stat => stat.length === 0)
+    const insufficientData = [lastSevenSessions, freeThrowsLastMonth, freeThrowsLifeTime].some((stat) => stat.length === 0)
 
     if (insufficientData) {
-        throw new Response("Not enough data", {status: 404})
+        throw new Response('Not enough data', { status: 404 })
     }
 
     const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
@@ -96,7 +96,8 @@ export async function loader({ request }: LoaderArgs) {
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } = useLoaderData<typeof loader>()
+    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } =
+        useLoaderData<typeof loader>()
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
@@ -163,8 +164,8 @@ export default function Shooting() {
                 </div>
             </div>
 
-            <div className='flex'>
-                <div className='flex flex-col align-center gap-1 h-full w-full'>
+            <div className="flex">
+                <div className="flex flex-col align-center gap-1 h-full w-full">
                     <p>Last 30 Days: Shots Landed/Attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
@@ -239,13 +240,15 @@ export default function Shooting() {
 }
 
 export function CatchBoundary() {
-    const caught = useCatch();
-  
+    const caught = useCatch()
+
     if (caught.status === 404) {
-      return <div className='flex justify-center'>
-        <h2>Not enough data</h2>
-      </div>;
+        return (
+            <div className="flex justify-center">
+                <h2>Not enough data</h2>
+            </div>
+        )
     }
-  
-    throw new Error(`Unexpected caught response with status: ${caught.status}`);
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }
