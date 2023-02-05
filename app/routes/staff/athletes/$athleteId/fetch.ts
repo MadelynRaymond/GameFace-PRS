@@ -1,5 +1,5 @@
-import { ActionArgs, json } from "@remix-run/node";
-import invariant from "tiny-invariant";
+import type { ActionArgs} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getEntriesOnReport } from "~/models/drill-entry.server";
 
 export async function action({request}: ActionArgs) {

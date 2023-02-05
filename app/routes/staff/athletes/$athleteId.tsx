@@ -21,11 +21,11 @@ const EntrySchema = z.object({
     userId: z.coerce.number(),
 })
 
-const EntriesSchema = z.object({
+export const EntriesSchema = z.object({
     entries: z.array(EntrySchema),
 })
 
-type Entry = z.infer<typeof EntrySchema>
+export type Entry = z.infer<typeof EntrySchema>
 type FormActivity = { mode: 'edit' | 'new'; selectedReportId?: number }
 //type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
@@ -103,7 +103,6 @@ export default function AthleteDetails() {
         reportQuery.submit({ id: reportId.toString() }, { method: 'post', action: `/staff/athletes/${athlete.id}/fetch` })
     }
 
-
     return (
         <div className="athlete-overview-container">
             <div className="athlete-reports">
@@ -129,7 +128,7 @@ export default function AthleteDetails() {
                         </option>
                     ))}
                 </select>
-                <Form method="post" ref={formRef}>
+                <Form method="post" ref={formRef} action={state.mode === 'new' ? `/staff/athletes/${athlete.id}` : `${state.selectedReportId}`}>
                     {drills.map((drill, i) => (
                         <EntryField
                             visible={drill.categoryId === category || category === 0}
@@ -183,7 +182,7 @@ function EntryField({
     index,
     valueDefault,
     outOfDefault,
-    formMode
+    formMode,
 }: {
     drillName: string
     drillUnit: DrillUnit
@@ -191,7 +190,7 @@ function EntryField({
     id: number
     index: number
     valueDefault?: string | number
-    outOfDefault?: string | number,
+    outOfDefault?: string | number
     formMode: 'edit' | 'new'
 }) {
     const value = React.useRef<HTMLInputElement | null>(null)
@@ -229,12 +228,24 @@ function EntryField({
             <div className="flex gap-2">
                 <div className="w-full">
                     <label htmlFor="score">{fieldOne}</label>
-                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} defaultValue={formMode === 'edit' ? valueDefault : undefined} id="" />
+                    <input
+                        ref={value}
+                        type="number"
+                        name={`entries[${index}][${valueOne}]`}
+                        defaultValue={formMode === 'edit' ? valueDefault : undefined}
+                        id=""
+                    />
                 </div>
                 {fieldTwo !== 'none' && (
                     <div className="w-full">
                         <label htmlFor="out-of">{fieldTwo}</label>
-                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} defaultValue={formMode === 'edit' ? outOfDefault : undefined} id="" />
+                        <input
+                            ref={second}
+                            type="number"
+                            name={`entries[${index}][${valueTwo}]`}
+                            defaultValue={formMode === 'edit' ? outOfDefault : undefined}
+                            id=""
+                        />
                     </div>
                 )}
             </div>
