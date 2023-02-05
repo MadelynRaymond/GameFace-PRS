@@ -20,6 +20,7 @@ export async function getAthletes() {
             id: true,
             email: true,
             profile: true,
+            status: true
         },
         orderBy: {
             profile: {
