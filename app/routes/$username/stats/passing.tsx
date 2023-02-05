@@ -125,115 +125,114 @@ export default function Shooting() {
     ]
 
     return (
-        <div className="stat-grid">
-            <div className="stat-box-group">
-                <div className="stat-box">
-                    <p className="stat-box__title">Successful Passes</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{scoredLifeTime}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            3.8%
-                        </p>
-                        <p className="stat-box__desc">last 30 days</p>
-                    </div>
-                </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Attepted Passes</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{attemptedLifeTime}</p>
-                        <p className="stat-box__improvement">
-                            <span className="up-symbol">▲</span>
-                            3.2%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
-                    </div>
-                </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Avg. Pass Success Rate</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{successPercentage}%</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            4.4%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
-                    </div>
+        <div>
+            <div className="report-card-header">
+            <div className="report-card-title">
+                <h2>Passing Statistics </h2>
+                <p>Athlete: Danielle Williams (Year Overview)</p>
+            </div>
+            <div className="button-group">
+                <p className="filter-heading">Select Filter:</p>
+                <div className="filter-button-group">
+                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
+                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
+                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
                 </div>
             </div>
-
-            <div className="flex">
-                <div className="flex flex-col align-center gap-1 h-full w-full">
-                    <p>Last 30 Days: Missed vs. Landed</p>
+            </div>
+            <div className="stat-grid">
+                <div className="stat-box-group">
+                    <div className="stat-box">
+                        <p className="stat-box__title">Successful Passes</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{scoredLifeTime}</p>
+                            <p className="stat-box__desc">last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Attepted Passes</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{attemptedLifeTime}</p>
+                            <p className="stat-box__desc">in last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Avg. Pass Success Rate</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{successPercentage}%</p>
+                            <p className="stat-box__desc">in last 30 days</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex graph-container">
+                    <div className="flex flex-col align-center gap-1 h-full w-full">
+                        <p>Last 30 Days: Missed vs. Landed</p>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={800} height={400}>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Tooltip />
+                                <Legend verticalAlign="bottom" align="center" />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="flex flex-col align-center gap-1 h-full w-full">
+                        <p>Lifetime: Missed vs. Landed</p>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={800} height={400}>
+                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Tooltip />
+                                <Legend verticalAlign="bottom" align="center" />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Last Seven Sessions: Pass Success Rate</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={800} height={400}>
-                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                        <BarChart width={500} height={300} data={sessionScores}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="created" />
+                            <YAxis />
                             <Tooltip />
-                            <Legend verticalAlign="bottom" align="center" />
-                        </PieChart>
+                            <Legend />
+                            <Bar dataKey="scored" stackId="a" fill="#DF7861" />
+                            <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                        </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 h-full w-full">
-                    <p>Lifetime: Missed vs. Landed</p>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Lifetime Overview: Pass Success Rate</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={800} height={400}>
-                            <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                        <AreaChart
+                            width={730}
+                            height={250}
+                            data={sessionPercentChange}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <defs>
+                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
-                            <Legend verticalAlign="bottom" align="center" />
-                        </PieChart>
+                            <Legend />
+                            <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                        </AreaChart>
                     </ResponsiveContainer>
                 </div>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Last Seven Sessions: Pass Success Rate</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart width={500} height={300} data={sessionScores}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="scored" stackId="a" fill="#DF7861" />
-                        <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Lifetime Overview: Pass Success Rate</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={sessionPercentChange}
-                        margin={{
-                            top: 10,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <defs>
-                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                            </linearGradient>
-                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Legend />
-                        <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                    </AreaChart>
-                </ResponsiveContainer>
             </div>
         </div>
     )
