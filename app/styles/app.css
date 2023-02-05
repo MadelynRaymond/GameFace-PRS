@@ -59,6 +59,10 @@
   flex-direction: column;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .form-center {
   display: flex;
   align-items: center;
@@ -403,7 +407,12 @@
 .athlete-reports button {
   align-self: flex-end;
 }
-.athlete-reports > div {
+.athlete-reports > div:first-of-type {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.athlete-reports > .report-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;

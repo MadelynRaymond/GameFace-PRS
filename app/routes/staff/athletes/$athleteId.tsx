@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { Form, useActionData, useFetcher, useLoaderData } from '@remix-run/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import invariant from 'tiny-invariant'
 import { getAthleteWithReports } from '~/models/athlete.server'
 import { getDrills } from '~/models/drill.server'
@@ -76,9 +76,11 @@ export default function AthleteDetails() {
     const { drills, categories, reports, athlete } = useLoaderData<typeof loader>()
     const actionData = useActionData<typeof action>()
 
+    //drill categories
     const [category, setCategory] = React.useState<number>(0)
     const reportQuery = useFetcher()
 
+    //set action to edit or new report
     function formModeReducer(state: FormActivity, action: { type: 'change_mode'; payload?: number }): FormActivity {
         if (action.type === 'change_mode' && action.payload) {
             return action.payload === state.selectedReportId ? { mode: 'new', selectedReportId: undefined } : { mode: 'edit', selectedReportId: action.payload }
@@ -87,19 +89,25 @@ export default function AthleteDetails() {
         throw Error('Unknown action')
     }
 
+    //hook for reducer
     const [state, dispatch] = React.useReducer(formModeReducer, { mode: 'new' })
+    const formRef = React.useRef<HTMLFormElement>(null)
+
+    function handleReportClick(reportId: number) {
+        dispatch({ type: 'change_mode', payload: reportId })
+
+        populateReport(reportId)
+    }
 
     function populateReport(reportId: number) {
         reportQuery.submit({ id: reportId.toString() }, { method: 'post', action: `/staff/athletes/${athlete.id}/fetch` })
-        dispatch({ type: 'change_mode', payload: reportId })
     }
+
 
     return (
         <div className="athlete-overview-container">
             <div className="athlete-reports">
-                <button>Add Report</button>
-                <span>{state.mode}</span>
-                <div>
+                <div className="report-list">
                     {reports.map((report) => (
                         <Report
                             key={report.id}
@@ -107,8 +115,7 @@ export default function AthleteDetails() {
                             createdAt={report.created_at}
                             athleteFirstName={athlete.profile?.firstName}
                             athleteLastName={athlete.profile?.lastName}
-                            populateReport={populateReport}
-                            selected={state.selectedReportId === report.id ? true : false}
+                            handleReportClick={handleReportClick}
                         />
                     ))}
                 </div>
@@ -122,7 +129,7 @@ export default function AthleteDetails() {
                         </option>
                     ))}
                 </select>
-                <Form method="post">
+                <Form method="post" ref={formRef}>
                     {drills.map((drill, i) => (
                         <EntryField
                             visible={drill.categoryId === category || category === 0}
@@ -133,6 +140,7 @@ export default function AthleteDetails() {
                             drillUnit={drill.drillUnit as DrillUnit}
                             valueDefault={reportQuery.data?.entries.find((e: Entry) => e.drillId === drill.id).value || undefined}
                             outOfDefault={reportQuery.data?.entries.find((e: Entry) => e.drillId === drill.id).outOf || undefined}
+                            formMode={state.mode}
                         />
                     ))}
                     <button type="submit">Submit</button>
@@ -148,24 +156,21 @@ function Report({
     createdAt,
     athleteFirstName,
     athleteLastName,
-    populateReport,
-    selected
+    handleReportClick,
 }: {
     id: number
     athleteFirstName?: string
     athleteLastName?: string
     createdAt: string
-    populateReport: (id: number) => void,
-    selected: boolean
+    handleReportClick: (id: number) => void
 }) {
     return (
-        <div onClick={() => populateReport(id)} className="athlete-report">
+        <div onClick={() => handleReportClick(id)} className="athlete-report">
             <p>{id}</p>
             <p>
                 {athleteFirstName} {athleteLastName}
             </p>
             <p>{toDateString(createdAt)}</p>
-            <span>{selected.toString()}</span>
         </div>
     )
 }
@@ -178,6 +183,7 @@ function EntryField({
     index,
     valueDefault,
     outOfDefault,
+    formMode
 }: {
     drillName: string
     drillUnit: DrillUnit
@@ -185,7 +191,8 @@ function EntryField({
     id: number
     index: number
     valueDefault?: string | number
-    outOfDefault?: string | number
+    outOfDefault?: string | number,
+    formMode: 'edit' | 'new'
 }) {
     const value = React.useRef<HTMLInputElement | null>(null)
     const second = React.useRef<HTMLInputElement | null>(null)
@@ -222,12 +229,12 @@ function EntryField({
             <div className="flex gap-2">
                 <div className="w-full">
                     <label htmlFor="score">{fieldOne}</label>
-                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} defaultValue={valueDefault} id="" />
+                    <input ref={value} type="number" name={`entries[${index}][${valueOne}]`} defaultValue={formMode === 'edit' ? valueDefault : undefined} id="" />
                 </div>
                 {fieldTwo !== 'none' && (
                     <div className="w-full">
                         <label htmlFor="out-of">{fieldTwo}</label>
-                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} defaultValue={outOfDefault} id="" />
+                        <input ref={second} type="number" name={`entries[${index}][${valueTwo}]`} defaultValue={formMode === 'edit' ? outOfDefault : undefined} id="" />
                     </div>
                 )}
             </div>
