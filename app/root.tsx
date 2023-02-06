@@ -50,48 +50,38 @@ function Navbar() {
     return (
         <nav className="navbar no-print">
             <div>
-                <div className="logo">
-                    <Link to={'/'}>
-                        <img
-                            src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_564,h_564,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png"
-                            alt=""
-                        />
-                    </Link>
-                </div>
                 <div>
                     <ul>
                         <li>
-                            <a href="https://www.gameface413.org/">Home</a>
+                            <p className="nav-logo">Game Face PRS</p>
                         </li>
-                        {user && (
-                            <li>
-                                <Link to={`${user?.username}/stats`}>My Stats</Link>
-                            </li>
-                        )}
                     </ul>
                 </div>
             </div>
 
             <div>
                 {user ? (
-                    <ul>
-                        <li>
-                            <Form method="post" action="/logout">
-                                <button
-                                    style={{
-                                        backgroundColor: 'white',
-                                    }}
-                                    type="submit"
-                                    className="nav-btn"
-                                >
-                                    Logout
-                                </button>
-                            </Form>
-                        </li>
+                    <ul className="left-nav-container">
 
-                        <li className="pfp">
+                        <li className="left-nav-btn">
+                            <a href="https://www.gameface413.org/">Main Site</a>
+                        </li>
+                        <li className="left-nav-btn">
+                            <Link to={`${user?.username}/stats`}>My Stats</Link>
+                        </li>
+                        <li className="left-nav-btn">
+                            <Form method="post" action="/logout">
+                                <input
+                                    type="submit"
+                                    className="logout-btn"
+                                    value="Logout"
+                                />
+                            </Form>
+                        </li >
+
+                        <li className="left-nav-btn">
                             <Link to={`${user?.username}/profile`}>
-                                <img src={Basketball} alt="Profile"></img>
+                                Profile
                             </Link>
                         </li>
                     </ul>

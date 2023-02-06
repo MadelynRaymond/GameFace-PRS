@@ -111,8 +111,9 @@
   display: flex;
   align-items: center;
   flex-grow: 0.01;
-  /* top | right | bottom | left */
+
 }
+
 .logo img {
   object-fit: contain;
   max-width: 80px;
