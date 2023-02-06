@@ -85,7 +85,7 @@ export default function Jumping() {
                         </div>
                     </div>
                     <div className="stat-box">
-                        <p className="stat-box__title">Last Session: Avg. Jump (Height)</p>
+                        <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{lastSessionAverage}ft</p>
                             <p className="stat-box__desc">in last 30 days</p>

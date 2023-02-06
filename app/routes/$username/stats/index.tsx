@@ -51,7 +51,7 @@ export default function Overall() {
 
             <div className="overall-stat-table">
                 <div className="stat-row flex-r">
-                    <p>Speed</p>
+                    <h4>Speed</h4>
                     <div className="stat-row-item">
                         <p className="table-stat-name">Fastest Drill</p>
                         <p>{`${dbTimeToString(speedAggregations.min)}` || 'Not enough data'}</p>
@@ -62,7 +62,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Shooting</p>
+                    <h4>Shooting</h4>
                     <div>
                         <p className="table-stat-name">Shots Made</p>
                         <p>todo</p>
@@ -73,7 +73,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Dribbling</p>
+                    <h4>Dribbling</h4>
                     <div>
                         <p className="table-stat-name">Fastes Drill w/no Mistakes</p>
                         <p>{`${dbTimeToString(dribblingAggregations.min)}` || 'Not enough data'}</p>
@@ -84,7 +84,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Passing</p>
+                    <h4>Passing</h4>
                     <div>
                         <p className="table-stat-name">Passes Completed</p>
                         <p>todo</p>
@@ -95,7 +95,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Strength</p>
+                    <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
                         <p>{`${dbTimeToString(squatAggregations.min)}` || 'Not enough data'}</p>
@@ -106,7 +106,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Jumping</p>
+                    <h4>Jumping</h4>
                     <div>
                         <p className="table-stat-name">Highest Jump</p>
                         <p>todo</p>

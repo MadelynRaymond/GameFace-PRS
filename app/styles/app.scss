@@ -79,7 +79,7 @@
   background-color: rgb(255, 255, 255);
   color: black;
   border: 4px solid black;
-  margin: 2rem 12rem;
+  margin: 2rem 6rem;
   border-radius: 8px;
   border-bottom: 8px solid black;
 }
@@ -311,7 +311,19 @@
 }
 
 .table-stat-name {
+
   font-weight: lighter;
+}
+
+.stat-row h4{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+}
+
+.stat-box__figure{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.9rem;
+  margin-top: 1rem;
 }
 
 
@@ -344,8 +356,14 @@
   margin: 1rem 4rem 0rem 4rem;
 }
 
+.report-card-title{
+  font-size: 1rem;
+  font-family: 'Press Start 2P', cursive;
+}
 .report-card-title p {
   color: gray;
+  font-size: 0.75rem;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .filter-heading{
