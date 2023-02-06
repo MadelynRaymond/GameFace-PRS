@@ -1,18 +1,24 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUserId } from '~/session.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { requireUser } from '~/session.server'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAverage, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
-import { dbTimeToString } from '~/util'
+import { dateFromDaysOptional, dbTimeToString } from '~/util'
+import { useEffect, useReducer, useState } from 'react'
 
 export async function loader({ request }: LoaderArgs) {
-    const userId = await requireUserId(request)
-    const today = new Date()
-    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
+    const user = await requireUser(request)
+    const { username, id } = user
+    const userId = id
 
-    const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval: priorDate })
-    const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval: priorDate })
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
+
+    const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval })
+    const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval })
 
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Speed Drill',
@@ -46,49 +52,78 @@ export async function loader({ request }: LoaderArgs) {
 
     const lastSessionAverage = dbTimeToString(sessionScores[sessionScores.length - 1].time)
 
-    return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage })
+    return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage, username })
 }
+
 export default function Speed() {
-    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage } = useLoaderData<typeof loader>()
+    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage, username } = useLoaderData<typeof loader>()
+    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
+        if (action.type !== 'update'){
+           throw new Error("Unknown action") 
+        }
+
+        if (!action.payload) return {text: 'Lifetime'}
+
+        return {text: `Last ${action.payload} days`}
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+
+    useEffect(() => {
+        console.log('refetched')
+        filter.load(`/${username}/stats/speed?interval=${interval}`)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({type: 'update', payload: interval})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
 
     return (
         <div>
             <div className="report-card-header">
-            <div className="report-card-title">
-                <h2>Speed Statistics </h2>
-                <p>Athlete: Danielle Williams (Year Overview)</p>
-            </div>
-            <div className="button-group">
-                <p className="filter-heading">Select Filter:</p>
-                <div className="filter-button-group">
-                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                <div className="report-card-title">
+                    <h2>Speed Statistics </h2>
+                    <p>Athlete: Danielle Williams (Year Overview)</p>
                 </div>
-            </div>
+                <div className="button-group">
+                    <p className="filter-heading">Select Filter:</p>
+                    <div className="filter-button-group">
+                        <button onClick={() => setInterval(30)} className="filter-button">
+                            Month
+                        </button>
+                        <button onClick={() => setInterval(365)} className="filter-button">
+                            Year
+                        </button>
+                        <button onClick={() => setInterval(undefined)}>Lifetime</button>
+                    </div>
+                </div>
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box">
                         <p className="stat-box__title">Overall (Avg time)</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{averageTimeMonth}s</p>
-                            <p className="stat-box__desc">last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.averageTimeMonth || averageTimeMonth}s</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Best Speed</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{bestTimeMonth}s</p>
-                            <p className="stat-box__desc">last 30 days</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Last Session Avg. Speed</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{lastSessionAverage}s</p>
-            
-                            <p className="stat-box__desc">last 30 days</p>
+
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
