@@ -72,39 +72,80 @@
 /*NAVBAR */
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding-left: 1rem;
   text-align: start;
   font-size: 1rem;
   background-color: rgb(255, 255, 255);
   color: black;
+  border: 4px solid black;
+  margin: 2rem 6rem;
+  border-radius: 8px;
+  border-bottom: 8px solid black;
 }
+
 .navbar > div, .navbar > div ul {
-  gap: 2rem;
   display: flex;
-  align-items: center;
 }
+
 .navbar ul {
   margin: 0;
   padding: 0;
 }
+
 .navbar ul li {
   text-decoration: none;
   list-style: none;
+}
+
+.nav-logo {
+  padding-top: 0.25rem;
 }
 
 .btn, .login-button {
   color: white;
   background-color: #DF7861;
   border: none;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Press Start 2P", cursive;
   padding: 0.5rem 1rem;
+}
+
+.welcome-back-txt {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.4rem;
+}
+
+.login-button:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  cursor: pointer;
 }
 
 .login-button {
-  margin: 0.5 1rem;
+  margin: 0.5rem 1rem;
+}
+
+.left-nav-container > * {
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+  border-left: 4px solid black;
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-logo {
+  font-size: 1.25rem;
+  font-family: "Press Start 2P", cursive;
+}
+
+.logout-btn > button {
+  border: none;
+  background-color: inherit;
+  color: inherit;
+}
+
+.left-nav-container > *:hover, .logout-btn:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
 }
 
 .logo {
@@ -113,31 +154,21 @@
   flex-grow: 0.01;
   /* top | right | bottom | left */
 }
+
 .logo img {
   object-fit: contain;
   max-width: 80px;
-}
-
-.nav-btn {
-  font-size: 1rem;
-  font-weight: 500;
-  border: 1px solid black;
-  border-radius: 40px;
-  /* top | right | bottom | left */
-  padding: 5px 20px;
-  cursor: pointer;
-}
-.nav-btn:hover {
-  background-color: #0a0c10;
 }
 
 #register {
   background-color: #0a0c10;
   color: white;
 }
+
 #register a {
   color: white;
 }
+
 #register:hover {
   background-color: #0a0c10;
   cursor: pointer;
@@ -162,15 +193,18 @@
   margin: 2rem;
   margin-bottom: 0;
 }
+
 .stats-menu__athlete-name {
   font-weight: 400;
   font-size: 0.85rem;
   color: rgb(166, 165, 171);
 }
+
 .stats-menu__header {
   font-weight: 600;
   font-size: 2rem;
 }
+
 .stats-menu__item-selected {
   color: #0a0c10 !important;
   font-weight: 600;
@@ -181,12 +215,10 @@
   max-width: 1800px;
   justify-content: center;
   align-content: center;
-  padding: 0 1rem;
+  padding: 0 2rem;
   display: grid;
   grid-template-columns: repeat(2, minmax(400px, 900px));
   grid-template-rows: repeat(2, minmax(350px, 375px));
-  gap: 2rem;
-  margin-top: 1.5rem;
 }
 
 .stat-box-group {
@@ -198,15 +230,19 @@
 }
 
 .stat-box {
-  background-color: #f0f0f0;
   min-width: 250px;
   max-height: 250px;
-  border-radius: 8px;
   padding: 1rem;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  border-radius: 8px;
 }
+
 .stat-box__title {
-  height: 2rem;
+  border-bottom: 2px solid black;
+  margin-bottom: 0.5rem;
 }
+
 .stat-box__data {
   display: flex;
   align-items: center;
@@ -214,23 +250,22 @@
   margin: 0 auto;
   margin-top: 2rem;
 }
+
 .stat-box__figure {
   font-size: 2.75rem;
   font-weight: 600;
 }
+
 .stat-box__improvement {
   color: green;
   font-size: 1.25rem;
   font-weight: 500;
 }
-.stat-box__regression {
-  color: red;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
+
 .stat-box__desc {
   font-size: 0.75rem;
 }
+
 .stat-box .up-symbol {
   font-size: 1rem;
 }
@@ -243,14 +278,17 @@
 #login {
   width: 300px;
 }
+
 #login > * {
   margin: 0;
   padding: 0;
 }
+
 #login h1 {
   text-align: center;
   margin-bottom: 1rem;
 }
+
 #login input {
   display: block;
   margin-bottom: 1rem;
@@ -278,7 +316,7 @@
 
 .stat-row {
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: white;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
@@ -286,13 +324,39 @@
   font-weight: bold;
   align-items: center;
   align-content: center;
+  border: 4px solid black;
+  border-bottom: 10px solid black;
 }
+
 .stat-row > * {
   width: 100%;
 }
 
 .table-stat-name {
   font-weight: lighter;
+}
+
+.stat-row h4 {
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.8rem;
+}
+
+.stat-box__figure {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.9rem;
+  margin-top: 1rem;
+}
+
+.report-card-graph-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 4rem;
+}
+
+.report-card-graph {
+  border: 4px solid black;
+  border-bottom: 10px solid black;
+  padding: 7rem 11rem;
 }
 
 /*Helper styling classes*/
@@ -312,36 +376,69 @@
   margin: 1rem 4rem 0rem 4rem;
 }
 
+.report-card-title {
+  font-size: 1rem;
+  font-family: "Press Start 2P", cursive;
+}
+
 .report-card-title p {
   color: gray;
+  font-size: 0.75rem;
+  font-family: "Press Start 2P", cursive;
 }
 
-.button-group {
+.filter-heading {
+  margin-top: 1rem;
+}
+
+.button-group { /* All dashboard buttons (filters, print, and export) */
   display: flex;
-  gap: 4rem;
+  gap: 2rem;
 }
 
-.export-button-group {
+.export-button-group { /* Print and export grouping */
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  margin: 0.5rem;
+}
+
+.export, .print-btn {
+  border: 3px solid black;
+  border-bottom: 6px solid black;
+  background-color: white;
 }
 
 .filter-button-group {
   display: flex;
   justify-content: flex-end;
-  border: 1px solid black;
-  margin: 0.5rem;
+  border: 3px solid black;
+  border-bottom: 6px solid black;
 }
+
+.filter-button-group > :hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.print-btn:hover, .export:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-button-group > * {
+  background-color: white;
+  padding: 0 1rem;
+}
+
 .filter-button-group :not(:last-child) {
-  border-right: 1px solid black;
+  border-right: 3px solid black;
 }
 
 .export-button {
   border: none;
   border-radius: 0.5rem;
-  padding: 0.5rem;
   gap: 1rem;
 }
 
@@ -356,6 +453,13 @@
   padding: 4rem;
   padding-top: 0.5rem;
   gap: 4rem;
+}
+
+.graph-container {
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  padding-top: 0.5rem;
+  margin: 0.75rem 2rem;
 }
 
 /*STAFF ATHLETE TABLE */
@@ -373,15 +477,19 @@
   -webkit-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
   -moz-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
 }
+
 .athlete-table thead tr {
   background-color: #DF7861;
 }
+
 .athlete-table th, .athlete-table td {
   padding: 24px 15px;
 }
+
 .athlete-table tr {
   border-bottom: 2px solid black;
 }
+
 .athlete-table tbody tr.active-row {
   font-weight: bold;
   color: #009879;
@@ -404,19 +512,23 @@
   flex-direction: column;
   gap: 1rem;
 }
+
 .athlete-reports button {
   align-self: flex-end;
 }
+
 .athlete-reports > div:first-of-type {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
+
 .athlete-reports > .report-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .athlete-reports .athlete-report {
   border: 1px solid black;
   padding: 2rem;
@@ -440,10 +552,16 @@
 }
 
 /* Registration Page */
+.registration-header-txt {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.25rem;
+}
+
 .registration-form {
   margin: 2rem 30rem;
   padding: 2rem 4rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
 }
 
 .registration-form-row {
@@ -451,6 +569,7 @@
   gap: 1rem;
   justify-content: space-between;
 }
+
 .registration-form-row > div {
   flex: 1;
 }
@@ -468,8 +587,12 @@
   background-color: #DF7861;
   border: none;
   color: white;
-  font-family: "Montserrat", sans-serif;
   padding: 0.5rem 1rem;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+}
+
+.register-btn button:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
@@ -501,11 +624,17 @@
   margin: 2rem 25rem;
   padding: 4rem 3rem;
   margin-top: 0;
-  border: 2px solid #0a0c10;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-content: space-between;
   gap: 4rem;
+  font-family: "Press Start 2P", cursive;
+}
+
+.profile-container h3 {
+  border-bottom: 2px solid black;
 }
 
 .profile-container-row {
@@ -520,13 +649,17 @@
   margin-bottom: 0;
   padding-bottom: 0;
   background-color: #DF7861;
-  border: 2px solid #0a0c10;
+  border: 4px solid black;
   border-bottom: none;
   display: flex;
   justify-content: space-between;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
 }
 
 .profile-banner button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
   margin-bottom: 1rem;
   background-color: black;
   color: white;
@@ -545,6 +678,7 @@
   margin-right: 1rem;
   /* top | right | bottom | left */
 }
+
 .pfp img {
   object-fit: contain;
   max-width: 50px;

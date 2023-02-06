@@ -65,96 +65,95 @@ export async function loader({ request }: LoaderArgs) {
 export default function Strength() {
     const { bestDistance, averageDistanceMonth, sessionScoresSquat, sessionScoresJumpDistance, averageSquatMonth } = useLoaderData<typeof loader>()
     return (
-        <div className="stat-grid">
-            <div className="stat-box-group">
-                <div className="stat-box">
-                    <p className="stat-box__title">Best Jump (Distance)</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageDistanceMonth}ft</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            2.4%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
+        <div>
+            <div className="report-card-header">
+                <div className="report-card-title">
+                    <h2>Strength Statistics </h2>
+                    <p>Athlete: Danielle Williams (Year Overview)</p>
+                </div>
+                <div className="button-group">
+                    <p className="filter-heading">Select Filter:</p>
+                    <div className="filter-button-group">
+                        <button onClick={() => console.log("Month")} className="filter-button">Month</button>
+                        <button onClick={() => console.log("Year")} className="filter-button">Year</button>
+                        <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
                     </div>
                 </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Avg. Jump (Distance)</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{bestDistance}</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            1.1%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
+                </div>
+            <div className="stat-grid">
+                <div className="stat-box-group">
+                    <div className="stat-box">
+                        <p className="stat-box__title">Best Jump (Distance)</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{averageDistanceMonth}ft</p>
+                            <p className="stat-box__desc">in last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Avg. Jump (Distance)</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{bestDistance}</p>
+                            <p className="stat-box__desc">in last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Avg. Squat Duration</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{averageSquatMonth}s</p>
+                            <p className="stat-box__desc">in last 30 days</p>
+                        </div>
                     </div>
                 </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Avg. Squat Duration w/Weights</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageSquatMonth}s</p>
-                        <p className="stat-box__improvement">
-                            <span className="up-symbol">▲</span>
-                            8.3%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
-                    </div>
+                <div className="flex align-center flex-col gap-1 graph-container">
+                    <p>Lifetime Overview: Average Jump Distance</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={730} height={400} data={sessionScoresJumpDistance}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="created"></XAxis>
+                            <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
+                            <Bar dataKey="value" fill="#DF7861">
+                                <Label value="Session Date" position="top" />
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
-            </div>
-
-            <div className="flex align-center flex-col gap-1">
-                <p>Lifetime Overview: Average Jump Distance</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart width={730} height={400} data={sessionScoresJumpDistance}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="created"></XAxis>
-                        <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
-                        <Bar dataKey="value" fill="#DF7861">
-                            <Label value="Session Date" position="top" />
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Last 30 Days: Avg. Squat Duration w/Weight</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart width={730} height={250} data={sessionScoresSquat}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="time" stackId="a" fill="#ECB390" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Lifetime Overview: Best Squat Duration w/Weights</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart width={730} height={250} data={sessionScoresSquat}>
-                        <defs>
-                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                            </linearGradient>
-                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Legend />
-                        <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                        <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
-                    </AreaChart>
-                </ResponsiveContainer>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Last 30 Days: Avg. Squat Duration w/Weight</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={730} height={250} data={sessionScoresSquat}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="time" stackId="a" fill="#ECB390" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Lifetime Overview: Best Squat Duration w/Weights</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart width={730} height={250} data={sessionScoresSquat}>
+                            <defs>
+                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Legend />
+                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         </div>
     )

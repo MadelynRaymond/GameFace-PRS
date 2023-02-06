@@ -28,20 +28,22 @@ export default function Overall() {
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Training Report Card</h2>
-                    <p>Current Year (2022)</p>
+                    <p>Athlete: Danielle Williams (Year Overview)</p>
                 </div>
-                <div style={{ visibility: 'hidden' }} className="button-group">
+                <div className="button-group">
+                    <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button className="filter-button">Month</button>
-                        <button className="filter-button">Year</button>
-                        <button className="filter-button">Lifetime</button>
+                        <button onClick={() => console.log("Month")} className="filter-button">Month</button>
+                        <button onClick={() => console.log("Year")} className="filter-button">Year</button>
+                        <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
                     </div>
                     <div className="export-button-group">
-                        <button onClick={() => window.print()} style={{ visibility: 'visible' }} className="export-button no-print">
-                            Print
+                        <button onClick={() => window.print()} className="print-btn no-print">
+                            Prin
                         </button>
-                        <button style={{ display: 'none' }} className="export-button">
-                            Export Icon
+                        
+                        <button className="export">
+                            Exp
                         </button>
                     </div>
                 </div>
@@ -49,7 +51,7 @@ export default function Overall() {
 
             <div className="overall-stat-table">
                 <div className="stat-row flex-r">
-                    <p>Speed</p>
+                    <h4>Speed</h4>
                     <div className="stat-row-item">
                         <p className="table-stat-name">Fastest Drill</p>
                         <p>{`${dbTimeToString(speedAggregations.min)}` || 'Not enough data'}</p>
@@ -60,7 +62,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Shooting</p>
+                    <h4>Shooting</h4>
                     <div>
                         <p className="table-stat-name">Shots Made</p>
                         <p>todo</p>
@@ -71,7 +73,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Dribbling</p>
+                    <h4>Dribbling</h4>
                     <div>
                         <p className="table-stat-name">Fastes Drill w/no Mistakes</p>
                         <p>{`${dbTimeToString(dribblingAggregations.min)}` || 'Not enough data'}</p>
@@ -82,7 +84,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Passing</p>
+                    <h4>Passing</h4>
                     <div>
                         <p className="table-stat-name">Passes Completed</p>
                         <p>todo</p>
@@ -93,7 +95,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Strength</p>
+                    <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
                         <p>{`${dbTimeToString(squatAggregations.min)}` || 'Not enough data'}</p>
@@ -104,7 +106,7 @@ export default function Overall() {
                     </div>
                 </div>
                 <div className="stat-row flex-r">
-                    <p>Jumping</p>
+                    <h4>Jumping</h4>
                     <div>
                         <p className="table-stat-name">Highest Jump</p>
                         <p>todo</p>
@@ -113,6 +115,18 @@ export default function Overall() {
                         <p className="table-stat-name">Avg. Jump Height</p>
                         <p>todo</p>
                     </div>
+                </div>
+            </div>
+            <div className="report-card-graph-container">
+                <div className="report-card-graph">
+                <p>Avg. Squat Lifetime</p>
+                </div>
+                <div className="report-card-graph">
+                    <p>Name of the Graph</p>
+                    
+                </div>
+                <div className="report-card-graph">
+                    <p>Name of the Graph</p>
                 </div>
             </div>
             {/*<div className="overall-graph-container">

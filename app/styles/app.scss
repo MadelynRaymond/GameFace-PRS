@@ -1,106 +1,183 @@
-@use './variables' as *;
-@use './utility' as *;
-@use './mixins' as *;
+/*UTILITY */
+.w-full {
+  width: 100%;
+}
 
-/*NAVBAR */
+.h-full {
+  height: 100%;
+}
 
-$orange-primary: #DF7861;
-$dark-primary: #0a0c10;
-$gray-primary: #f0f0f0;
+.error-text {
+  color: red;
+}
 
-.navbar{
+.bold {
+  font-weight: 700;
+}
 
+.semi-bold {
+  font-weight: 500;
+}
+
+.flex {
+  display: flex;
+}
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+.gap-3 {
+  gap: 2rem;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.form-center {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+/*NAVBAR */
+.navbar {
+  display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding-left: 1rem;
   text-align: start;
   font-size: 1rem;
   background-color: rgb(255, 255, 255);
   color: black;
-
-  & > div, & > div ul {
-    
-    gap: 2rem;
-    display: flex;
-    align-items: center;
-  } 
-
-  ul {
-    margin: 0;
-    padding: 0;
-    li {   
-      text-decoration: none;
-      list-style: none;
-    }
-  }
+  border: 4px solid black;
+  margin: 2rem 6rem;
+  border-radius: 8px;
+  border-bottom: 8px solid black;
+}
+.navbar > div, .navbar > div ul {
+  display: flex;
+}
+.navbar ul {
+  margin: 0;
+  padding: 0;
+}
+.navbar ul li {
+  text-decoration: none;
+  list-style: none;
+}
+.nav-logo{
+  padding-top: 0.25rem;
 }
 
-.btn, .login-button{
+.btn, .login-button {
+
   color: white;
-  background-color: $orange-primary;
+  background-color: #DF7861;
   border: none;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Press Start 2P', cursive;
   padding: 0.5rem 1rem;
+}
+
+.welcome-back-txt{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.4rem;
+}
+
+.login-button:hover{
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-
+  cursor: pointer;
 }
 
-.login-button{
-  margin: 0.5 1rem;
+.login-button {
+  margin: 0.5rem 1rem;
+}
+
+.left-nav-container > *{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+  border-left: 4px solid black;
+  padding: 0.5rem 0.75rem;
 }
 
 
+.nav-logo{
+  font-size: 1.25rem;
+  font-family: 'Press Start 2P', cursive;
+}
 
-.logo  {
+.logout-btn > button{
+  border: none;
+  background-color: inherit;
+  color: inherit;
+}
+
+
+.left-nav-container > *:hover, .logout-btn:hover{
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.logo {
   display: flex;
   align-items: center;
   flex-grow: 0.01;
   /* top | right | bottom | left */
-
-  & img {
-    object-fit: contain;
-    max-width: 80px;
-  }
+}
+.logo img {
+  object-fit: contain;
+  max-width: 80px;
 }
 
-.nav-btn {
-  font-size: 1rem;
-  font-weight: 500;
-  border: 1px solid black;
-  border-radius: 40px;
-  /* top | right | bottom | left */
-  padding: 5px 20px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: $dark-primary;
-  }
-}
 
 #register {
-    background-color: $dark-primary;
-    color: white;
-
-    & a {
-      color:white;
-    }
-
-    &:hover {
-      background-color: $dark-primary;
-      cursor: pointer;
-    }
+  background-color: #0a0c10;
+  color: white;
+}
+#register a {
+  color: white;
+}
+#register:hover {
+  background-color: #0a0c10;
+  cursor: pointer;
 }
 
-
-@media screen and (max-width: 600px){
-    .nav-btn{
-     display: none;
-    }
- }
-
- /*Stats page */
- .stats-menu__items{
+@media screen and (max-width: 600px) {
+  .nav-btn {
+    display: none;
+  }
+}
+/*Stats page */
+.stats-menu__items {
   display: flex;
   gap: 2rem;
   padding: 1rem 0;
@@ -112,23 +189,19 @@ $gray-primary: #f0f0f0;
   border-bottom: 1px solid rgba(166, 165, 171, 0.75);
   margin: 2rem;
   margin-bottom: 0;
-
-  &__athlete-name{
-    font-weight: 400;
-    font-size: 0.85rem;
-    color: rgb(166, 165, 171);
-  }
-
-  &__header {
-    font-weight: 600;
-    font-size: 2rem;
-  }
-
-  &__item-selected {
-    color: $dark-primary !important;
-    font-weight: 600;
-  }
-
+}
+.stats-menu__athlete-name {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: rgb(166, 165, 171);
+}
+.stats-menu__header {
+  font-weight: 600;
+  font-size: 2rem;
+}
+.stats-menu__item-selected {
+  color: #0a0c10 !important;
+  font-weight: 600;
 }
 
 .stat-grid {
@@ -136,13 +209,10 @@ $gray-primary: #f0f0f0;
   max-width: 1800px;
   justify-content: center;
   align-content: center;
-  padding: 0 1rem;
+  padding: 0 2rem;
   display: grid;
   grid-template-columns: repeat(2, minmax(400px, 900px));
   grid-template-rows: repeat(2, minmax(350px, 375px));
-  gap: 2rem;
-  margin-top: 1.5rem;
-
 
 }
 
@@ -155,98 +225,87 @@ $gray-primary: #f0f0f0;
 }
 
 .stat-box {
-  background-color: $gray-primary;
   min-width: 250px;
   max-height: 250px;
-  border-radius: 8px;
   padding: 1rem;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  border-radius: 8px;
 
+}
+.stat-box__title {
+  border-bottom: 2px solid black;
 
-  &__title {
-    height: 2rem;
-  }
-
-
-  &__data {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin: 0 auto;
-    margin-top: 2rem;
-  }
-
-  &__figure {
-    font-size: 2.75rem;
-    font-weight: 600;
-  }
-
-  &__improvement {
-    color: green;
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-
-  &__regression {
-    color: red;
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-
-  &__desc {
-    font-size: 0.75rem;
-  }
-
-  .up-symbol{
-    font-size: 1rem;
-  }
+  margin-bottom: 0.5rem;
+}
+.stat-box__data {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+.stat-box__figure {
+  font-size: 2.75rem;
+  font-weight: 600;
+}
+.stat-box__improvement {
+  color: green;
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
+.stat-box__desc {
+  font-size: 0.75rem;
+}
+.stat-box .up-symbol {
+  font-size: 1rem;
+}
 
 /*Login*/
 #forgot-password {
   display: block;
 }
+
 #login {
-  & > * {
-    margin: 0;
-    padding: 0;
-  }
   width: 300px;
-  h1 {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  & input {
-    display: block;
-    margin-bottom: 1rem;
-  }
+}
+#login > * {
+  margin: 0;
+  padding: 0;
+}
+#login h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+#login input {
+  display: block;
+  margin-bottom: 1rem;
 }
 
-.login-btn-group{
+.login-btn-group {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.forgot-password-link{
-  text-align:end;
-  color: $orange-primary;
+.forgot-password-link {
+  text-align: end;
+  color: #DF7861;
 }
 
-
 /*Dashboard pages*/
-
-.overall-stat-table{
+.overall-stat-table {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: flex-end;
   gap: 1rem;
   margin: 2rem 4rem;
-
 }
-.stat-row{
+
+.stat-row {
   height: 100%;
-  background-color: $gray-primary;
+  background-color: white;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
@@ -255,78 +314,137 @@ $gray-primary: #f0f0f0;
   align-items: center;
   align-content: center;
 
-  > * {
-    width: 100%;
-  }
-  
+  border: 4px solid black;
+  border-bottom: 10px solid black;
+}
+.stat-row > * {
+  width: 100%;
 }
 
-.table-stat-name{
+.table-stat-name {
+
   font-weight: lighter;
 }
 
+.stat-row h4{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+}
+
+.stat-box__figure{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.9rem;
+  margin-top: 1rem;
+}
+
+
+.report-card-graph-container{
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 4rem;
+}
+
+.report-card-graph{
+  border: 4px solid black;
+  border-bottom: 10px solid black; 
+  padding: 7rem 11rem;
+}
 
 /*Helper styling classes*/
-
-.flex-r{
+.flex-r {
   display: flex;
   flex-direction: row;
 }
 
-.flex-c{
+.flex-c {
   display: flex;
   flex-direction: column;
 }
 
-.report-card-header{
+.report-card-header {
   display: flex;
   justify-content: space-between;
   margin: 1rem 4rem 0rem 4rem;
-
 }
 
-.report-card-title p{
+.report-card-title{
+  font-size: 1rem;
+  font-family: 'Press Start 2P', cursive;
+}
+.report-card-title p {
   color: gray;
+  font-size: 0.75rem;
+  font-family: 'Press Start 2P', cursive;
 }
 
-.button-group{
+.filter-heading{
+  margin-top: 1rem;
+}
+
+.button-group { /* All dashboard buttons (filters, print, and export) */
   display: flex;
-  gap: 4rem;
+  gap: 2rem;
 }
 
-.export-button-group{
+.export-button-group { /* Print and export grouping */
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  margin: 0.5rem;
 
 }
 
-.filter-button-group{
+.export, .print-btn{
+  border: 3px solid black;
+  border-bottom: 6px solid black;
+  background-color: white;
+
+}
+
+.filter-button-group {
   display: flex;
   justify-content: flex-end;
-  border: 1px solid black;
-  margin: 0.5rem; 
+  border: 3px solid black;
+  border-bottom: 6px solid black
+
   
-  :not(:last-child){
-    border-right: 1px solid black;
-  
-  }
 }
-.export-button{
+
+.filter-button-group >:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+
+}
+
+
+.print-btn:hover, .export:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  
+
+}
+
+.filter-button-group > *{
+  background-color: white;
+  padding: 0 1rem;
+
+}
+.filter-button-group :not(:last-child) {
+  border-right: 3px solid black;
+}
+
+.export-button {
   border: none;
   border-radius: 0.5rem;
-  padding: 0.5rem;
   gap: 1rem;
-  
 }
 
-.filter-button{
-  border:none;
+.filter-button {
+  border: none;
 }
 
-.overall-graph-container{
-
+.overall-graph-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 350px;
@@ -335,6 +453,12 @@ $gray-primary: #f0f0f0;
   gap: 4rem;
 }
 
+.graph-container{
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  padding-top: 0.5rem;
+  margin: 0.75rem 2rem;
+}
 
 /*STAFF ATHLETE TABLE */
 .athlete-table {
@@ -347,29 +471,23 @@ $gray-primary: #f0f0f0;
   font-family: sans-serif;
   min-width: 400px;
   border: 2px solid black;
-  box-shadow: 7px 8px 0px 0px rgba(0,0,0,0.86);
-  -webkit-box-shadow: 7px 8px 0px 0px rgba(0,0,0,0.86);
-  -moz-box-shadow: 7px 8px 0px 0px rgba(0,0,0,0.86);
-
-  thead tr {
-    background-color: $orange-primary;
-  }
-
-  th, & td {
-    padding: 24px 15px;
-  }
-
-
-  tr {
-    border-bottom: 2px solid black;
-  }
-
-  tbody tr.active-row {
-    font-weight: bold;
-    color: #009879;
-  }
+  box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
+  -webkit-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
+  -moz-box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
 }
-
+.athlete-table thead tr {
+  background-color: #DF7861;
+}
+.athlete-table th, .athlete-table td {
+  padding: 24px 15px;
+}
+.athlete-table tr {
+  border-bottom: 2px solid black;
+}
+.athlete-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
 
 /*DRILL ENTRY PAGE */
 .athlete-overview-container {
@@ -387,34 +505,30 @@ $gray-primary: #f0f0f0;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
-  button {
-    align-self: flex-end;
-  }
-
-  > div:first-of-type {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-
-  > .report-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .athlete-report {
-    border: 1px solid black;
-    padding: 2rem;
-    height: 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 1px 2px 0px 2px rgba(0,0,0,0.75);
-    -webkit-box-shadow: 1px 2px 0px 2px rgba(0,0,0,0.75);
-    -moz-box-shadow: 1px 2px 0px 2px rgba(0,0,0,0.75);
-  }
+}
+.athlete-reports button {
+  align-self: flex-end;
+}
+.athlete-reports > div:first-of-type {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.athlete-reports > .report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.athlete-reports .athlete-report {
+  border: 1px solid black;
+  padding: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
 }
 
 .athlete-report-form {
@@ -426,42 +540,51 @@ $gray-primary: #f0f0f0;
   overflow-y: auto;
   padding: 2rem;
 }
-/* Registration Page */
 
-.registration-form{
+/* Registration Page */
+.registration-header-txt{
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.25rem;
+}
+.registration-form {
   margin: 2rem 30rem;
-  padding:2rem 4rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-  
+  padding: 2rem 4rem;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
 }
 
 
-.registration-form-row{
+.registration-form-row {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
-
-  > div {
-    flex: 1;
-  }
+}
+.registration-form-row > div {
+  flex: 1;
 }
 
-.register-link{
+.register-link {
   text-decoration: underline;
 }
 
-.register-btn{
- display: flex;
- justify-content: flex-end;
+.register-btn {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.register-btn button{
-  background-color: $orange-primary;
+.register-btn button {
+  background-color: #DF7861;
   border: none;
   color: white;
-  font-family: "Montserrat", sans-serif;
   padding: 0.5rem 1rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+}
+
+.register-btn button:hover{
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+  
 }
 
 .registration-form-header {
@@ -470,118 +593,113 @@ $gray-primary: #f0f0f0;
   flex-grow: 0.01;
   padding-bottom: 1rem;
 }
+
 .registration-form-header img {
   object-fit: contain;
   max-width: 125px;
 }
 
-.registration-form-header h2{
-  align-self:flex-end;
-  
+.registration-form-header h2 {
+  align-self: flex-end;
 }
 
-.registration-form-header p{
-  color: $orange-primary;
-
+.registration-form-header p {
+  color: #DF7861;
 }
 
-.registration-form-header p span{
+.registration-form-header p span {
   text-decoration: underline;
 }
 
-        
-.profile-container{
+.profile-container {
   margin: 2rem 25rem;
-  padding:4rem 3rem;
+  padding: 4rem 3rem;
   margin-top: 0;
-  border: 2px solid $dark-primary;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-content: space-between;
-  gap: 4rem;  
+  gap: 4rem;
+  font-family: 'Press Start 2P', cursive;
 
 }
 
-.profile-container-row{
+.profile-container h3{
+  border-bottom: 2px solid black;
+}
+
+.profile-container-row {
   display: flex;
   justify-content: space-between;
   text-align: left;
-  
 }
 
-
-.profile-banner{
+.profile-banner {
   margin: 0rem 25rem;
-  padding:4rem 3rem;
+  padding: 4rem 3rem;
   margin-bottom: 0;
   padding-bottom: 0;
   background-color: #DF7861;
-  border: 2px solid $dark-primary;
+  border: 4px solid black;
   border-bottom: none;
   display: flex;
   justify-content: space-between;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+
 }
 
-.profile-banner button{
+.profile-banner button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
   margin-bottom: 1rem;
   background-color: black;
   color: white;
   border-radius: 3px;
 }
 
-.profile-btn-group{
+.profile-btn-group {
   display: flex;
   gap: 1rem;
 }
 
-.pfp  {
+.pfp {
   display: flex;
   align-items: center;
   flex-grow: 0.01;
   margin-right: 1rem;
   /* top | right | bottom | left */
-
-  & img {
-    object-fit: contain;
-    max-width: 50px;
-  }
+}
+.pfp img {
+  object-fit: contain;
+  max-width: 50px;
 }
 
 @media print {
   .no-print {
     display: none !important;
   }
-
   body {
     font-size: 10pt;
   }
- 
 }
-
 @media print and (color) {
   * {
-     -webkit-print-color-adjust: exact;
-     print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
   }
-
-
   .stat-row {
     padding: 1rem;
     gap: 0.5rem;
   }
-
   .overall-graph-container {
     grid-template-columns: repeat(2, 1fr);
   }
-
   button {
     visibility: hidden !important;
   }
-
-
 }
-

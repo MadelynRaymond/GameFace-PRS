@@ -52,128 +52,128 @@ export default function Speed() {
     const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage } = useLoaderData<typeof loader>()
 
     return (
-        <div className="stat-grid">
-            <div className="stat-box-group">
-                <div className="stat-box">
-                    <p className="stat-box__title">Overall (Avg time)</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{averageTimeMonth}s</p>
-                        <p className="stat-box__improvement">
-                            <span className="up-symbol">▲</span>
-                            2.1%
-                        </p>
-                        <p className="stat-box__desc">(last 30 days)</p>
-                    </div>
-                </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Best Speed</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{bestTimeMonth}s</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            3.4%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
-                    </div>
-                </div>
-
-                <div className="stat-box">
-                    <p className="stat-box__title">Last Session Avg. Speed</p>
-                    <div className="stat-box__data">
-                        <p className="stat-box__figure">{lastSessionAverage}s</p>
-                        <p className="stat-box__regression">
-                            <span className="up-symbol">▼</span>
-                            1.7%
-                        </p>
-                        <p className="stat-box__desc">in last 30 days</p>
-                    </div>
+        <div>
+            <div className="report-card-header">
+            <div className="report-card-title">
+                <h2>Speed Statistics </h2>
+                <p>Athlete: Danielle Williams (Year Overview)</p>
+            </div>
+            <div className="button-group">
+                <p className="filter-heading">Select Filter:</p>
+                <div className="filter-button-group">
+                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
+                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
+                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
                 </div>
             </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Last 30 Days: Avg. Speed</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={sessionScores}
-                        margin={{
-                            top: 10,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <defs>
-                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Legend />
-                        <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                    </AreaChart>
-                </ResponsiveContainer>
             </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Lifetime Overview: Best Speed per Session</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={sessionScores}
-                        margin={{
-                            top: 10,
-                            right: 30,
-                            left: 0,
-                            bottom: 0,
-                        }}
-                    >
-                        <defs>
-                            <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Legend />
-                        <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-                <p>Last Seven Sessions: Avg. vs. Best Speed</p>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        width={500}
-                        height={300}
-                        data={sessionScores}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5,
-                        }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="created" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="best" fill="#DF7861" />
-                        <Bar dataKey="time" fill="#ECB390" />
-                    </BarChart>
-                </ResponsiveContainer>
+            <div className="stat-grid">
+                <div className="stat-box-group">
+                    <div className="stat-box">
+                        <p className="stat-box__title">Overall (Avg time)</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{averageTimeMonth}s</p>
+                            <p className="stat-box__desc">last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Best Speed</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{bestTimeMonth}s</p>
+                            <p className="stat-box__desc">last 30 days</p>
+                        </div>
+                    </div>
+                    <div className="stat-box">
+                        <p className="stat-box__title">Last Session Avg. Speed</p>
+                        <div className="stat-box__data">
+                            <p className="stat-box__figure">{lastSessionAverage}s</p>
+            
+                            <p className="stat-box__desc">last 30 days</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Last 30 Days: Avg. Speed</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                            width={730}
+                            height={250}
+                            data={sessionScores}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <defs>
+                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Legend />
+                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Lifetime Overview: Best Speed per Session</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                            width={730}
+                            height={250}
+                            data={sessionScores}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <defs>
+                                <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Legend />
+                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="flex flex-col align-center gap-1 graph-container">
+                    <p>Last Seven Sessions: Avg. vs. Best Speed</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            width={500}
+                            height={300}
+                            data={sessionScores}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="created" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="best" fill="#DF7861" />
+                            <Bar dataKey="time" fill="#ECB390" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         </div>
     )

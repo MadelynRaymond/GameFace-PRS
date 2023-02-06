@@ -57,7 +57,7 @@ export default function Register() {
             <div className="registration-form">
                 <div className="registration-form-header">
                     <div>
-                        <h2>Student-Athlete Registration</h2>
+                        <h2 className="registration-header-txt">Student-Athlete Registration</h2>
                         <p>
                             Already have an account?{' '}
                             <Link to="/login">
@@ -92,7 +92,7 @@ export default function Register() {
                         </div>
                         <div>
                             <label>Password</label>
-                            <input type="password" name="password"></input>
+                            <input type="password" placeholder="Ex. v3rySecu4e!" name="password"></input>
                             {actionData?.errors?.fieldErrors.password && <span className="error-text">{actionData.errors.fieldErrors.password[0]}</span>}
                         </div>
                     </div>
