@@ -37,6 +37,19 @@ export default function Overall() {
     const { speedAggregations, dribblingAggregations, squatAggregations, shootingAggregations, passingAggregations, jumpingAggregations, username } = useLoaderData<typeof loader>()
     const filter = useFetcher<typeof loader>()
 
+     const lifetimePie = [
+        {
+            name: 'Shots Attempted (lifetime)',
+            value: filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf,
+            fill: '#DF7861',
+        },
+        {
+            name: 'Shots Scored (lifetime)',
+            value: filter?.data?.shootingAggregations._sum.value || shootingAggregations._sum.value,
+            fill: '#ECB390',
+        },
+    ]
+
     return (
         <div>
             <div className="report-card-header">
@@ -131,12 +144,19 @@ export default function Overall() {
                     </div>
                 </div>
             </div>
-            <div className="report-card-graph-container">
+            <div className="overall-graph-container">
                 <div className="report-card-graph">
                     <p>Avg. Squat Lifetime</p>
                 </div>
                 <div className="report-card-graph">
-                    <p>Name of the Graph</p>
+                    <p>Shots Made vs Attempted (lifetime)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart width={800} height={400}>
+                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" align="center" />
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
                 <div className="report-card-graph">
                     <p>Name of the Graph</p>
