@@ -76,7 +76,7 @@ export default function Login() {
             className="form-center"
         >
             <Form method="post" id="login">
-                <h1>Login</h1>
+                <h1 className="welcome-back-txt">Welcome Back!</h1>
                 <div className="register-link">
                     <Link to="/register">New here? Create an account!</Link>
                 </div>

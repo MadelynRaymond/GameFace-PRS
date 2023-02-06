@@ -60,28 +60,23 @@ function Navbar() {
             <div>
                 {user ? (
                     <ul className="left-nav-container">
-
-                        <li className="left-nav-btn">
-                            <a href="https://www.gameface413.org/">Main Site</a>
-                        </li>
-                        <li className="left-nav-btn">
-                            <Link to={`${user?.username}/stats`}>My Stats</Link>
-                        </li>
-                        <li className="left-nav-btn">
-                            <Form method="post" action="/logout" className="logout-btn"> 
-                                <input
-                                    className="logout-btn"
-                                    type="submit"
-                                    value="Logout"
-                                />
-                            </Form>
-                        </li >
-
-                        <li className="left-nav-btn">
-                            <Link to={`${user?.username}/profile`}>
+                        <a href="https://www.gameface413.org/">
+                            <li className="left-nav-btn">
+                            Main Site
+                            </li>
+                        </a>
+                        <Link to={`${user?.username}/stats`}>
+                            <li className="left-nav-btn">My Stats</li>
+                        </Link>
+                        <Form className='logout-btn' method="post" action="/logout"> 
+                            <button type='submit'>Logout</button>
+                        </Form>
+                        <Link to={`${user?.username}/profile`}>
+                            <li className="left-nav-btn">
                                 Profile
-                            </Link>
-                        </li>
+                            </li>
+                        </Link>
+                       
                     </ul>
                 ) : (
                     <ul className="left-nav-container">

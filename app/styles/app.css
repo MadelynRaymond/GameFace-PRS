@@ -106,9 +106,18 @@
   color: white;
   background-color: #DF7861;
   border: none;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Press Start 2P", cursive;
   padding: 0.5rem 1rem;
+}
+
+.welcome-back-txt {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.4rem;
+}
+
+.login-button:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  cursor: pointer;
 }
 
 .login-button {
@@ -127,9 +136,10 @@
   font-family: "Press Start 2P", cursive;
 }
 
-.logout-btn {
+.logout-btn > button {
   border: none;
   background-color: inherit;
+  color: inherit;
 }
 
 .left-nav-container > *:hover, .logout-btn:hover {
@@ -542,10 +552,16 @@
 }
 
 /* Registration Page */
+.registration-header-txt {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.25rem;
+}
+
 .registration-form {
   margin: 2rem 30rem;
   padding: 2rem 4rem;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
 }
 
 .registration-form-row {
@@ -571,8 +587,12 @@
   background-color: #DF7861;
   border: none;
   color: white;
-  font-family: "Montserrat", sans-serif;
   padding: 0.5rem 1rem;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+}
+
+.register-btn button:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
