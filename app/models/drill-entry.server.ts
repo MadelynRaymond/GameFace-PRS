@@ -52,6 +52,20 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
     })
 }
 
+export async function getEntries({userId, drillName, interval = new Date()}: {userId: User['id'], drillName: Drill['name'], interval: Date}) {
+    return prisma.drillEntry.findMany({
+        where: {
+            userId,
+            drill: {
+                name: drillName
+            },
+            created_at: {
+                gte: interval
+            }
+        }
+    })
+}
+
 export async function getEntriesByDrillLiteral({
     drillName,
     userId,
@@ -161,6 +175,7 @@ export async function getEntriesTotal({ drillName, userId, interval }: { drillNa
 }
 
 export async function getEntriesAggregate({ drillName, userId, interval }: { drillName: Drill['name']; userId: User['id']; interval?: Date }) {
+
     const aggregations = await prisma.drillEntry.aggregate({
         _min: {
             value: true,

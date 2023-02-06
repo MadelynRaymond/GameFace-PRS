@@ -25,9 +25,17 @@ export function dbTimeToString(dbTime: number | null): string {
 }
 
 export function toDateString(dbDate: string): string {
+  console.log(dbDate)
   const dateObj = new Date(dbDate)
 
   return `${dateObj.getMonth()}/${dateObj.getDate()}/${dateObj.getFullYear()}`
+}
+
+export function dateFromDaysOptional(days: number | null): Date | undefined {
+  if (!days) return undefined
+
+  const today = new Date()
+  return new Date(new Date().setDate(today.getDate() - days))
 }
 
 /*export function useContainsClick(ref: React.RefObject<HTMLElement>) {
