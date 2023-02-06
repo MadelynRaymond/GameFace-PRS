@@ -1,19 +1,24 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUserId } from '~/session.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { dbTimeToString } from '~/util'
+import { requireUser, requireUserId } from '~/session.server'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { dateFromDaysOptional, dbTimeToString } from '~/util'
+import { useState, useReducer, useEffect } from 'react'
 
 export async function loader({ request }: LoaderArgs) {
-    const userId = await requireUserId(request)
+    const {username, id} = await requireUser(request)
+    const userId = id
 
-    const entries = await getEntriesByDrillLiteral({ drillName: 'Dribbling Speed', userId })
-    const times = entries.map((entry) => entry.value as number)
-    const bestTimes = entries.map((entry) => entry.bestScore as number)
-    const averageTimeMonth = dbTimeToString(Math.floor(times.reduce((sum, score) => score + sum, 0) / entries.length))
-    const bestTimeMonth = dbTimeToString(Math.min(...bestTimes))
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
+
+    const entries = await getEntriesByDrillLiteral({ drillName: 'Dribbling Speed', userId, interval})
+    const {min, average} = await getEntriesAggregate({drillName: "Dribbling Speed", userId, interval })
+    const [bestTime, averageTime] = [min, average]
 
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Dribbling Speed',
@@ -44,11 +49,36 @@ export async function loader({ request }: LoaderArgs) {
 
     const lastSessionAverage = dbTimeToString(sessionScores[sessionScores.length - 1].time)
 
-    return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage })
+    return json({ averageTime, bestTime, sessionScores, lastSessionAverage, username })
 }
 export default function Dribbling() {
-    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage } = useLoaderData<typeof loader>()
+    const { averageTime, bestTime, sessionScores, lastSessionAverage, username } = useLoaderData<typeof loader>()
+    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
+        if (action.type !== 'update'){
+           throw new Error("Unknown action") 
+        }
 
+        switch (action.payload) {
+            case 30: return {text: 'Last 30 days'}
+            case 365: return {text: "Last year"}
+            default: return {text: 'Lifetime'}
+        }
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+
+    useEffect(() => {
+        filter.load(`/${username}/stats/dribbling?interval=${interval}`)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({type: 'update', payload: interval})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
+    
     return (
         <div>
             <div className="report-card-header">
@@ -59,9 +89,9 @@ export default function Dribbling() {
             <div className="button-group">
                 <p className="filter-heading">Select Filter:</p>
                 <div className="filter-button-group">
-                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                    <button onClick={() => setInterval(30)} className="filter-button">Month</button>
+                    <button onClick={() => setInterval(365)} className="filter-button">Year</button>
+                    <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
                 </div>
             </div>
             </div>
@@ -70,15 +100,15 @@ export default function Dribbling() {
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Dribbling Speed Drill Completion</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{averageTimeMonth}s</p>
-                            <p className="stat-box__desc">(last 30 days)</p>
+                            <p className="stat-box__figure">{filter?.data?.averageTime?.toFixed(1) || averageTime?.toFixed(1)}s</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Best Dribbling Speed Drill Completion</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{bestTimeMonth}s</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.bestTime || bestTime}s</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
