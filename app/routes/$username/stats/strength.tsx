@@ -1,6 +1,6 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Label } from 'recharts'
-import { requireUser, requireUserId } from '~/session.server'
-import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { requireUser } from '~/session.server'
+import { getEntriesAggregate, getEntriesLastNReports } from '~/models/drill-entry.server'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
@@ -117,21 +117,21 @@ export default function Strength() {
                         <p className="stat-box__title">Best Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.bestJumpDistance || bestJumpDistance}ft</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.averageJumpDistance?.toFixed(1) || averageJumpDistance?.toFixed(1)}</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Squat Duration</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.squatAverage?.toFixed(1) || squatAverage?.toFixed(1)}s</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
