@@ -31,8 +31,6 @@ export function links() {
         {   rel: 'stylesheet preload prefetch',
             href: 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap',
             as: 'style'
-
-
         }
         
     ]
@@ -70,10 +68,10 @@ function Navbar() {
                             <Link to={`${user?.username}/stats`}>My Stats</Link>
                         </li>
                         <li className="left-nav-btn">
-                            <Form method="post" action="/logout">
+                            <Form method="post" action="/logout" className="logout-btn"> 
                                 <input
-                                    type="submit"
                                     className="logout-btn"
+                                    type="submit"
                                     value="Logout"
                                 />
                             </Form>
@@ -86,7 +84,7 @@ function Navbar() {
                         </li>
                     </ul>
                 ) : (
-                    <ul>
+                    <ul className="left-nav-container">
                         <li>
                             <Link
                                 style={{
@@ -103,8 +101,6 @@ function Navbar() {
                                 style={{
                                     display: 'block',
                                 }}
-                                className="nav-btn"
-                                id="register"
                                 to="/register"
                             >
                                 Register

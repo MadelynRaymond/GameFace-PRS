@@ -72,22 +72,19 @@
 /*NAVBAR */
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding-left: 1rem;
   text-align: start;
   font-size: 1rem;
   background-color: rgb(255, 255, 255);
   color: black;
   border: 4px solid black;
-  margin: 0.25rem 12rem;
+  margin: 2rem 12rem;
   border-radius: 8px;
   border-bottom: 8px solid black;
 }
 .navbar > div, .navbar > div ul {
-  gap: 2rem;
   display: flex;
-  align-items: center;
 }
 .navbar ul {
   margin: 0;
@@ -96,6 +93,9 @@
 .navbar ul li {
   text-decoration: none;
   list-style: none;
+}
+.nav-logo{
+  padding-top: 0.25rem;
 }
 
 .btn, .login-button {
@@ -108,20 +108,16 @@
 }
 
 .login-button {
-  margin: 0.5 1rem;
+  margin: 0.5rem 1rem;
 }
 
 .left-nav-container > *{
-  padding: 0 1.rem;
   font-family: 'Press Start 2P', cursive;
   font-size: 0.75rem;
-
-
+  border-left: 4px solid black;
+  padding: 0.5rem 0.75rem;
 }
 
-.left-nav-btn{
-  background-color: rgb(255, 59, 59);
-}
 
 .nav-logo{
   font-size: 1.25rem;
@@ -130,8 +126,14 @@
 
 .logout-btn{
   border: none;
-  background-color: white;
+  background-color: inherit;
 
+}
+
+.left-nav-container > *:hover, .logout-btn:hover{
+  background-color: black;
+  color: white;
+  cursor: pointer;
 }
 
 .logo {
@@ -145,18 +147,6 @@
   max-width: 80px;
 }
 
-.nav-btn {
-  font-size: 1rem;
-  font-weight: 500;
-  border: 1px solid black;
-  border-radius: 40px;
-  /* top | right | bottom | left */
-  padding: 5px 20px;
-  cursor: pointer;
-}
-.nav-btn:hover {
-  background-color: #0a0c10;
-}
 
 #register {
   background-color: #0a0c10;
@@ -253,11 +243,7 @@
   font-size: 1.25rem;
   font-weight: 500;
 }
-.stat-box__regression {
-  color: red;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
+
 .stat-box__desc {
   font-size: 0.75rem;
 }
@@ -664,5 +650,3 @@
     visibility: hidden !important;
   }
 }
-
-/*# sourceMappingURL=app.css.map */
