@@ -1,14 +1,18 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUserId } from '~/session.server'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { requireUser, requireUserId } from '~/session.server'
+import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { dateFromDaysOptional } from '~/util'
+import { useEffect, useReducer, useState } from 'react'
 
 export async function loader({ request }: LoaderArgs) {
     const today = new Date()
     const priorDate = new Date(new Date().setDate(today.getDate() - 30))
-    const userId = await requireUserId(request)
+    const {username, id} = await requireUser(request)
+    const userId = id
+
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Free Throws',
         userId,
@@ -30,43 +34,15 @@ export async function loader({ request }: LoaderArgs) {
         throw new Response('Not enough data', { status: 404 })
     }
 
-    const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
 
-    const { scored: scoredLastMonth, attempted: attemptedLastMonth } = freeThrowsLastMonth
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
+    const scored = await (await getEntriesTotal({drillName: "Free Throws", userId, interval}))._sum.value || 0
+    const attempted = await (await getEntriesTotal({drillName: "Free Throws", userId, interval}))._sum.outOf || 1
 
-    const successPercentage = Math.floor((scoredLifeTime / attemptedLifeTime) * 100)
+    const successPercentage = Math.floor((scored / attempted) * 100)
 
     const sessionScores = lastSevenSessions
         .flatMap((report) => ({
@@ -87,26 +63,51 @@ export async function loader({ request }: LoaderArgs) {
 
     return json({
         sessionScores,
-        attemptedLifeTime,
-        scoredLifeTime,
+        attempted,
+        scored,
         successPercentage,
-        scoredLastMonth,
-        attemptedLastMonth,
         sessionPercentChange,
+        username
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } =
+    const { sessionScores, scored, attempted, successPercentage, sessionPercentChange, username } =
         useLoaderData<typeof loader>()
+    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
+        if (action.type !== 'update'){
+           throw new Error("Unknown action") 
+        }
+
+        switch (action.payload) {
+            case 30: return {text: 'Last 30 days'}
+            case 365: return {text: "Last year"}
+            default: return {text: 'Lifetime'}
+        }
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+
+    useEffect(() => {
+        filter.load(`/${username}/stats/shooting?interval=${interval}`)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({type: 'update', payload: interval})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
+
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
-            value: attemptedLifeTime,
+            value: attempted,
             fill: '#DF7861',
         },
         {
             name: 'Shots Scored (lifetime)',
-            value: scoredLifeTime,
+            value: scored,
             fill: '#ECB390',
         },
     ]
@@ -114,12 +115,12 @@ export default function Shooting() {
     const lastMonthPie = [
         {
             name: 'Shots Attempted (last 30 days)',
-            value: attemptedLastMonth,
+            value: attempted,
             fill: '#DF7861',
         },
         {
             name: 'Shots Scored (last 30 days)',
-            value: scoredLastMonth,
+            value: scored,
             fill: '#ECB390',
         },
     ]
@@ -134,9 +135,9 @@ export default function Shooting() {
             <div className="button-group">
                 <p className="filter-heading">Select Filter:</p>
                 <div className="filter-button-group">
-                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                    <button onClick={() => setInterval(30)} className="filter-button">Month</button>
+                    <button onClick={() => setInterval(365)} className="filter-button">Year</button>
+                    <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
                 </div>
             </div>
             </div>
@@ -145,22 +146,22 @@ export default function Shooting() {
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Scored</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{scoredLifeTime}</p>
-                            <p className="stat-box__desc">last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.scored || scored}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Attempted</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{attemptedLifeTime}</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.attempted || attempted}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{successPercentage}%</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage}%</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>

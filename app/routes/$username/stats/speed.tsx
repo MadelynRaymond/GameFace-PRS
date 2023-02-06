@@ -62,9 +62,11 @@ export default function Speed() {
            throw new Error("Unknown action") 
         }
 
-        if (!action.payload) return {text: 'Lifetime'}
-
-        return {text: `Last ${action.payload} days`}
+        switch (action.payload) {
+            case 30: return {text: 'Last 30 days'}
+            case 365: return {text: "Last year"}
+            default: return {text: 'Lifetime'}
+        }
     }
     const filter = useFetcher<typeof loader>()
     const [interval, setInterval] = useState<number | undefined>(undefined)
