@@ -1,7 +1,7 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUser, requireUserId } from '~/session.server'
+import { requireUser } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional } from '~/util'

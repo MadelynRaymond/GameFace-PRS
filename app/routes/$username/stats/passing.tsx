@@ -1,72 +1,38 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUserId } from '~/session.server'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { requireUser } from '~/session.server'
+import { getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { dateFromDaysOptional } from '~/util'
+import { useState, useReducer, useEffect } from 'react'
 
 export async function loader({ request }: LoaderArgs) {
-    const today = new Date()
-    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
-    const userId = await requireUserId(request)
+    const {username, id}= await requireUser(request)
+    const userId = id
+
     const lastSevenSessions = await getEntriesLastNReports({
         drillName: 'Passing Drill',
         userId,
         sessions: 7,
     })
-    const passesLifetime = await getEntriesByDrillLiteral({
-        drillName: 'Passing Drill',
-        userId,
-    })
-    const passesLastMonth = await getEntriesByDrillLiteral({
-        drillName: 'Passing Drill',
-        userId,
-        interval: priorDate,
-    })
 
-    const insufficientData = [passesLastMonth, passesLifetime, lastSevenSessions].some((entry) => entry.length === 0)
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
+
+    const passes = await getEntriesTotal({drillName: "Passing Drill", userId, interval})
+
+    const insufficientData = passes._sum.outOf === 0
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
     }
+    const [passesMade, passesAttempted] = [passes._sum.value || 0, passes._sum.outOf || 1]
 
-    const { scored: scoredLifeTime, attempted: attemptedLifeTime } = passesLifetime
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
 
-    const { scored: scoredLastMonth, attempted: attemptedLastMonth } = passesLastMonth
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
-
-    const successPercentage = Math.floor((scoredLifeTime / attemptedLifeTime) * 100)
+    const successPercentage = Math.floor((passesMade / passesAttempted) * 100)
 
     const sessionScores = lastSevenSessions
         .flatMap((report) => ({
@@ -86,43 +52,67 @@ export async function loader({ request }: LoaderArgs) {
     const sessionPercentChange = sessionScores.map((score) => ({ value: Math.floor((score.scored / score.attempted) * 100), created: score.created }))
 
     return json({
+        username,
         sessionScores,
-        attemptedLifeTime,
-        scoredLifeTime,
-        successPercentage,
-        scoredLastMonth,
-        attemptedLastMonth,
+        passesAttempted,
+        passesMade,
         sessionPercentChange,
+        successPercentage
     })
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } =
-        useLoaderData<typeof loader>()
+    const {username, sessionScores, passesAttempted, passesMade, successPercentage, sessionPercentChange} = useLoaderData<typeof loader>()
     const lifetimePie = [
         {
-            name: 'Shots Attempted (lifetime)',
-            value: attemptedLifeTime,
+            name: 'Passes Attempted (lifetime)',
+            value: passesAttempted,
             fill: '#DF7861',
         },
         {
-            name: 'Shots Scored (lifetime)',
-            value: scoredLifeTime,
+            name: 'Passes Made (lifetime)',
+            value: passesMade,
             fill: '#ECB390',
         },
     ]
 
     const lastMonthPie = [
         {
-            name: 'Shots Attempted (last 30 days)',
-            value: attemptedLastMonth,
+            name: 'Passes Attempted (last 30 days)',
+            value: passesAttempted,
             fill: '#DF7861',
         },
         {
-            name: 'Shots Scored (last 30 days)',
-            value: scoredLastMonth,
+            name: 'Passes Made (last 30 days)',
+            value: passesMade,
             fill: '#ECB390',
         },
     ]
+
+    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
+        if (action.type !== 'update'){
+           throw new Error("Unknown action") 
+        }
+
+        switch (action.payload) {
+            case 30: return {text: 'Last 30 days'}
+            case 365: return {text: "Last year"}
+            default: return {text: 'Lifetime'}
+        }
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+
+    useEffect(() => {
+        filter.load(`/${username}/stats/passing?interval=${interval}`)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({type: 'update', payload: interval})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
 
     return (
         <div>
@@ -134,9 +124,9 @@ export default function Shooting() {
             <div className="button-group">
                 <p className="filter-heading">Select Filter:</p>
                 <div className="filter-button-group">
-                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                    <button onClick={() => setInterval(30)} className="filter-button">Month</button>
+                    <button onClick={() => setInterval(365)}className="filter-button">Year</button>
+                    <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
                 </div>
             </div>
             </div>
@@ -145,22 +135,22 @@ export default function Shooting() {
                     <div className="stat-box">
                         <p className="stat-box__title">Successful Passes</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{scoredLifeTime}</p>
-                            <p className="stat-box__desc">last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.passesMade || passesMade}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Attepted Passes</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{attemptedLifeTime}</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.passesAttempted || passesAttempted}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Pass Success Rate</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{successPercentage}%</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
