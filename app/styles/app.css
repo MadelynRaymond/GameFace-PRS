@@ -604,11 +604,17 @@
   margin: 2rem 25rem;
   padding: 4rem 3rem;
   margin-top: 0;
-  border: 2px solid #0a0c10;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-content: space-between;
   gap: 4rem;
+  font-family: "Press Start 2P", cursive;
+}
+
+.profile-container h3 {
+  border-bottom: 2px solid black;
 }
 
 .profile-container-row {
@@ -623,13 +629,17 @@
   margin-bottom: 0;
   padding-bottom: 0;
   background-color: #DF7861;
-  border: 2px solid #0a0c10;
+  border: 4px solid black;
   border-bottom: none;
   display: flex;
   justify-content: space-between;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
 }
 
 .profile-banner button {
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
   margin-bottom: 1rem;
   background-color: black;
   color: white;

@@ -27,15 +27,15 @@ export default function Profile() {
             </div>
             <div className="profile-container">
                 <div>
-                    <h3>Email</h3>
+                    <h3>Email:</h3>
                     <p>{email}</p>
                 </div>
                 <div>
-                    <h3>Age</h3>
+                    <h3>Age:</h3>
                     <p>{profile?.age}</p>
                 </div>
                 <div>
-                    <h3>Grade</h3>
+                    <h3>Grade:</h3>
                     <p>{profile?.grade}</p>
                 </div>
                 <div>
