@@ -1,10 +1,14 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useFetcher, useLoaderData, useMatches } from '@remix-run/react'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { getEntriesAggregate, getEntriesAverage, getEntriesLastNReports, getEntriesMax, getEntriesMin, getEntriesTotal } from '~/models/drill-entry.server'
-import { requireUser, requireUserId } from '~/session.server'
-import { dateFromDaysOptional, dbTimeToString } from '~/util'
+import { useFetcher, useLoaderData } from '@remix-run/react'
+import { CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+    getEntriesAggregate,
+    getEntriesByDrillLiteral,
+    getEntriesTotal,
+} from '~/models/drill-entry.server'
+import { requireUser } from '~/session.server'
+import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
@@ -14,13 +18,20 @@ export async function loader({ request }: LoaderArgs) {
     const intervalLiteral = filter ? parseInt(filter) : null
 
     const interval = dateFromDaysOptional(intervalLiteral)
+    const shootingData = await getEntriesByDrillLiteral({ drillName: 'Free Throws', userId: id, interval })
+    const shootingRatio = shootingData.map((e) => ({
+        ratio: Math.floor((e.value / (e.outOf as number)) * 100),
+        created_at: toDateString(e.created_at.toString()),
+    }))
 
+    const passingData = await getEntriesByDrillLiteral({drillName: "Passing Drill", userId: id, interval})
+    const passingRatio = passingData.map(e => ({ratio: Math.floor(e.value / (e.outOf as number) * 100), created_at: toDateString(e.created_at.toString())}))
     const speedAggregations = await getEntriesAggregate({ drillName: 'Speed Drill', userId: id, interval })
     const dribblingAggregations = await getEntriesAggregate({ drillName: 'Dribbling Speed', userId: id, interval })
     const squatAggregations = await getEntriesAggregate({ drillName: 'Squat Drill', userId: id, interval })
-    const passingAggregations = await getEntriesTotal({drillName: 'Passing Drill', userId: id, interval})
-    const shootingAggregations = await getEntriesTotal({drillName: 'Free Throws', userId: id, interval})
-    const jumpingAggregations = await getEntriesAggregate({drillName: 'Jump Height Drill', userId: id, interval})
+    const passingAggregations = await getEntriesTotal({ drillName: 'Passing Drill', userId: id, interval })
+    const shootingAggregations = await getEntriesTotal({ drillName: 'Free Throws', userId: id, interval })
+    const jumpingAggregations = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId: id, interval })
 
     return json({
         username,
@@ -29,15 +40,28 @@ export async function loader({ request }: LoaderArgs) {
         squatAggregations,
         shootingAggregations,
         passingAggregations,
-        jumpingAggregations
+        jumpingAggregations,
+        shootingRatio,
+        passingRatio
     })
 }
 
 export default function Overall() {
-    const { speedAggregations, dribblingAggregations, squatAggregations, shootingAggregations, passingAggregations, jumpingAggregations, username } = useLoaderData<typeof loader>()
+    const {
+        speedAggregations,
+        shootingRatio,
+        passingRatio,
+        dribblingAggregations,
+        squatAggregations,
+        shootingAggregations,
+        passingAggregations,
+        jumpingAggregations,
+        username,
+    } = useLoaderData<typeof loader>()
+
     const filter = useFetcher<typeof loader>()
 
-     const lifetimePie = [
+    const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
             value: filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf,
@@ -146,53 +170,12 @@ export default function Overall() {
             </div>
             <div className="overall-graph-container">
                 <div className="report-card-graph">
-                    <p>Avg. Squat Lifetime</p>
-                </div>
-                <div className="report-card-graph">
-                    <p>Shots Made vs Attempted (lifetime)</p>
+                    <p>Lifetime Overview: Shots made (percent)</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={800} height={400}>
-                            <Pie data={lifetimePie} animationDuration={800} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
-                            <Tooltip />
-                            <Legend verticalAlign="bottom" align="center" />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="report-card-graph">
-                    <p>Name of the Graph</p>
-                </div>
-            </div>
-            {/*<div className="overall-graph-container">
-                <div className="flex flex-col align-center gap-1">
-                    <p>Avg. Squat Lifetime</p>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={730} height={250} data={sessionScoresSquat}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar dataKey="time" stackId="a" fill="#ECB390" />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="flex flex-col align-center gap-1">
-                    <p>Shots Made vs Attempted (lifetime)</p>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart width={800} height={400}>
-                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
-                            <Tooltip />
-                            <Legend verticalAlign="bottom" align="center" />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="flex flex-col align-center gap-1">
-                    <p>Lifetime Overview: Best Speed Drill</p>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
+                        <LineChart
                             width={730}
                             height={250}
-                            data={sessionScoresSpeed}
+                            data={filter?.data?.shootingRatio || shootingRatio}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -206,16 +189,63 @@ export default function Overall() {
                                     <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="created" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
-                        </AreaChart>
+                            <Line type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                        </LineChart>
                     </ResponsiveContainer>
                 </div>
-            </div>*/}
+                <div className="report-card-graph">
+                    <p>Shots Made vs Attempted (lifetime)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart width={800} height={400}>
+                            <Pie
+                                data={lifetimePie}
+                                animationDuration={800}
+                                innerRadius={75}
+                                outerRadius={125}
+                                fill="#8884d8"
+                                paddingAngle={0}
+                                dataKey="value"
+                            ></Pie>
+                            <Tooltip />
+                            <Legend verticalAlign="bottom" align="center" />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+                <div className="report-card-graph">
+                    <p>Lifetime Overview: Shots made (percent)</p>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart
+                            width={730}
+                            height={250}
+                            data={filter?.data?.passingRatio || passingRatio}
+                            margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                        >
+                            <defs>
+                                <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="created_at" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
         </div>
     )
 }

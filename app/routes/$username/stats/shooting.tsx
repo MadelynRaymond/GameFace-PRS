@@ -8,7 +8,7 @@ import { dateFromDaysOptional, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
 
-const ShootingEntrySchema = z
+export const ShootingEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
         value: z.coerce.number(),
