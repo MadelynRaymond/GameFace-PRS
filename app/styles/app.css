@@ -628,11 +628,6 @@
   text-decoration: underline;
 }
 
-.register-btn {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .btn {
   background-color: #DF7861;
   border: 2px solid black;
@@ -651,12 +646,17 @@
   transform: translate(1px, 1px);
 }
 
+.register-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .register-btn button {
   background-color: #DF7861;
   border: 2px solid black;
   color: white;
   margin: 2px;
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   font-family: "Press Start 2P", cursive;
   font-size: 0.75rem;
   border-radius: 0.25rem;
@@ -732,12 +732,11 @@
 }
 
 .profile-banner button {
-  font-family: "Press Start 2P", cursive;
   font-size: 0.75rem;
-  margin-bottom: 1rem;
   background-color: black;
   color: white;
   border-radius: 3px;
+  margin-bottom: 1rem;
 }
 
 .profile-btn-group {
@@ -784,6 +783,21 @@
   button {
     visibility: hidden !important;
   }
+}
+.profile-btn {
+  background-color: #DF7861;
+  border: 2px solid black;
+  color: white;
+  padding: 1rem 1.5rem;
+  font-family: "Montserrat", sans-serif !important;
+  border-radius: 0.25rem;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in;
+  box-shadow: 4px 4px 0 black;
+}
+.profile-btn:hover {
+  box-shadow: none;
+  transform: translate(1px, 1px);
 }
 
 /*# sourceMappingURL=app.css.map */

@@ -21,8 +21,8 @@ export default function Profile() {
             <div className="profile-banner">
                 <h2>Welcome back, {profile?.firstName}!</h2>
                 <div className="profile-btn-group">
-                    <button className="btn">Edit Profile</button>
-                    <button className="btn">Reset Password</button>
+                    <button className="profile-btn">Edit Profile</button>
+                    <button className="profile-btn">Reset Password</button>
                 </div>
             </div>
             <div className="profile-container">
