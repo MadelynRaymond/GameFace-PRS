@@ -113,13 +113,13 @@ export default function Jumping() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button">
+                        <button onClick={() => setInterval(30)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => setInterval(365)} className="filter-button">
+                        <button onClick={() => setInterval(365)} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>

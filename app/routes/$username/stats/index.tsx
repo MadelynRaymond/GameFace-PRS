@@ -90,11 +90,11 @@ export default function Overall() {
                 <div className="button-group no-print">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button">
+                        <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button">Year</button>
-                        <button onClick={() => filter.load(`/${username}/stats?index`)}  className="filter-button">Lifetime</button>
+                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button year">Year</button>
+                        <button onClick={() => filter.load(`/${username}/stats?index`)}  className="filter-button lifetime">Lifetime</button>
                     </div>
                     <div className="export-button-group">
                         <button onClick={() => window.print()} className="print-btn no-print">
@@ -176,7 +176,7 @@ export default function Overall() {
             </div>
             <div className="overall-graph-container">
                 <div className="report-card-graph">
-                    <p>???</p>
+                    <p>Shots Made Over Time</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             width={730}
@@ -225,7 +225,7 @@ export default function Overall() {
                     </ResponsiveContainer>
                 </div>
                 <div className="report-card-graph">
-                    <p>???</p>
+                    <p>Successful Pass Rate Over Time</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             width={730}
