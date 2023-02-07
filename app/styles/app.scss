@@ -99,15 +99,6 @@
   padding-top: 0.25rem;
 }
 
-.btn, .login-button {
-
-  color: white;
-  background-color: #DF7861;
-  border: none;
-  font-family: 'Press Start 2P', cursive;
-  padding: 0.5rem 1rem;
-}
-
 .welcome-back-txt{
   font-family: 'Press Start 2P', cursive;
   font-size: 1.4rem;
@@ -576,6 +567,24 @@
   justify-content: flex-end;
 }
 
+.btn {
+  background-color: #DF7861;
+  border: 2px solid black;
+  color: white;
+  margin: 2px;
+  padding: 1rem 1.5rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in;
+  box-shadow: 4px 4px 0 black;
+
+  &:hover {
+    box-shadow: none;
+    transform: translate(1px, 1px);
+  }
+}
 .register-btn button {
   background-color: #DF7861;
   border: 2px solid black;
