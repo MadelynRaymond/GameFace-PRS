@@ -43,9 +43,9 @@ export async function loader({ request }: LoaderArgs) {
             ShootingEntrySchema.parseAsync(shootingSessionData)
         ])
 
-        const scored = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.value)
-        const attempted = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.outOf)
-        const successPercentage = Math.floor((scored || 0 / (attempted || 1)) * 100)
+        const scored = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.value) as number
+        const attempted = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.outOf) as number
+        const successPercentage = Math.floor((scored / attempted) * 100)
 
         return json({
             shootingEntries,
