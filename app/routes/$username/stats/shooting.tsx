@@ -1,125 +1,119 @@
-import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, BarChart, Bar, Line, LineChart } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUserId } from '~/session.server'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { requireUser } from '~/session.server'
+import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { dateFromDaysOptional, toDateString } from '~/util'
+import { useEffect, useReducer, useState } from 'react'
+import { z } from 'zod'
+
+const ShootingEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ scored: s.value, attempted: s.outOf, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const today = new Date()
-    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
-    const userId = await requireUserId(request)
-    const lastSevenSessions = await getEntriesLastNReports({
-        drillName: 'Free Throws',
-        userId,
-        sessions: 7,
-    })
-    const freeThrowsLifeTime = await getEntriesByDrillLiteral({
-        drillName: 'Free Throws',
-        userId,
-    })
-    const freeThrowsLastMonth = await getEntriesByDrillLiteral({
-        drillName: 'Free Throws',
-        userId,
-        interval: priorDate,
-    })
+    const { username, id } = await requireUser(request)
+    const userId = id
 
-    const insufficientData = [lastSevenSessions, freeThrowsLastMonth, freeThrowsLifeTime].some((stat) => stat.length === 0)
+    //fetch time interval from url
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
+
+    const shootingEntryData = await getEntriesByDrillLiteral({ drillName: 'Free Throws', userId, interval })
+    const insufficientData = !shootingEntryData || shootingEntryData.length === 0
 
     if (insufficientData) {
-        throw new Response('Not enough data', { status: 404 })
+        throw new Response("Not enough data", {status: 404})
     }
 
-    const { scored: scoredLifeTime, attempted: attemptedLifeTime } = freeThrowsLifeTime
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
 
-    const { scored: scoredLastMonth, attempted: attemptedLastMonth } = freeThrowsLastMonth
-        .flatMap((entry) => ({
-            value: entry.value as number,
-            outOf: entry.outOf as number,
-        }))
-        .reduce(
-            (result, curr) => {
-                return {
-                    scored: result.scored + curr.value,
-                    attempted: result.attempted + curr.outOf,
-                }
-            },
-            {
-                scored: 0,
-                attempted: 0,
-            }
-        )
+    try {
+        
+        const shootingSessionData = await getEntriesLastNReports({ drillName: 'Free Throws', userId, sessions: 7 })
+        const [shootingEntries, lastSevenSessions] = await Promise.all([
+            ShootingEntrySchema.parseAsync(shootingEntryData),
+            ShootingEntrySchema.parseAsync(shootingSessionData)
+        ])
 
-    const successPercentage = Math.floor((scoredLifeTime / attemptedLifeTime) * 100)
+        const scored = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.value) as number
+        const attempted = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.outOf) as number
+        const successPercentage = Math.floor((scored / attempted) * 100)
 
-    const sessionScores = lastSevenSessions
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            scored: entry.entries[0].value,
-            attempted: entry.entries[0].outOf,
-        })) as unknown as {
-        created: string
-        scored: number
-        attempted: number
-    }[]
-
-    const sessionPercentChange = sessionScores.map((score) => ({ value: Math.floor((score.scored / score.attempted) * 100), created: score.created }))
-
-    return json({
-        sessionScores,
-        attemptedLifeTime,
-        scoredLifeTime,
-        successPercentage,
-        scoredLastMonth,
-        attemptedLastMonth,
-        sessionPercentChange,
-    })
+        return json({
+            shootingEntries,
+            lastSevenSessions,
+            attempted,
+            scored,
+            successPercentage,
+            username,
+        })
+    } catch (error) {
+        console.log(error)
+        throw new Response('Uh oh! There was a problem getting your stats.', { status: 500 })
+    }
 }
 export default function Shooting() {
-    const { sessionScores, attemptedLifeTime, scoredLifeTime, successPercentage, scoredLastMonth, attemptedLastMonth, sessionPercentChange } =
-        useLoaderData<typeof loader>()
+    const { scored, attempted, successPercentage, username, lastSevenSessions, shootingEntries } = useLoaderData<typeof loader>()
+    const intervalReducer = (_state: { text: string }, action: { type: 'update'; payload?: number }): { text: string } => {
+        if (action.type !== 'update') {
+            throw new Error('Unknown action')
+        }
+
+        switch (action.payload) {
+            case 30:
+                return { text: 'Last 30 days' }
+            case 365:
+                return { text: 'Last year' }
+            default:
+                return { text: 'Lifetime' }
+        }
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, { text: '' })
+
+    useEffect(() => {
+        if (interval) {
+            filter.load(`/${username}/stats/shooting?interval=${interval}`)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({ type: 'update', payload: interval })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
+
     const lifetimePie = [
         {
             name: 'Shots Attempted (lifetime)',
-            value: attemptedLifeTime,
+            value: attempted,
             fill: '#DF7861',
         },
         {
             name: 'Shots Scored (lifetime)',
-            value: scoredLifeTime,
+            value: scored,
             fill: '#ECB390',
         },
     ]
 
-    const lastMonthPie = [
+    const percentPie = [
         {
-            name: 'Shots Attempted (last 30 days)',
-            value: attemptedLastMonth,
+            name: 'Shots Attempted as % (last 30 days)',
+            value: 100 - (filter?.data?.successPercentage || successPercentage),
             fill: '#DF7861',
         },
         {
-            name: 'Shots Scored (last 30 days)',
-            value: scoredLastMonth,
+            name: 'Shots Scored as % (last 30 days)',
+            value: filter?.data?.successPercentage || successPercentage,
             fill: '#ECB390',
         },
     ]
@@ -127,69 +121,75 @@ export default function Shooting() {
     return (
         <div>
             <div className="report-card-header">
-            <div className="report-card-title">
-                <h2>Shooting Statistics </h2>
-                <p>Athlete: Danielle Williams (Year Overview)</p>
-            </div>
-            <div className="button-group">
-                <p className="filter-heading">Select Filter:</p>
-                <div className="filter-button-group">
-                    <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                    <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                    <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                <div className="report-card-title">
+                    <h2>Shooting Statistics </h2>
+                    <p>Athlete: Danielle Williams (Year Overview)</p>
                 </div>
-            </div>
+                <div className="button-group">
+                    <p className="filter-heading">Select Filter:</p>
+                    <div className="filter-button-group">
+                        <button onClick={() => setInterval(30)} className="filter-button">
+                            Month
+                        </button>
+                        <button onClick={() => setInterval(365)} className="filter-button">
+                            Year
+                        </button>
+                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                            Lifetime
+                        </button>
+                    </div>
+                </div>
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Scored</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{scoredLifeTime}</p>
-                            <p className="stat-box__desc">last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.scored || scored || 'No data'}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Attempted</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{attemptedLifeTime}</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.attempted || attempted || 'No data'}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{successPercentage}%</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
                 <div className="flex graph-container">
-                        <div className="flex flex-col align-center gap-1 h-full w-full">
-                            <p>Last 30 Days: Shots Landed/Attempted</p>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart width={800} height={400}>
-                                    <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
-                                    <Tooltip />
-                                    <Legend verticalAlign="bottom" align="center" />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="flex flex-col align-center gap-1 h-full w-full">
-                            <p>Lifetime Overview: Shots Landed/Attempted</p>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart width={800} height={400}>
-                                    <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
-                                    <Tooltip />
-                                    <Legend verticalAlign="bottom" align="center" />
-                                </PieChart>
-                            </ResponsiveContainer>
+                    <div className="flex flex-col align-center gap-1 h-full w-full">
+                        <p>Last 30 Days: Shots Landed/Attempted</p>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={800} height={400}>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Tooltip />
+                                <Legend verticalAlign="bottom" align="center" />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="flex flex-col align-center gap-1 h-full w-full">
+                        <p>Lifetime Overview: Shots Landed/Attempted</p>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={800} height={400}>
+                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Tooltip />
+                                <Legend verticalAlign="bottom" align="center" />
+                            </PieChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Shots Landed vs. Attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={500} height={300} data={sessionScores}>
+                        <BarChart width={500} height={300} data={lastSevenSessions}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created" />
                             <YAxis />
@@ -201,12 +201,12 @@ export default function Shooting() {
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Lifetime Overview: Shots over Time</p>
+                    <p>{state.text}: Shots scored vs attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
+                        <LineChart
                             width={730}
                             height={250}
-                            data={sessionPercentChange}
+                            data={filter?.data?.shootingEntries || shootingEntries}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -229,8 +229,9 @@ export default function Shooting() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                        </AreaChart>
+                            <Line dataKey="scored" stroke="#DF7861" />
+                            <Line dataKey="attempted" stroke="#ECB390" />
+                        </LineChart>
                     </ResponsiveContainer>
                 </div>
             </div>
@@ -245,6 +246,14 @@ export function CatchBoundary() {
         return (
             <div className="flex justify-center">
                 <h2>Not enough data</h2>
+            </div>
+        )
+    }
+
+    if (caught.status === 500){
+        return (
+            <div className="flex justify-center">
+                <h2>{caught.data}</h2>
             </div>
         )
     }

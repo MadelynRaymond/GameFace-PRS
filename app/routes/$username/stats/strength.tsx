@@ -1,69 +1,103 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Label } from 'recharts'
-import { requireUserId } from '~/session.server'
-import { getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { requireUser } from '~/session.server'
+import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral } from '~/models/drill-entry.server'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useCatch, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { dateFromDaysOptional, toDateString } from '~/util'
+import { useState, useReducer, useEffect } from 'react'
+import { z } from 'zod'
+
+const SquatEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ time: s.value, created_at: s.created_at })))
+
+const JumpDistanceEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ distance: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const userId = await requireUserId(request)
+    const {username, id} = await requireUser(request)
+    const userId = id
 
-    const jumpDistanceentries = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId })
-    const squatEntries = await getEntriesByDrillLiteral({ drillName: 'Squat Drill', userId })
-    const distances = jumpDistanceentries.map((entry) => entry.value as number)
+    const url = new URL(request.url)
+    const filter = url.searchParams.get('interval')
+    const intervalLiteral = filter ? parseInt(filter) : null
+    const interval = dateFromDaysOptional(intervalLiteral)
 
-    const insufficientData = [squatEntries, jumpDistanceentries].some((entry) => entry.length === 0)
+    const squatEntryData = await getEntriesByDrillLiteral({drillName: "Squat Drill", userId, interval})
+    const jumpDistanceData = await getEntriesByDrillLiteral({drillName: "Jump Distance Drill", userId, interval})
+
+    const insufficientData = !squatEntryData || !jumpDistanceData
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
     }
 
-    const bestDistancesMonth = jumpDistanceentries.map((entry) => entry.bestScore as number)
-    const bestDistance = Math.max(...bestDistancesMonth)
-    const averageDistanceMonth = (distances.reduce((sum, score) => score + sum, 0) / jumpDistanceentries.length).toFixed(2)
-    const averageSquatMonth = (squatEntries.map((entry) => entry.value as number).reduce((sum, score) => score + sum, 0) / squatEntries.length).toFixed(2)
+    try {
+        const [squatEntries, jumpDistanceEntries] = await Promise.all([
+            SquatEntrySchema.parseAsync(squatEntryData),
+            JumpDistanceEntrySchema.parseAsync(jumpDistanceData)
+        ])
 
-    const monthlySessionsSquat = await getEntriesLastNReports({
-        drillName: 'Squat Drill',
-        userId,
-        sessions: 30,
-    })
+        const jumpDistanceAggregate = await getEntriesAggregate({drillName: "Jump Distance Drill", userId, interval})
+        const [bestJumpDistance, averageJumpDistance] = [jumpDistanceAggregate.max, jumpDistanceAggregate.average]
+        const squatAverage = await (await getEntriesAverage({drillName: "Squat Drill", userId, interval}))._avg
 
-    const sessionScoresSquat = monthlySessionsSquat
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            time: entry.entries[0].value,
-            best: entry.entries[0].bestScore,
-        })) as unknown as {
-        created: string
-        time: number
-        best: number
-    }[]
+        return json({
+            bestJumpDistance,
+            averageJumpDistance,
+            username,
+            squatEntries,
+            jumpDistanceEntries,
+            squatAverage
+        })
+    }
+    catch (error) {
+        throw new Response("Internal server error", {status: 500})
+    }
 
-    const sessionScoresJumpDistance = monthlySessionsSquat
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            value: entry.entries[0].value,
-            best: entry.entries[0].bestScore,
-        })) as unknown as {
-        created: string
-        value: number
-        best: number
-    }[]
-
-    return json({ bestDistance, bestDistancesMonth, averageDistanceMonth, sessionScoresSquat, sessionScoresJumpDistance, averageSquatMonth })
 }
 
 export default function Strength() {
-    const { bestDistance, averageDistanceMonth, sessionScoresSquat, sessionScoresJumpDistance, averageSquatMonth } = useLoaderData<typeof loader>()
+    const {username, bestJumpDistance, averageJumpDistance, jumpDistanceEntries, squatEntries, squatAverage} = useLoaderData<typeof loader>()
+
+    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
+        if (action.type !== 'update'){
+           throw new Error("Unknown action") 
+        }
+
+        switch (action.payload) {
+            case 30: return {text: 'Last 30 days'}
+            case 365: return {text: "Last year"}
+            default: return {text: 'Lifetime'}
+        }
+    }
+    const filter = useFetcher<typeof loader>()
+    const [interval, setInterval] = useState<number | undefined>(undefined)
+    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+
+    useEffect(() => {
+        filter.load(`/${username}/stats/strength?interval=${interval}`)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [interval])
+
+    useEffect(() => {
+        dispatch({type: 'update', payload: interval})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter.data])
+    
     return (
         <div>
             <div className="report-card-header">
@@ -74,9 +108,9 @@ export default function Strength() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => console.log("Month")} className="filter-button">Month</button>
-                        <button onClick={() => console.log("Year")} className="filter-button">Year</button>
-                        <button onClick={() => console.log("LifeTime")} className="filter-button">Lifetime</button>
+                        <button onClick={() => setInterval(30)} className="filter-button">Month</button>
+                        <button onClick={() => setInterval(365)} className="filter-button">Year</button>
+                        <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
                     </div>
                 </div>
                 </div>
@@ -85,42 +119,44 @@ export default function Strength() {
                     <div className="stat-box">
                         <p className="stat-box__title">Best Jump (Distance)</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{averageDistanceMonth}ft</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.bestJumpDistance || bestJumpDistance}ft</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Jump (Distance)</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{bestDistance}</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.averageJumpDistance?.toFixed(1) || averageJumpDistance?.toFixed(1)}</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Squat Duration</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{averageSquatMonth}s</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__figure">{filter?.data?.squatAverage?.value?.toFixed(1) || squatAverage?.value?.toFixed(1)}s</p>
+                            <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
                 <div className="flex align-center flex-col gap-1 graph-container">
-                    <p>Lifetime Overview: Average Jump Distance</p>
+                    <p>{state.text} Jump Distance</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={730} height={400} data={sessionScoresJumpDistance}>
+                        <BarChart width={730} height={400} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created"></XAxis>
                             <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
-                            <Bar dataKey="value" fill="#DF7861">
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="distance" fill="#DF7861">
                                 <Label value="Session Date" position="top" />
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Last 30 Days: Avg. Squat Duration w/Weight</p>
+                    <p>{state.text}: Squat Duration w/Weight</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={730} height={250} data={sessionScoresSquat}>
+                        <BarChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis />
@@ -133,7 +169,7 @@ export default function Strength() {
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Lifetime Overview: Best Squat Duration w/Weights</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart width={730} height={250} data={sessionScoresSquat}>
+                        <AreaChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />

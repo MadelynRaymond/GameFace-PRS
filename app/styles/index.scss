@@ -1,8 +1,12 @@
+@use 'variables' as *;
 /* Box sizing rules */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+body {
+  background-color: $bg-primary;
 }
 
 /* Remove default margin */
