@@ -152,7 +152,7 @@ export default function Overall() {
                     <p>Shots Made vs Attempted (lifetime)</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
-                            <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                            <Pie data={lifetimePie} animationDuration={800} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
                             <Tooltip />
                             <Legend verticalAlign="bottom" align="center" />
                         </PieChart>

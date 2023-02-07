@@ -1,3 +1,4 @@
+@use 'variables' as *;
 /*UTILITY */
 .w-full {
   width: 100%;
@@ -577,18 +578,24 @@
 
 .register-btn button {
   background-color: #DF7861;
-  border: none;
+  border: 2px solid black;
   color: white;
-  padding: 0.5rem 1rem;
+  margin: 2px;
+  padding: 1rem 1.5rem;
   font-family: 'Press Start 2P', cursive;
   font-size: 0.75rem;
+  border-radius: 0.25rem;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in;
+  box-shadow: 4px 4px 0 black;
 }
+
 
 .register-btn button:hover{
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-
-  
+  box-shadow: none;
+  transform: translate(1px, 1px);
 }
+
 
 .registration-form-header {
   display: flex;
