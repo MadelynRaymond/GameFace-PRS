@@ -10,6 +10,11 @@ import {
 import { requireUser } from '~/session.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
+let orange = '#EDA75C'
+let orangeAccent = '#FFA500'
+let black = '#000000'
+let strokeWidth = 4
+
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
     const { username, id } = user
@@ -59,21 +64,22 @@ export default function Overall() {
         username,
     } = useLoaderData<typeof loader>()
 
+
     const filter = useFetcher<typeof loader>()
 
     const lifetimePie = [
         {
-            name: 'Shots Attempted (lifetime)',
+            name: 'Shots Attempted',
             value: filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
-            name: 'Shots Scored (lifetime)',
+            name: 'Shots Scored',
             value: filter?.data?.shootingAggregations._sum.value || shootingAggregations._sum.value,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
-
+    
     return (
         <div>
             <div className="report-card-header">
@@ -170,7 +176,7 @@ export default function Overall() {
             </div>
             <div className="overall-graph-container">
                 <div className="report-card-graph">
-                    <p>Lifetime Overview: Shots made (percent)</p>
+                    <p>???</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             width={730}
@@ -185,8 +191,8 @@ export default function Overall() {
                         >
                             <defs>
                                 <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                    <stop offset="80%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="100%" stopColor={orange} stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created_at" />
@@ -194,12 +200,12 @@ export default function Overall() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                            <Line type="monotone" dataKey="ratio" stroke={orange} strokeWidth={strokeWidth} fillOpacity={4} fill="url(#colorUv2)" />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="report-card-graph">
-                    <p>Shots Made vs Attempted (lifetime)</p>
+                    <p>Shots Made vs Attempted</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart width={800} height={400}>
                             <Pie
@@ -207,7 +213,7 @@ export default function Overall() {
                                 animationDuration={800}
                                 innerRadius={75}
                                 outerRadius={125}
-                                fill="#8884d8"
+                                fill={orange}
                                 paddingAngle={0}
                                 dataKey="value"
                             ></Pie>
@@ -217,7 +223,7 @@ export default function Overall() {
                     </ResponsiveContainer>
                 </div>
                 <div className="report-card-graph">
-                    <p>Lifetime Overview: Shots made (percent)</p>
+                    <p>???</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             width={730}
@@ -241,7 +247,7 @@ export default function Overall() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                            <Line type="monotone" dataKey="ratio" stroke={orangeAccent} strokeWidth={strokeWidth}fillOpacity={1} fill="url(#colorUv2)" />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

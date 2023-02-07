@@ -88,6 +88,11 @@ export default function Dribbling() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
 
+    let orange = '#EDA75C'
+    let orangeAccent = '#FFA500'
+    let black = '#000000'
+    let strokeWidth = 4
+    
     return (
         <div>
             <div className="report-card-header">
@@ -152,17 +157,19 @@ export default function Dribbling() {
                             }}
                         >
                             <defs>
+                            <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                    <stop offset="80%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="100%" stopColor={orange} stopOpacity={0.2} />
                                 </linearGradient>
+                            </defs>
                             </defs>
                             <XAxis dataKey="created_at" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="time" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -182,8 +189,8 @@ export default function Dribbling() {
                         >
                             <defs>
                                 <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                    <stop offset="80%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="100%" stopColor={orange} stopOpacity={0.2} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created_at" />
@@ -191,7 +198,7 @@ export default function Dribbling() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv2)" />
+                            <Area type="monotone" dataKey="time" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv2)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -214,8 +221,8 @@ export default function Dribbling() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="time" fill="#ECB390" />
-                            <Bar dataKey="bestTime" fill="#DF7861" />
+                            <Bar dataKey="time" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="bestTime" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

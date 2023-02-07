@@ -8,6 +8,11 @@ import { dateFromDaysOptional, toDateString } from '~/util'
 import { useState, useReducer, useEffect } from 'react'
 import { z } from 'zod'
 
+let orange = '#EDA75C'
+let orangeAccent = '#FFA500'
+let black = '#000000'
+let strokeWidth = 4
+
 const PassesEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
@@ -65,12 +70,12 @@ export default function Shooting() {
         {
             name: 'Passes Attempted (lifetime)',
             value: filter?.data?.passesAttempted || passesAttempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Passes Made (lifetime)',
             value: filter?.data?.passesMade || passesMade,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -78,12 +83,12 @@ export default function Shooting() {
         {
             name: 'Passes Attempted (last 30 days)',
             value: filter?.data?.passesAttempted || passesAttempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Passes Made (last 30 days)',
             value: filter?.data?.passesMade || passesMade,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -116,6 +121,7 @@ export default function Shooting() {
         dispatch({ type: 'update', payload: interval })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
+
 
     return (
         <div>
@@ -168,7 +174,7 @@ export default function Shooting() {
                         <p>Last 30 Days: Missed vs. Landed</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill={orangeAccent} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -178,7 +184,7 @@ export default function Shooting() {
                         <p>Lifetime: Missed vs. Landed</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill={orange} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -194,8 +200,8 @@ export default function Shooting() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="completed" stackId="a" fill="#DF7861" />
-                            <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="completed" stackId="a" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="attempted" stackId="a" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -219,20 +225,17 @@ export default function Shooting() {
                         >
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                    <stop offset="80%" stopColor={orangeAccent} stopOpacity={0.8} />
+                                    <stop offset="100%" stopColor={orangeAccent} stopOpacity={0} />
                                 </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                                </linearGradient>
+                                
                             </defs>
                             <XAxis dataKey="created" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="ratio" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

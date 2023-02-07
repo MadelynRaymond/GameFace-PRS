@@ -8,6 +8,12 @@ import { dateFromDaysOptional, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
 
+let orange = '#EDA75C'
+let orangeAccent = '#FFA500'
+let black = '#000000'
+let strokeWidth = 4
+
+
 export const ShootingEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
@@ -96,12 +102,12 @@ export default function Shooting() {
         {
             name: 'Shots Attempted (lifetime)',
             value: attempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Shots Scored (lifetime)',
             value: scored,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -109,12 +115,12 @@ export default function Shooting() {
         {
             name: 'Shots Attempted as % (last 30 days)',
             value: 100 - (filter?.data?.successPercentage || successPercentage),
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Shots Scored as % (last 30 days)',
             value: filter?.data?.successPercentage || successPercentage,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -169,7 +175,7 @@ export default function Shooting() {
                         <p>Last 30 Days: Shots Landed/Attempted</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -179,7 +185,7 @@ export default function Shooting() {
                         <p>Lifetime Overview: Shots Landed/Attempted</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -195,8 +201,8 @@ export default function Shooting() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="scored" stackId="a" fill="#DF7861" />
-                            <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="scored" stackId="a" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="attempted" stackId="a" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -229,8 +235,8 @@ export default function Shooting() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line dataKey="scored" stroke="#DF7861" />
-                            <Line dataKey="attempted" stroke="#ECB390" />
+                            <Line dataKey="scored" stroke={black} fill="url(#colorUv)" />
+                            <Line dataKey="attempted" stroke={black} fill="url(#colorPv)"/>
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
