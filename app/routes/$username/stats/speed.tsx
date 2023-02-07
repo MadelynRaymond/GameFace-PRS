@@ -91,7 +91,7 @@ export default function Speed() {
 
     useEffect(() => {
         if (interval) {
-            filter.load(`/${username}/stats/shooting?interval=${interval}`)
+            filter.load(`/${username}/stats/speed?interval=${interval}`)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [interval])
@@ -181,7 +181,7 @@ export default function Speed() {
                         <AreaChart
                             width={730}
                             height={250}
-                            data={lastSevenSessions}
+                            data={filter?.data?.speedEntries || speedEntries}
                             margin={{
                                 top: 10,
                                 right: 30,
