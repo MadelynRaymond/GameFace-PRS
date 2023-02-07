@@ -59,15 +59,17 @@ export async function loader({ request }: LoaderArgs) {
 }
 export default function Shooting() {
     const { username, passingEntries, passesAttempted, passesMade, successPercentage, lastSevenSessions } = useLoaderData<typeof loader>()
+    const filter = useFetcher<typeof loader>()
+
     const lifetimePie = [
         {
             name: 'Passes Attempted (lifetime)',
-            value: passesAttempted,
+            value: filter?.data?.passesAttempted || passesAttempted,
             fill: '#DF7861',
         },
         {
             name: 'Passes Made (lifetime)',
-            value: passesMade,
+            value: filter?.data?.passesMade || passesMade,
             fill: '#ECB390',
         },
     ]
@@ -75,12 +77,12 @@ export default function Shooting() {
     const lastMonthPie = [
         {
             name: 'Passes Attempted (last 30 days)',
-            value: passesAttempted,
+            value: filter?.data?.passesAttempted || passesAttempted,
             fill: '#DF7861',
         },
         {
             name: 'Passes Made (last 30 days)',
-            value: passesMade,
+            value: filter?.data?.passesMade || passesMade,
             fill: '#ECB390',
         },
     ]
@@ -99,7 +101,6 @@ export default function Shooting() {
                 return { text: 'Lifetime' }
         }
     }
-    const filter = useFetcher<typeof loader>()
     const [interval, setInterval] = useState<number | undefined>(undefined)
     const [state, dispatch] = useReducer(intervalReducer, { text: '' })
     
@@ -157,7 +158,7 @@ export default function Shooting() {
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Pass Success Rate</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{successPercentage}%</p>
+                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage}%</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
@@ -187,7 +188,7 @@ export default function Shooting() {
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Pass Success Rate</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={500} height={300} data={lastSevenSessions}>
+                        <BarChart width={500} height={300} data={filter?.data?.lastSevenSessions || lastSevenSessions}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created" />
                             <YAxis />
