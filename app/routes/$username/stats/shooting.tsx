@@ -9,7 +9,7 @@ import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
 
 let orange = '#EDA75C'
-let orangeAccent = '#FFA500'
+let orangeAccent = '#E58274'
 let black = '#000000'
 let strokeWidth = 4
 
@@ -100,12 +100,12 @@ export default function Shooting() {
 
     const lifetimePie = [
         {
-            name: 'Shots Attempted (lifetime)',
+            name: 'Shots Attempted',
             value: attempted,
             fill: orange,
         },
         {
-            name: 'Shots Scored (lifetime)',
+            name: 'Shots Scored',
             value: scored,
             fill: orangeAccent,
         },
@@ -235,8 +235,8 @@ export default function Shooting() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line dataKey="scored" stroke={black} fill="url(#colorUv)" />
-                            <Line dataKey="attempted" stroke={black} fill="url(#colorPv)"/>
+                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorUv)" />
+                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorPv)"/>
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

@@ -11,7 +11,7 @@ import { requireUser } from '~/session.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
 let orange = '#EDA75C'
-let orangeAccent = '#FFA500'
+let orangeAccent = '#E58274'
 let black = '#000000'
 let strokeWidth = 4
 
@@ -93,8 +93,8 @@ export default function Overall() {
                         <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button">
                             Month
                         </button>
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)}>Year</button>
-                        <button onClick={() => filter.load(`/${username}/stats?index`)}>Lifetime</button>
+                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button">Year</button>
+                        <button onClick={() => filter.load(`/${username}/stats?index`)}  className="filter-button">Lifetime</button>
                     </div>
                     <div className="export-button-group">
                         <button onClick={() => window.print()} className="print-btn no-print">
@@ -216,6 +216,8 @@ export default function Overall() {
                                 fill={orange}
                                 paddingAngle={0}
                                 dataKey="value"
+                                stroke={black}
+                                strokeWidth={strokeWidth}
                             ></Pie>
                             <Tooltip />
                             <Legend verticalAlign="bottom" align="center" />

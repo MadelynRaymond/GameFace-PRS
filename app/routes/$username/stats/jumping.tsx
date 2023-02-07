@@ -99,7 +99,7 @@ export default function Jumping() {
     }, [filter.data])
 
     let orange = '#EDA75C'
-    let orangeAccent = '#FFA500'
+    let orangeAccent = '#E58274'
     let black = '#000000'
     let strokeWidth = 4
 
@@ -191,8 +191,8 @@ export default function Jumping() {
                         >
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="80%" stopColor={orange} stopOpacity={0.8} />
-                                    <stop offset="100%" stopColor={orange} stopOpacity={0} />
+                                    <stop offset="5%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={orange} stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created_at" />

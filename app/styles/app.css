@@ -250,7 +250,7 @@
 }
 
 .stat-box__figure {
-  font-size: 2.75rem;
+  font-size: 2.25rem;
   font-weight: 600;
 }
 
@@ -415,7 +415,6 @@
 
 .report-card-title p {
   color: gray;
-  font-size: 0.75rem;
   font-family: "Montserrat", sans-serif;
 }
 
