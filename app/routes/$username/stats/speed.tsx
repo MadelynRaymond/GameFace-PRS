@@ -6,7 +6,7 @@ import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
-import { z } from 'zod'
+import { z, ZodError } from 'zod'
 
 const SpeedEntrySchema = z
     .object({
@@ -28,10 +28,6 @@ export async function loader({ request }: LoaderArgs) {
     const intervalLiteral = filter ? parseInt(filter) : null
     const interval = dateFromDaysOptional(intervalLiteral)
 
-    //idk what this is
-    const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval })
-    const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval })
-
     //get data points from last 7 reports
     const speedSessionData = await getEntriesLastNReports({
         drillName: 'Speed Drill',
@@ -42,17 +38,22 @@ export async function loader({ request }: LoaderArgs) {
     //get all entries from time interval
     const speedEntryData = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId, interval })
 
+    const insufficientData = !speedEntryData || speedEntryData.length === 0
+
+    if (insufficientData) {
+            throw new Response('Not enough data', { status: 404 })
+    }
+
     try {
         //transform entries into correct format
         const [speedEntries, lastSevenSessions] = await Promise.all([
             SpeedEntrySchema.parseAsync(speedEntryData),
             SpeedEntrySchema.parseAsync(speedSessionData),
         ])
-        const insufficientData = lastSevenSessions.length === 0
 
-        if (insufficientData) {
-            throw new Response('Not enough data', { status: 404 })
-        }
+        //idk what this is
+        const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval })
+        const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval })
 
         //idk what this is either
         const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
@@ -62,6 +63,7 @@ export async function loader({ request }: LoaderArgs) {
         const lastSessionSpeedDrill = lastSevenSessions[0].time
 
         return json({ averageTimeMonth, bestTimeMonth, lastSevenSessions, lastSessionAverage: lastSessionSpeedDrill, speedEntries, username })
+
     } catch (error) {
         throw new Response('Internal server error', { status: 500 })
     }

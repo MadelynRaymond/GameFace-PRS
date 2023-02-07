@@ -4,8 +4,18 @@ import { json } from '@remix-run/node'
 import { requireUser, requireUserId } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
-import { dateFromDaysOptional, dbTimeToString } from '~/util'
+import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useState, useReducer, useEffect } from 'react'
+import { z } from 'zod'
+
+const DribblingSpeedSchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ scored: s.value, attempted: s.outOf, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
     const {username, id} = await requireUser(request)
@@ -20,32 +30,23 @@ export async function loader({ request }: LoaderArgs) {
     const {min, average} = await getEntriesAggregate({drillName: "Dribbling Speed", userId, interval })
     const [bestTime, averageTime] = [min, average]
 
-    const lastSevenSessions = await getEntriesLastNReports({
+    const dribblingSpeedSessionData = await getEntriesLastNReports({
         drillName: 'Dribbling Speed',
         userId,
         sessions: 7,
     })
 
-    const insufficientData = [entries, lastSevenSessions].some((entry) => entry.length === 0)
+    try {
+        const lastSevenSessions = await DribblingSpeedSchema.parseAsync(dribblingSpeedSessionData)
 
-    if (insufficientData) {
-        throw new Response('Not enough data', { status: 404 })
+    }
+    catch (error) {
+        throw new Response("Not enough data", {status: 404})
     }
 
-    const sessionScores = lastSevenSessions
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            time: entry.entries[0].value,
-            best: entry.entries[0].bestScore,
-        })) as unknown as {
-        created: string
-        time: number
-        best: number
-    }[]
+
+    
+
 
     const lastSessionAverage = dbTimeToString(sessionScores[sessionScores.length - 1].time)
 
@@ -123,7 +124,7 @@ export default function Dribbling() {
                     </div>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Last Seven Sessions: Avg. Dribbling Drill Completion Time</p>
+                    <p>Last Seven Sessions: Dribbling Drill Completion Time</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                             width={730}

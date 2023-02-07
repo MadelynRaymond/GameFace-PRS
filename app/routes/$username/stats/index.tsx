@@ -81,66 +81,66 @@ export default function Overall() {
                     <h4>Speed</h4>
                     <div className="stat-row-item">
                         <p className="table-stat-name">Fastest Drill</p>
-                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.min || speedAggregations.min)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.min || speedAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Drill Speed</p>
-                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.average || speedAggregations.average)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.average || speedAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
                     <h4>Shooting</h4>
                     <div>
                         <p className="table-stat-name">Shots Made</p>
-                        <p>{filter?.data?.shootingAggregations._sum.value || shootingAggregations._sum.value || 0}</p>
+                        <p>{filter?.data?.shootingAggregations._sum.value || shootingAggregations._sum.value || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Shots Made/Attempted</p>
-                        <p>{filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf || 1}</p>
+                        <p>{filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
                     <h4>Dribbling</h4>
                     <div>
                         <p className="table-stat-name">Fastes Drill w/no Mistakes</p>
-                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.min || dribblingAggregations.min)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.min || dribblingAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Drill w/no Mistakes</p>
-                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.average || dribblingAggregations.average)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.average || dribblingAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
                     <h4>Passing</h4>
                     <div>
                         <p className="table-stat-name">Passes Completed</p>
-                        <p>{filter?.data?.passingAggregations._sum.value || passingAggregations._sum.value || 0}</p>
+                        <p>{filter?.data?.passingAggregations._sum.value || passingAggregations._sum.value || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Passes Completion Rate</p>
-                        <p>{filter?.data?.passingAggregations._sum.outOf || passingAggregations._sum.outOf || 1}</p>
+                        <p>{filter?.data?.passingAggregations._sum.outOf || passingAggregations._sum.outOf || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
                     <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Best Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'Not enough data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
                     <h4>Jumping</h4>
                     <div>
                         <p className="table-stat-name">Highest Jump</p>
-                        <p>{filter?.data?.jumpingAggregations.max || jumpingAggregations.max || 'Not enough data'}</p>
+                        <p>{filter?.data?.jumpingAggregations.max || jumpingAggregations.max || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Jump Height</p>
-                        <p>{filter?.data?.jumpingAggregations.average || jumpingAggregations.average || 'Not enough data'}</p>
+                        <p>{filter?.data?.jumpingAggregations.average || jumpingAggregations.average || 'No data'}</p>
                     </div>
                 </div>
             </div>

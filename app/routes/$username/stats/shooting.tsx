@@ -18,8 +18,6 @@ const ShootingEntrySchema = z
     .transform((data) => data.map((s) => ({ scored: s.value, attempted: s.outOf, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const today = new Date()
-    const priorDate = new Date(new Date().setDate(today.getDate() - 30))
     const { username, id } = await requireUser(request)
     const userId = id
 
@@ -29,19 +27,25 @@ export async function loader({ request }: LoaderArgs) {
     const intervalLiteral = filter ? parseInt(filter) : null
     const interval = dateFromDaysOptional(intervalLiteral)
 
-    const scored = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.value) || 0
-    const attempted = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.outOf) || 1
-
-    const successPercentage = Math.floor((scored / attempted) * 100)
-
     const shootingEntryData = await getEntriesByDrillLiteral({ drillName: 'Free Throws', userId, interval })
-    const shootingSessionData = await getEntriesLastNReports({ drillName: 'Free Throws', userId, sessions: 7 })
+    const insufficientData = !shootingEntryData || shootingEntryData.length === 0
+
+    if (insufficientData) {
+        throw new Response("Not enough data", {status: 404})
+    }
+
 
     try {
+        
+        const shootingSessionData = await getEntriesLastNReports({ drillName: 'Free Throws', userId, sessions: 7 })
         const [shootingEntries, lastSevenSessions] = await Promise.all([
             ShootingEntrySchema.parseAsync(shootingEntryData),
             ShootingEntrySchema.parseAsync(shootingSessionData)
         ])
+
+        const scored = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.value)
+        const attempted = (await (await getEntriesTotal({ drillName: 'Free Throws', userId, interval }))._sum.outOf)
+        const successPercentage = Math.floor((scored || 0 / (attempted || 1)) * 100)
 
         return json({
             shootingEntries,
@@ -52,7 +56,8 @@ export async function loader({ request }: LoaderArgs) {
             username,
         })
     } catch (error) {
-        throw new Response('Internal server Error', { status: 500 })
+        console.log(error)
+        throw new Response('Uh oh! There was a problem getting your stats.', { status: 500 })
     }
 }
 export default function Shooting() {
@@ -139,21 +144,21 @@ export default function Shooting() {
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Scored</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.scored || scored}</p>
+                            <p className="stat-box__figure">{filter?.data?.scored || scored || 'No data'}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Attempted</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.attempted || attempted}</p>
+                            <p className="stat-box__figure">{filter?.data?.attempted || attempted || 'No data'}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage}%</p>
+                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
@@ -240,6 +245,14 @@ export function CatchBoundary() {
         return (
             <div className="flex justify-center">
                 <h2>Not enough data</h2>
+            </div>
+        )
+    }
+
+    if (caught.status === 500){
+        return (
+            <div className="flex justify-center">
+                <h2>{caught.data}</h2>
             </div>
         )
     }
