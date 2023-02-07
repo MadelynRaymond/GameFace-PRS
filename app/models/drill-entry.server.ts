@@ -25,30 +25,22 @@ export async function createEntryOnReport(reportId: number, entries: DrillEntry[
 }
 
 export async function getEntriesLastNReports({ drillName, userId, sessions }: { drillName: Drill['name']; userId: User['id']; sessions: number }) {
-    return prisma.athleteReport.findMany({
+    return prisma.drillEntry.findMany({
         select: {
-            created_at: true,
-            entries: {
-                select: {
-                    value: true,
-                    outOf: true,
-                    unit: true,
-                    bestScore: true,
-                },
-                where: {
-                    drill: {
-                        name: drillName,
-                    },
-                },
-            },
-        },
-        orderBy: {
-            created_at: 'asc',
+            value: true,
+            outOf: true,
+            created_at: true
         },
         where: {
             userId,
+            drill: {
+                name: drillName
+            }
         },
-        take: sessions,
+        orderBy: {
+            created_at: 'desc'
+        },
+        take: sessions
     })
 }
 
@@ -69,7 +61,7 @@ export async function getEntries({userId, drillName, interval = new Date()}: {us
 export async function getEntriesByDrillLiteral({
     drillName,
     userId,
-    interval = new Date(),
+    interval,
 }: {
     drillName: Drill['name']
     userId: User['id']
@@ -79,8 +71,7 @@ export async function getEntriesByDrillLiteral({
         select: {
             value: true,
             outOf: true,
-            unit: true,
-            bestScore: true,
+            created_at: true,
         },
         where: {
             drill: {
@@ -89,6 +80,9 @@ export async function getEntriesByDrillLiteral({
             user: {
                 id: userId,
             },
+            created_at: {
+                gte: interval
+            }
         },
     })
 }

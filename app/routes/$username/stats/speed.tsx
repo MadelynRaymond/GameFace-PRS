@@ -3,85 +3,99 @@ import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUser } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
-import { getEntriesAverage, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
-import { dateFromDaysOptional, dbTimeToString } from '~/util'
+import { getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
+import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
+import { z } from 'zod'
+
+const SpeedEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ time: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
     const { username, id } = user
     const userId = id
 
+    //fetch time interval from url
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null
     const interval = dateFromDaysOptional(intervalLiteral)
 
+    //idk what this is
     const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval })
     const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval })
 
-    const lastSevenSessions = await getEntriesLastNReports({
+    //get data points from last 7 reports
+    const speedSessionData = await getEntriesLastNReports({
         drillName: 'Speed Drill',
         userId,
         sessions: 7,
     })
 
-    const insufficientData = [lastSevenSessions].some((entry) => entry.length === 0)
+    //get all entries from time interval
+    const speedEntryData = await getEntriesByDrillLiteral({ drillName: 'Speed Drill', userId, interval })
 
-    if (insufficientData) {
-        throw new Response('Not enough data', { status: 404 })
+    try {
+        //transform entries into correct format
+        const [speedEntries, lastSevenSessions] = await Promise.all([
+            SpeedEntrySchema.parseAsync(speedEntryData),
+            SpeedEntrySchema.parseAsync(speedSessionData),
+        ])
+        const insufficientData = lastSevenSessions.length === 0
+
+        if (insufficientData) {
+            throw new Response('Not enough data', { status: 404 })
+        }
+
+        //idk what this is either
+        const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
+        const bestTimeMonth = dbTimeToString(dbBestTimeMonth._min.bestScore)
+
+        //last entry for the speed drill
+        const lastSessionSpeedDrill = lastSevenSessions[0].time
+
+        return json({ averageTimeMonth, bestTimeMonth, lastSevenSessions, lastSessionAverage: lastSessionSpeedDrill, speedEntries, username })
+    } catch (error) {
+        throw new Response('Internal server error', { status: 500 })
     }
-
-    const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
-    const bestTimeMonth = dbTimeToString(dbBestTimeMonth._min.bestScore)
-
-    const sessionScores = lastSevenSessions
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            time: entry.entries[0].value,
-            best: entry.entries[0].bestScore,
-        })) as unknown as {
-        created: string
-        time: number
-        best: number
-    }[]
-
-    const lastSessionAverage = dbTimeToString(sessionScores[sessionScores.length - 1].time)
-
-    return json({ averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage, username })
 }
 
 export default function Speed() {
-    const { averageTimeMonth, bestTimeMonth, sessionScores, lastSessionAverage, username } = useLoaderData<typeof loader>()
-    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
-        if (action.type !== 'update'){
-           throw new Error("Unknown action") 
+    const { averageTimeMonth, bestTimeMonth, lastSevenSessions, lastSessionAverage, username, speedEntries } = useLoaderData<typeof loader>()
+    const intervalReducer = (_state: { text: string }, action: { type: 'update'; payload?: number }): { text: string } => {
+        if (action.type !== 'update') {
+            throw new Error('Unknown action')
         }
 
         switch (action.payload) {
-            case 30: return {text: 'Last 30 days'}
-            case 365: return {text: "Last year"}
-            default: return {text: 'Lifetime'}
+            case 30:
+                return { text: 'Last 30 days' }
+            case 365:
+                return { text: 'Last year' }
+            default:
+                return { text: 'Lifetime' }
         }
     }
     const filter = useFetcher<typeof loader>()
     const [interval, setInterval] = useState<number | undefined>(undefined)
-    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+    const [state, dispatch] = useReducer(intervalReducer, { text: '' })
 
     useEffect(() => {
-        console.log('refetched')
         filter.load(`/${username}/stats/speed?interval=${interval}`)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [interval])
 
     useEffect(() => {
-        dispatch({type: 'update', payload: interval})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch({ type: 'update', payload: interval })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
 
     return (
@@ -130,12 +144,12 @@ export default function Speed() {
                     </div>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Last 30 Days: Avg. Speed</p>
+                    <p>{state.text}: Speed Drill</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                             width={730}
                             height={250}
-                            data={sessionScores}
+                            data={filter?.data?.speedEntries || speedEntries}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -149,7 +163,7 @@ export default function Speed() {
                                     <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="created" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
@@ -164,7 +178,7 @@ export default function Speed() {
                         <AreaChart
                             width={730}
                             height={250}
-                            data={sessionScores}
+                            data={lastSevenSessions}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -178,7 +192,7 @@ export default function Speed() {
                                     <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="created" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
@@ -193,7 +207,7 @@ export default function Speed() {
                         <BarChart
                             width={500}
                             height={300}
-                            data={sessionScores}
+                            data={lastSevenSessions}
                             margin={{
                                 top: 5,
                                 right: 30,
@@ -206,7 +220,7 @@ export default function Speed() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="best" fill="#DF7861" />
+                            <Bar dataKey="time" fill="#DF7861" />
                             <Bar dataKey="time" fill="#ECB390" />
                         </BarChart>
                     </ResponsiveContainer>
