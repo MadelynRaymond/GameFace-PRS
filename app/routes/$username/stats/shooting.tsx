@@ -149,14 +149,14 @@ export default function Shooting() {
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Shots Attempted</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.attempted || attempted || 'No data'}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box dots">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}</p>

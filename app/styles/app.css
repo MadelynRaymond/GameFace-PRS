@@ -82,6 +82,11 @@
   margin: 2rem 6rem;
   border-radius: 8px;
   border-bottom: 8px solid black;
+  min-height: 5rem;
+}
+
+.menu-text {
+  margin-top: 1.25rem;
 }
 
 .navbar > div, .navbar > div ul {
@@ -99,7 +104,7 @@
 }
 
 .nav-logo {
-  padding-top: 0.25rem;
+  padding-top: 1.25rem;
 }
 
 .welcome-back-txt {
@@ -176,20 +181,20 @@
   display: flex;
   gap: 2rem;
   padding: 1rem 0;
-  color: rgb(166, 165, 171);
+  color: rgb(102, 102, 102);
   font-weight: 500;
 }
 
 .stats-menu {
-  border-bottom: 1px solid rgba(166, 165, 171, 0.75);
-  margin: 2rem;
+  border-bottom: 4px solid black;
+  margin: 2rem 4rem;
   margin-bottom: 0;
 }
 
 .stats-menu__athlete-name {
   font-weight: 400;
   font-size: 0.85rem;
-  color: rgb(166, 165, 171);
+  color: rgb(102, 102, 102);
 }
 
 .stats-menu__header {
@@ -198,7 +203,7 @@
 }
 
 .stats-menu__item-selected {
-  color: #0a0c10 !important;
+  color: black !important;
   font-weight: 600;
 }
 
@@ -222,12 +227,13 @@
 }
 
 .stat-box {
-  min-width: 250px;
+  min-width: 200px;
   max-height: 250px;
   padding: 1rem;
   border: 4px solid black;
   border-bottom: 8px solid black;
   border-radius: 8px;
+  background-color: white;
 }
 
 .stat-box__title {
@@ -306,9 +312,38 @@
   margin: 2rem 4rem;
 }
 
+.dots {
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg%27%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.07' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.squiggles {
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg%27%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.08'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.crosses {
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.08'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.accent {
+  background-color: rgb(237, 167, 97);
+}
+
+.accent-2 {
+  background-color: rgb(201, 175, 201);
+}
+
+.lines {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-size: 40px 40px;
+  background-image: repeating-linear-gradient(45deg, black 0, #0e0e0e 4px, #ffffff 0, #ffffff 50%);
+}
+
 .stat-row {
   height: 100%;
-  background-color: white;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
@@ -352,6 +387,7 @@
   gap: 1rem;
   border: 4px solid black;
   border-bottom: 10px solid black;
+  background-color: white;
 }
 
 /*Helper styling classes*/
@@ -379,7 +415,7 @@
 .report-card-title p {
   color: gray;
   font-size: 0.75rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
 }
 
 .filter-heading {
@@ -455,6 +491,7 @@
   border-bottom: 8px solid black;
   padding-top: 0.5rem;
   margin: 0.75rem 2rem;
+  background-color: white;
 }
 
 /*STAFF ATHLETE TABLE */

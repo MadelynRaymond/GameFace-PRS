@@ -62,18 +62,18 @@ function Navbar() {
                     <ul className="left-nav-container">
                         <a href="https://www.gameface413.org/">
                             <li className="left-nav-btn">
-                            Main Site
+                            <p className="menu-text">Main Site</p>
                             </li>
                         </a>
                         <Link to={`${user?.username}/stats`}>
-                            <li className="left-nav-btn">My Stats</li>
+                            <li className="left-nav-btn"><p className="menu-text">My Stats</p></li>
                         </Link>
                         <Form className='logout-btn' method="post" action="/logout"> 
-                            <button type='submit'>Logout</button>
+                            <button type='submit'><p className="menu-text">Logout</p></button>
                         </Form>
                         <Link to={`${user?.username}/profile`}>
                             <li className="left-nav-btn">
-                                Profile
+                                <p className="menu-text">Profile</p>
                             </li>
                         </Link>
                        

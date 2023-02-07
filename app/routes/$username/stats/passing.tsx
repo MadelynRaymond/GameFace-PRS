@@ -141,21 +141,21 @@ export default function Shooting() {
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Successful Passes</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.passesMade || passesMade}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box crosses">
                         <p className="stat-box__title">Attepted Passes</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.passesAttempted || passesAttempted}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Avg. Pass Success Rate</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage}%</p>

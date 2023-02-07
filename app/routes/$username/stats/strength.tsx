@@ -116,21 +116,21 @@ export default function Strength() {
                 </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Best Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.bestJumpDistance || bestJumpDistance}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box dots">
                         <p className="stat-box__title">Avg. Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.averageJumpDistance?.toFixed(1) || averageJumpDistance?.toFixed(1)}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Avg. Squat Duration</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.squatAverage?.value?.toFixed(1) || squatAverage?.value?.toFixed(1)}s</p>

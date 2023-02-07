@@ -81,7 +81,7 @@ export default function Overall() {
                     <h2>Training Report Card</h2>
                     <p>Athlete: Danielle Williams (Year Overview)</p>
                 </div>
-                <div className="button-group">
+                <div className="button-group no-print">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
                         <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button">
@@ -101,7 +101,7 @@ export default function Overall() {
             </div>
 
             <div className="overall-stat-table">
-                <div className="stat-row flex-r">
+                <div className="stat-row flex-r crosses">
                     <h4>Speed</h4>
                     <div className="stat-row-item">
                         <p className="table-stat-name">Fastest Drill</p>
@@ -123,10 +123,10 @@ export default function Overall() {
                         <p>{filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf || 'No data'}</p>
                     </div>
                 </div>
-                <div className="stat-row flex-r">
+                <div className="stat-row flex-r dots">
                     <h4>Dribbling</h4>
                     <div>
-                        <p className="table-stat-name">Fastes Drill w/no Mistakes</p>
+                        <p className="table-stat-name">Fastest Drill w/no Mistakes</p>
                         <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.min || dribblingAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
@@ -134,7 +134,7 @@ export default function Overall() {
                         <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.average || dribblingAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
-                <div className="stat-row flex-r">
+                <div className="stat-row flex-r accent">
                     <h4>Passing</h4>
                     <div>
                         <p className="table-stat-name">Passes Completed</p>
@@ -145,7 +145,7 @@ export default function Overall() {
                         <p>{filter?.data?.passingAggregations._sum.outOf || passingAggregations._sum.outOf || 'No data'}</p>
                     </div>
                 </div>
-                <div className="stat-row flex-r">
+                <div className="stat-row flex-r squiggles">
                     <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
@@ -156,7 +156,7 @@ export default function Overall() {
                         <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
-                <div className="stat-row flex-r">
+                <div className="stat-row flex-r accent-2">
                     <h4>Jumping</h4>
                     <div>
                         <p className="table-stat-name">Highest Jump</p>

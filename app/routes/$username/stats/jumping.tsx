@@ -122,21 +122,21 @@ export default function Jumping() {
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box crosses">
                         <p className="stat-box__title">Overall Highest Jump</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightBest?.toFixed(1) || jumpHeightBest?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
