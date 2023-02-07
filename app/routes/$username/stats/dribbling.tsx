@@ -77,8 +77,9 @@ export default function Dribbling() {
     const [state, dispatch] = useReducer(intervalReducer, { text: '' })
 
     useEffect(() => {
-        filter.load(`/${username}/stats/dribbling?interval=${interval}`)
-
+        if (interval) {
+            filter.load(`/${username}/stats/dribbling?interval=${interval}`)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [interval])
 

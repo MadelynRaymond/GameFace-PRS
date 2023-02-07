@@ -163,6 +163,32 @@ async function seed() {
         },
     })
 
+    const _pushupDrill = await prisma.drill.create({
+        data: {
+            name: 'Push Up Drill',
+            category: {
+                connect: {
+                    id: strength.id
+                }
+            },
+            drillUnit: 'integral'
+        }
+
+    })
+
+    const _pullupDrill = await prisma.drill.create({
+        data: {
+            name: 'Pull Up Drill',
+            category: {
+                connect: {
+                    id: strength.id
+                }
+            },
+            drillUnit: 'integral'
+        }
+
+    })
+
     //dont touch
     const report = await prisma.athleteReport.create({
         data: {

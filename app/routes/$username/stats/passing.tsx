@@ -2,66 +2,63 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieC
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUser } from '~/session.server'
-import { getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
+import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
-import { dateFromDaysOptional } from '~/util'
+import { dateFromDaysOptional, toDateString } from '~/util'
 import { useState, useReducer, useEffect } from 'react'
+import { z } from 'zod'
+
+const PassesEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ completed: s.value, attempted: s.outOf, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const {username, id}= await requireUser(request)
+    const { username, id } = await requireUser(request)
     const userId = id
-
-    const lastSevenSessions = await getEntriesLastNReports({
-        drillName: 'Passing Drill',
-        userId,
-        sessions: 7,
-    })
 
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null
     const interval = dateFromDaysOptional(intervalLiteral)
 
-    const passes = await getEntriesTotal({drillName: "Passing Drill", userId, interval})
-
-    const insufficientData = passes._sum.outOf === 0
+    const passingEntryData = await getEntriesByDrillLiteral({ drillName: 'Passing Drill', userId, interval })
+    const insufficientData = !passingEntryData || passingEntryData.length === 0
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
     }
-    const [passesMade, passesAttempted] = [passes._sum.value || 0, passes._sum.outOf || 1]
 
+    try {
+        const passingSessionData = await getEntriesLastNReports({ drillName: 'Passing Drill', userId, sessions: 7 })
 
-    const successPercentage = Math.floor((passesMade / passesAttempted) * 100)
+        const [passingEntries, lastSevenSessions] = await Promise.all([
+            PassesEntrySchema.parseAsync(passingEntryData),
+            PassesEntrySchema.parseAsync(passingSessionData),
+        ])
 
-    const sessionScores = lastSevenSessions
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            scored: entry.entries[0].value,
-            attempted: entry.entries[0].outOf,
-        })) as unknown as {
-        created: string
-        scored: number
-        attempted: number
-    }[]
+        const totalPasses = await getEntriesTotal({ drillName: 'Passing Drill', userId, interval })
+        const [passesMade, passesAttempted] = [totalPasses._sum.value, totalPasses._sum.outOf]
+        const successPercentage = Math.floor(((passesMade as number) / (passesAttempted as number)) * 100)
 
-    const sessionPercentChange = sessionScores.map((score) => ({ value: Math.floor((score.scored / score.attempted) * 100), created: score.created }))
-
-    return json({
-        username,
-        sessionScores,
-        passesAttempted,
-        passesMade,
-        sessionPercentChange,
-        successPercentage
-    })
+        return json({
+            passingEntries,
+            lastSevenSessions,
+            successPercentage,
+            passesMade,
+            passesAttempted,
+            username,
+        })
+    } catch (error) {
+        throw new Response('Internal server error', { status: 500 })
+    }
 }
 export default function Shooting() {
-    const {username, sessionScores, passesAttempted, passesMade, successPercentage, sessionPercentChange} = useLoaderData<typeof loader>()
+    const { username, passingEntries, passesAttempted, passesMade, successPercentage, lastSevenSessions } = useLoaderData<typeof loader>()
     const lifetimePie = [
         {
             name: 'Passes Attempted (lifetime)',
@@ -88,47 +85,58 @@ export default function Shooting() {
         },
     ]
 
-    const intervalReducer = (_state: {text: string}, action: {type: 'update', payload?: number}): {text: string} => {
-        if (action.type !== 'update'){
-           throw new Error("Unknown action") 
+    const intervalReducer = (_state: { text: string }, action: { type: 'update'; payload?: number }): { text: string } => {
+        if (action.type !== 'update') {
+            throw new Error('Unknown action')
         }
 
         switch (action.payload) {
-            case 30: return {text: 'Last 30 days'}
-            case 365: return {text: "Last year"}
-            default: return {text: 'Lifetime'}
+            case 30:
+                return { text: 'Last 30 days' }
+            case 365:
+                return { text: 'Last year' }
+            default:
+                return { text: 'Lifetime' }
         }
     }
     const filter = useFetcher<typeof loader>()
     const [interval, setInterval] = useState<number | undefined>(undefined)
-    const [state, dispatch] = useReducer(intervalReducer, {text: ''})
+    const [state, dispatch] = useReducer(intervalReducer, { text: '' })
+    
 
     useEffect(() => {
-        filter.load(`/${username}/stats/passing?interval=${interval}`)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (interval) {
+            filter.load(`/${username}/stats/passing?interval=${interval}`)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [interval])
 
     useEffect(() => {
-        dispatch({type: 'update', payload: interval})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch({ type: 'update', payload: interval })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
 
     return (
         <div>
             <div className="report-card-header">
-            <div className="report-card-title">
-                <h2>Passing Statistics </h2>
-                <p>Athlete: Danielle Williams (Year Overview)</p>
-            </div>
-            <div className="button-group">
-                <p className="filter-heading">Select Filter:</p>
-                <div className="filter-button-group">
-                    <button onClick={() => setInterval(30)} className="filter-button">Month</button>
-                    <button onClick={() => setInterval(365)}className="filter-button">Year</button>
-                    <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
+                <div className="report-card-title">
+                    <h2>Passing Statistics </h2>
+                    <p>Athlete: Danielle Williams (Year Overview)</p>
                 </div>
-            </div>
+                <div className="button-group">
+                    <p className="filter-heading">Select Filter:</p>
+                    <div className="filter-button-group">
+                        <button onClick={() => setInterval(30)} className="filter-button">
+                            Month
+                        </button>
+                        <button onClick={() => setInterval(365)} className="filter-button">
+                            Year
+                        </button>
+                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                            Lifetime
+                        </button>
+                    </div>
+                </div>
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
@@ -179,24 +187,28 @@ export default function Shooting() {
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Pass Success Rate</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={500} height={300} data={sessionScores}>
+                        <BarChart width={500} height={300} data={lastSevenSessions}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created" />
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="scored" stackId="a" fill="#DF7861" />
+                            <Bar dataKey="completed" stackId="a" fill="#DF7861" />
                             <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Lifetime Overview: Pass Success Rate</p>
+                    <p>{state.text}: Pass Success Rate (percent)</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                             width={730}
                             height={250}
-                            data={sessionPercentChange}
+                            //Conver entries to ratio
+                            data={
+                                filter?.data?.passingEntries.map((e) => ({ ratio: Math.floor((e.completed / (e.attempted as number)) * 100) })) ||
+                                passingEntries.map((e) => ({ ratio: Math.floor((e.completed / (e.attempted as number)) * 100) }))
+                            }
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -219,7 +231,7 @@ export default function Shooting() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="value" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

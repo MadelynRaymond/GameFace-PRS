@@ -90,8 +90,9 @@ export default function Speed() {
     const [state, dispatch] = useReducer(intervalReducer, { text: '' })
 
     useEffect(() => {
-        filter.load(`/${username}/stats/speed?interval=${interval}`)
-
+        if (interval) {
+            filter.load(`/${username}/stats/shooting?interval=${interval}`)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [interval])
 
