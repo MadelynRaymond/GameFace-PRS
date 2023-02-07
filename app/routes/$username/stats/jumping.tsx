@@ -2,55 +2,73 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUser } from '~/session.server'
-import { getEntriesAggregate, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
-import { dateFromDaysOptional } from '~/util'
+import { dateFromDaysOptional, toDateString } from '~/util'
 import { useState, useReducer, useEffect } from 'react'
+import { z } from 'zod'
+
+const JumpDistanceEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ distance: s.value, created_at: s.created_at })))
+
+const JumpHeightEntrySchema = z
+    .object({
+        created_at: z.coerce.string().transform((data) => toDateString(data)),
+        value: z.coerce.number(),
+        outOf: z.nullable(z.number()),
+    })
+    .array()
+    .transform((data) => data.map((s) => ({ height: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
     const { username, id } = await requireUser(request)
     const userId = id
-    const monthlySessionJumpHeight = await getEntriesLastNReports({
-        drillName: 'Jump Height Drill',
-        userId,
-        sessions: 30,
-    })
 
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null
     const interval = dateFromDaysOptional(intervalLiteral)
 
-    const jumpHeightAggregate = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId, interval })
-    const insufficientData = !jumpHeightAggregate
+    const jumpHeightData = await getEntriesByDrillLiteral({ drillName: 'Jump Height Drill', userId, interval })
+    const jumpDistanceData = await getEntriesByDrillLiteral({ drillName: 'Jump Distance Drill', userId, interval })
+
+    const insufficientData = !jumpHeightData || !jumpDistanceData
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
     }
 
-    const [jumpHeightBest, jumpHeightAverage] = [jumpHeightAggregate.max, jumpHeightAggregate.average]
+    try {
+        const [jumpHeightEntries, jumpDistanceEntries] = await Promise.all([
+            JumpHeightEntrySchema.parseAsync(jumpHeightData),
+            JumpDistanceEntrySchema.parseAsync(jumpDistanceData),
+        ])
+        const jumpHeightAggregate = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId, interval })
+        const [jumpHeightAverage, jumpHeightBest] = [jumpHeightAggregate.average, jumpHeightAggregate.max]
+        const lastSevenSessions = await JumpDistanceEntrySchema.parseAsync(
+            await getEntriesLastNReports({ drillName: 'Jump Distance Drill', userId, sessions: 7 })
+        )
 
-    const sessionScoresJumpHeight = monthlySessionJumpHeight
-        .flatMap((report) => ({
-            entries: report.entries,
-            created: report.created_at,
-        }))
-        .map((entry) => ({
-            created: entry.created.toDateString(),
-            height: entry.entries[0].value,
-            best: entry.entries[0].bestScore,
-        })) as unknown as {
-        created: string
-        height: number
-        best: number
-    }[]
-
-    const lastSessionAverage = sessionScoresJumpHeight[sessionScoresJumpHeight.length - 1].height
-
-    return json({ jumpHeightAverage, jumpHeightBest, lastSessionAverage, sessionScoresJumpHeight, username })
+        return json({
+            jumpHeightEntries,
+            jumpDistanceEntries,
+            jumpHeightAverage,
+            jumpHeightBest,
+            lastSevenSessions,
+            username,
+        })
+    } catch (error) {
+        throw new Response('Internal server error', { status: 500 })
+    }
 }
 export default function Jumping() {
-    const { jumpHeightAverage, jumpHeightBest, lastSessionAverage, sessionScoresJumpHeight, username } = useLoaderData<typeof loader>()
+    const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, username, lastSevenSessions } = useLoaderData<typeof loader>()
     const intervalReducer = (_state: { text: string }, action: { type: 'update'; payload?: number }): { text: string } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -121,17 +139,17 @@ export default function Jumping() {
                     <div className="stat-box">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{lastSessionAverage}ft</p>
+                            <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Lifetime Overview: Average Jump Height</p>
+                    <p>{state.text}: Jump Height</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
+                        <BarChart width={500} height={300} data={filter?.data?.jumpHeightEntries || jumpHeightEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="created" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <Tooltip />
                             <Legend />
@@ -140,25 +158,25 @@ export default function Jumping() {
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Lifetime Overview: Best Jump Height</p>
+                    <p>{state.text}: Jump Distance</p>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart width={500} height={300} data={sessionScoresJumpHeight}>
+                        <BarChart width={500} height={300} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="height" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="distance" stackId="a" fill="#ECB390" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Last Seven Sessions: Best Jump Height</p>
+                    <p>Last Seven Sessions: Jump Distance</p>
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                             width={730}
                             height={250}
-                            data={sessionScoresJumpHeight}
+                            data={lastSevenSessions}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -176,12 +194,12 @@ export default function Jumping() {
                                     <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="created" />
+                            <XAxis dataKey="created_at" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="distance" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
