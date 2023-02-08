@@ -80,28 +80,26 @@ function Navbar() {
                     </ul>
                 ) : (
                     <ul className="left-nav-container">
-                        <li>
                             <Link
                                 style={{
                                     display: 'block',
                                 }}
-                                className="nav-btn"
+                                className="nav-btn orange-background"
                                 to="/login"
                             >
-                                <p className="menu-text"> Login</p>
-                               
+                                <li className="left-nav-button"><p className="menu-text"> Login</p></li>
+                            
                             </Link>
-                        </li>
-                        <li>
-                            <Link
+                        
+                            <Link className="purple-background"
                                 style={{
                                     display: 'block',
                                 }}
                                 to="/register"
                             >
-                                <p className="menu-text">Register</p>
+                                <li></li>
+                                <li className="left-nav-button"><p className="menu-text"> Register</p></li>
                             </Link>
-                        </li>
                     </ul>
                 )}
             </div>
