@@ -828,4 +828,21 @@
   color: black;
 }
 
+/*EDIT PROFILE PAGE*/
+.edit-profile-container {
+  margin: 0 auto;
+  border: 1px solid black;
+  padding: 2rem;
+  max-width: 800px;
+}
+@media (min-width: 992px) {
+  .edit-profile-container .edit-group:last-of-type {
+    display: flex;
+    gap: 1rem;
+  }
+  .edit-profile-container .edit-group:last-of-type > div {
+    flex: 1 1 100%;
+  }
+}
+
 /*# sourceMappingURL=app.css.map */
