@@ -98,6 +98,11 @@ export default function Jumping() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
 
+    let orange = '#EDA75C'
+    let orangeAccent = '#E58274'
+    let black = '#000000'
+    let strokeWidth = 4
+
     return (
         <div>
             <div className="report-card-header">
@@ -108,13 +113,13 @@ export default function Jumping() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button">
+                        <button onClick={() => setInterval(30)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => setInterval(365)} className="filter-button">
+                        <button onClick={() => setInterval(365)} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>
@@ -122,21 +127,21 @@ export default function Jumping() {
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box crosses">
                         <p className="stat-box__title">Overall Highest Jump</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightBest?.toFixed(1) || jumpHeightBest?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
@@ -153,7 +158,7 @@ export default function Jumping() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="height" stackId="a" fill="#DF7861" />
+                            <Bar dataKey="height" stackId="a" fill={orangeAccent}  stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -166,7 +171,7 @@ export default function Jumping() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="distance" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="distance" stackId="a" fill={orange} stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -186,12 +191,8 @@ export default function Jumping() {
                         >
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                                    <stop offset="5%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={orange} stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created_at" />
@@ -199,7 +200,7 @@ export default function Jumping() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="distance" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="distance" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

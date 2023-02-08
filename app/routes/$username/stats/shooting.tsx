@@ -8,6 +8,12 @@ import { dateFromDaysOptional, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
 
+let orange = '#EDA75C'
+let orangeAccent = '#E58274'
+let black = '#000000'
+let strokeWidth = 4
+
+
 export const ShootingEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
@@ -94,14 +100,14 @@ export default function Shooting() {
 
     const lifetimePie = [
         {
-            name: 'Shots Attempted (lifetime)',
+            name: 'Shots Attempted',
             value: attempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
-            name: 'Shots Scored (lifetime)',
+            name: 'Shots Scored',
             value: scored,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -109,12 +115,12 @@ export default function Shooting() {
         {
             name: 'Shots Attempted as % (last 30 days)',
             value: 100 - (filter?.data?.successPercentage || successPercentage),
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Shots Scored as % (last 30 days)',
             value: filter?.data?.successPercentage || successPercentage,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -128,13 +134,13 @@ export default function Shooting() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button">
+                        <button onClick={() => setInterval(30)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => setInterval(365)} className="filter-button">
+                        <button onClick={() => setInterval(365)} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>
@@ -149,14 +155,14 @@ export default function Shooting() {
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Shots Attempted</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.attempted || attempted || 'No data'}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box dots">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}</p>
@@ -169,7 +175,7 @@ export default function Shooting() {
                         <p>Last 30 Days: Shots Landed/Attempted</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -179,7 +185,7 @@ export default function Shooting() {
                         <p>Lifetime Overview: Shots Landed/Attempted</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -195,8 +201,8 @@ export default function Shooting() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="scored" stackId="a" fill="#DF7861" />
-                            <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="scored" stackId="a" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="attempted" stackId="a" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -229,8 +235,8 @@ export default function Shooting() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line dataKey="scored" stroke="#DF7861" />
-                            <Line dataKey="attempted" stroke="#ECB390" />
+                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorUv)" />
+                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorPv)"/>
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

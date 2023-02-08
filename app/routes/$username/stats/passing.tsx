@@ -8,6 +8,11 @@ import { dateFromDaysOptional, toDateString } from '~/util'
 import { useState, useReducer, useEffect } from 'react'
 import { z } from 'zod'
 
+let orange = '#EDA75C'
+let orangeAccent = '#E58274'
+let black = '#000000'
+let strokeWidth = 4
+
 const PassesEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
@@ -65,12 +70,12 @@ export default function Shooting() {
         {
             name: 'Passes Attempted (lifetime)',
             value: filter?.data?.passesAttempted || passesAttempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Passes Made (lifetime)',
             value: filter?.data?.passesMade || passesMade,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -78,12 +83,12 @@ export default function Shooting() {
         {
             name: 'Passes Attempted (last 30 days)',
             value: filter?.data?.passesAttempted || passesAttempted,
-            fill: '#DF7861',
+            fill: orange,
         },
         {
             name: 'Passes Made (last 30 days)',
             value: filter?.data?.passesMade || passesMade,
-            fill: '#ECB390',
+            fill: orangeAccent,
         },
     ]
 
@@ -117,6 +122,7 @@ export default function Shooting() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
 
+
     return (
         <div>
             <div className="report-card-header">
@@ -127,13 +133,13 @@ export default function Shooting() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button">
+                        <button onClick={() => setInterval(30)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => setInterval(365)} className="filter-button">
+                        <button onClick={() => setInterval(365)} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button">
+                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>
@@ -141,21 +147,21 @@ export default function Shooting() {
             </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Successful Passes</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.passesMade || passesMade}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box crosses">
                         <p className="stat-box__title">Attepted Passes</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.passesAttempted || passesAttempted}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Avg. Pass Success Rate</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage}%</p>
@@ -168,7 +174,7 @@ export default function Shooting() {
                         <p>Last 30 Days: Missed vs. Landed</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill={orangeAccent} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -178,7 +184,7 @@ export default function Shooting() {
                         <p>Lifetime: Missed vs. Landed</p>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart width={800} height={400}>
-                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value"></Pie>
+                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill={orange} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
                                 <Legend verticalAlign="bottom" align="center" />
                             </PieChart>
@@ -194,8 +200,8 @@ export default function Shooting() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="completed" stackId="a" fill="#DF7861" />
-                            <Bar dataKey="attempted" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="completed" stackId="a" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="attempted" stackId="a" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -219,20 +225,17 @@ export default function Shooting() {
                         >
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
+                                    <stop offset="5%" stopColor={orangeAccent} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={orangeAccent} stopOpacity={0} />
                                 </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                                </linearGradient>
+                                
                             </defs>
                             <XAxis dataKey="created" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="ratio" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
+                            <Area type="monotone" dataKey="ratio" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

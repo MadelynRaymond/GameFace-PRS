@@ -97,6 +97,11 @@ export default function Strength() {
         dispatch({type: 'update', payload: interval})
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter.data])
+
+    let orange = '#EDA75C'
+    let orangeAccent = '#E58274'
+    let black = '#000000'
+    let strokeWidth = 4
     
     return (
         <div>
@@ -108,29 +113,29 @@ export default function Strength() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button">Month</button>
-                        <button onClick={() => setInterval(365)} className="filter-button">Year</button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button">Lifetime</button>
+                        <button onClick={() => setInterval(30)} className="filter-button month">Month</button>
+                        <button onClick={() => setInterval(365)} className="filter-button year">Year</button>
+                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">Lifetime</button>
                     </div>
                 </div>
                 </div>
             <div className="stat-grid">
                 <div className="stat-box-group">
-                    <div className="stat-box">
+                    <div className="stat-box accent">
                         <p className="stat-box__title">Best Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.bestJumpDistance || bestJumpDistance}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box dots">
                         <p className="stat-box__title">Avg. Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.averageJumpDistance?.toFixed(1) || averageJumpDistance?.toFixed(1)}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
-                    <div className="stat-box">
+                    <div className="stat-box accent-2">
                         <p className="stat-box__title">Avg. Squat Duration</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.squatAverage?.value?.toFixed(1) || squatAverage?.value?.toFixed(1)}s</p>
@@ -147,7 +152,7 @@ export default function Strength() {
                             <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="distance" fill="#DF7861">
+                            <Bar dataKey="distance" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}>
                                 <Label value="Session Date" position="top" />
                             </Bar>
                         </BarChart>
@@ -162,7 +167,7 @@ export default function Strength() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="time" stackId="a" fill="#ECB390" />
+                            <Bar dataKey="time" stackId="a"  fill={orange} stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -172,12 +177,8 @@ export default function Strength() {
                         <AreaChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
+                                    <stop offset="5%" stopColor={orange} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={orange} stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created" />
@@ -185,8 +186,7 @@ export default function Strength() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="time" stroke="#DF7861" fillOpacity={1} fill="url(#colorUv)" />
-                            <Area type="monotone" dataKey="best" stroke="#DF7861" fillOpacity={1} fill="url(#colorPv)" />
+                            <Area type="monotone" dataKey="time" stroke={black} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
