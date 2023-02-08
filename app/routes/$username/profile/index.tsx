@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useLocation } from '@remix-run/react'
 import { requireUser } from '~/session.server'
 
 export async function loader({ request }: LoaderArgs) {
@@ -10,19 +10,20 @@ export async function loader({ request }: LoaderArgs) {
         throw new Response('Not Found', { status: 404 })
     }
 
-    const { profile, email } = user
+    const { profile, email, username } = user
 
-    return json({ profile, email })
+    return json({ profile, email, username })
 }
 export default function Profile() {
-    const { profile, email } = useLoaderData<typeof loader>()
+    const { profile, email, username } = useLoaderData<typeof loader>()
+    const location = useLocation()
     return (
         <div>
             <div className="profile-banner">
                 <h2>Welcome back, {profile?.firstName}!</h2>
                 <div className="profile-btn-group">
-                    <button className="profile-btn">Edit Profile</button>
-                    <button className="profile-btn">Reset Password</button>
+                    <Link to="edit" className='profile-btn'>Edit Profile</Link>
+                    <Link to={`/${username}/change-password`} className="profile-btn">Change Password</Link>
                 </div>
             </div>
             <div className="profile-container">
