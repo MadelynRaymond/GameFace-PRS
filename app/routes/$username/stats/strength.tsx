@@ -38,7 +38,7 @@ export async function loader({ request }: LoaderArgs) {
     const squatEntryData = await getEntriesByDrillLiteral({drillName: "Squat Drill", userId, interval})
     const jumpDistanceData = await getEntriesByDrillLiteral({drillName: "Jump Distance Drill", userId, interval})
 
-    const insufficientData = !squatEntryData || !jumpDistanceData
+    const insufficientData = squatEntryData.length === 0 || jumpDistanceData.length === 0
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
