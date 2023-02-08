@@ -567,6 +567,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   gap: 1rem;
 }
 .athlete-reports .athlete-report {
+  background-color: #ffffff;
   border: 1px solid black;
   padding: 2rem;
   height: 2rem;
@@ -576,6 +577,11 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 1px 2px 0px 2px rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #EDA75C;
+  }
 }
 
 .athlete-report-form {
@@ -631,6 +637,14 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     box-shadow: none;
     transform: translate(1px, 1px);
   }
+}
+//get rid of these later
+.btn--red {
+  background-color: rgb(161, 62, 62);
+}
+
+.btn--green {
+  background-color: #009879;
 }
 
 .register-btn {
@@ -865,3 +879,4 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     }
   }
 }
+
