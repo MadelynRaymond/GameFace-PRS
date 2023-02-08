@@ -71,7 +71,7 @@ export default function Login() {
     return (
         <div
             style={{
-                height: '85vh',
+                height: '75vh',
             }}
             className="form-center"
         >
@@ -89,7 +89,7 @@ export default function Login() {
                     <span className="error-text">{actionData?.errors?.password}</span>
                 </div>
                 <div className="login-btn-group">
-                    <input className="btn" type="submit" name="login" value="Login" />
+                    <input className="btn login-btn" type="submit" name="login" value="Login" />
                     <Link className="forgot-password-link" to="/forgot-password">
                         Forgot password?
                     </Link>
