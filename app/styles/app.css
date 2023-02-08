@@ -688,10 +688,15 @@
   text-decoration: underline;
 }
 
+.profile {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.profile > * {
+  padding: 2rem;
+}
+
 .profile-container {
-  margin: 2rem 25rem;
-  padding: 4rem 3rem;
-  margin-top: 0;
   border: 4px solid black;
   border-bottom: 8px solid black;
   display: grid;
@@ -712,10 +717,10 @@
 }
 
 .profile-banner {
-  margin: 0rem 25rem;
-  padding: 4rem 3rem;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 8rem;
   background-color: #DF7861;
   border: 4px solid black;
   border-bottom: none;

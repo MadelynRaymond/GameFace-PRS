@@ -16,34 +16,35 @@ export async function loader({ request }: LoaderArgs) {
 }
 export default function Profile() {
     const { profile, email, username } = useLoaderData<typeof loader>()
-    const location = useLocation()
     return (
-        <div>
-            <div className="profile-banner">
-                <h2>Welcome back, {profile?.firstName}!</h2>
-                <div className="profile-btn-group">
-                    <Link to="edit" className='profile-btn'>Edit Profile</Link>
-                    <Link to={`/${username}/change-password`} className="profile-btn">Change Password</Link>
+            <div className='profile'>
+                <div className="profile-banner">
+                    <div className="w-full h-full flex align-center justify-between">
+                        <h2>Welcome back, {profile?.firstName}!</h2>
+                        <div className="profile-btn-group">
+                            <Link style={{color: 'white'}} to="edit" className='btn'>Edit Profile</Link>
+                            <Link style={{color: 'white'}}to={`/${username}/change-password`} className="btn">Change Password</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="profile-container">
+                    <div>
+                        <h3>Email:</h3>
+                        <p>{email}</p>
+                    </div>
+                    <div>
+                        <h3>Age:</h3>
+                        <p>{profile?.age}</p>
+                    </div>
+                    <div>
+                        <h3>Grade:</h3>
+                        <p>{profile?.grade}</p>
+                    </div>
+                    <div>
+                        <h3>School:</h3>
+                        <p>{profile?.school}</p>
+                    </div>
                 </div>
             </div>
-            <div className="profile-container">
-                <div>
-                    <h3>Email:</h3>
-                    <p>{email}</p>
-                </div>
-                <div>
-                    <h3>Age:</h3>
-                    <p>{profile?.age}</p>
-                </div>
-                <div>
-                    <h3>Grade:</h3>
-                    <p>{profile?.grade}</p>
-                </div>
-                <div>
-                    <h3>School:</h3>
-                    <p>{profile?.school}</p>
-                </div>
-            </div>
-        </div>
     )
 }
