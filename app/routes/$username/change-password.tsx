@@ -6,7 +6,6 @@ import { requireUser, requireUserId } from '~/session.server'
 
 export const ChangePasswordSchema = z
     .object({
-        currentPassword: z.string().min(4),
         newPassword: z.string().min(4),
         confirmPassword: z.string().min(4),
     })
@@ -15,7 +14,7 @@ export const ChangePasswordSchema = z
 type ChangePasswordErrors = z.inferFlattenedErrors<typeof ChangePasswordSchema>
 type ActionData = {
     errors?: ChangePasswordErrors
-    createError?: { message: string }
+    updateError?: { message: string }
 }
 // Loader will get called when the page loads
 export async function loader({ request }: LoaderArgs) {
@@ -51,17 +50,17 @@ export default function ChangePassword() {
             }}
             className="form-center"
         >
-            <Form method="post">
+            <Form method="post" style={{maxWidth: '600px', padding: '1rem'}}>
                 <h1>Change Password</h1>
-                <input type="password" name="password" id="currentPassword" placeholder="Current Password" />
-                {actionData?.errors?.fieldErrors.currentPassword && <span className="error-text">{actionData.errors.fieldErrors.currentPassword[0]}</span>}
                 <input type="password" name="newPassword" id="newPassword" placeholder="New Password" />
                 {actionData?.errors?.fieldErrors.newPassword && <span className="error-text">{actionData.errors.fieldErrors.newPassword[0]}</span>}
                 <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" />
                 {actionData?.errors?.fieldErrors.confirmPassword && <span className="error-text">{actionData.errors.fieldErrors.confirmPassword[0]}</span>}
                 <input type="hidden" name="user-id" value={userId} />
-                <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Change password" />
-                {actionData?.createError?.message && <span className="error-text">{actionData.createError.message}</span>}
+                <div>
+                    <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Change password" />
+                    {actionData?.errors?.formErrors && <span className="error-text">{actionData.errors.formErrors[0]}</span>}
+                </div>
             </Form>
         </div>
     )
