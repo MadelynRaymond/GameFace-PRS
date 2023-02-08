@@ -802,4 +802,30 @@
   transform: translate(1px, 1px);
 }
 
+.export-button-group { /* Print and export grouping */
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.export, .print-btn {
+  border: 3px solid black;
+  background-color: white;
+  color: black;
+  padding: 0 0.75rem;
+}
+
+.export-icons {
+  width: 30px;
+  height: 30px;
+}
+
+.login-btn:hover {
+  cursor: pointer;
+}
+
+.login-btn {
+  color: black;
+}
+
 /*# sourceMappingURL=app.css.map */
