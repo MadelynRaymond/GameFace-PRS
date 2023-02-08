@@ -8,10 +8,10 @@ import { updateAthleteProfile } from '~/models/athlete.server'
 
 const EditSchema = z.object({
     id: z.coerce.number(),
-    email: z.optional(z.string().email()),
-    age: z.optional(z.coerce.number().min(8, 'Age must be at least 8')),
-    grade: z.optional(z.coerce.number().min(6, 'Grade must be at least 6th').max(12, 'Grade must be at most 12th')),
-    school: z.optional(z.string().min(3, 'School must have more than 3 characters')),
+    email: z.optional(z.string().email()).or(z.literal('')),
+    age: z.optional(z.coerce.number().min(8, 'Age must be at least 8')).or(z.literal('')),
+    grade: z.optional(z.coerce.number().min(6, 'Grade must be at least 6th').max(12, 'Grade must be at most 12th')).or(z.literal('')),
+    school: z.optional(z.string().min(3, 'School must have more than 3 characters')).or(z.literal('')),
 })
 
 type EditErrors = z.inferFlattenedErrors<typeof EditSchema>
