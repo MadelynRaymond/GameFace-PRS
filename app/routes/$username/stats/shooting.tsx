@@ -68,35 +68,30 @@ export async function loader({ request }: LoaderArgs) {
 }
 export default function Shooting() {
     const { scored, attempted, successPercentage, username, lastSevenSessions, shootingEntries } = useLoaderData<typeof loader>()
-    const intervalReducer = (_state: { text: string }, action: { type: 'update'; payload?: number }): { text: string } => {
+    const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
         }
 
         switch (action.payload) {
             case 30:
-                return { text: 'Last 30 days' }
+                return { text: 'Last 30 days', touched: true, interval: 30 }
             case 365:
-                return { text: 'Last year' }
+                return { text: 'Last year', touched: true, interval: 365 }
             default:
-                return { text: 'Lifetime' }
+                return { text: 'Lifetime', touched: true }
         }
     }
+
     const filter = useFetcher<typeof loader>()
-    const [interval, setInterval] = useState<number | undefined>(undefined)
-    const [state, dispatch] = useReducer(intervalReducer, { text: '' })
+    const [state, dispatch] = useReducer(intervalReducer, { text: 'Lifetime', touched: false })
 
     useEffect(() => {
-        if (interval) {
-            filter.load(`/${username}/stats/shooting?interval=${interval}`)
+        if (state.touched) {
+            filter.load(`/${username}/stats/shooting?interval=${state.interval}`)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [interval])
-
-    useEffect(() => {
-        dispatch({ type: 'update', payload: interval })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter.data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state])
 
     const lifetimePie = [
         {
@@ -134,13 +129,13 @@ export default function Shooting() {
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => setInterval(30)} className="filter-button month">
+                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => setInterval(365)} className="filter-button year">
+                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => setInterval(undefined)} className="filter-button lifetime">
+                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>
