@@ -170,7 +170,7 @@ export default function Overall() {
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Jump Height</p>
-                        <p>{filter?.data?.jumpingAggregations.average || jumpingAggregations.average || 'No data'}</p>
+                        <p>{filter?.data?.jumpingAggregations.average?.toFixed(1) || jumpingAggregations.average?.toFixed(1) || 'No data'}</p>
                     </div>
                 </div>
             </div>
