@@ -88,7 +88,8 @@ function Navbar() {
                                 className="nav-btn"
                                 to="/login"
                             >
-                                Login
+                                <p className="menu-text"> Login</p>
+                               
                             </Link>
                         </li>
                         <li>
@@ -98,7 +99,7 @@ function Navbar() {
                                 }}
                                 to="/register"
                             >
-                                Register
+                                <p className="menu-text">Register</p>
                             </Link>
                         </li>
                     </ul>
