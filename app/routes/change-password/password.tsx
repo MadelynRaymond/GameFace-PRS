@@ -3,7 +3,6 @@ import { Form, useActionData, useLoaderData, useTransition } from '@remix-run/re
 import { ZodError, z } from 'zod'
 import { changePassword } from '~/models/user.server'
 import { requireUser, requireUserId } from '~/session.server'
-import { action } from '../staff/athletes/$athleteId/fetch'
 
 export const ChangePasswordSchema = z
     .object({
@@ -21,10 +20,11 @@ type ActionData = {
 // Loader will get called when the page loads
 export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
+    if (!userId) return redirect('/change-password/password')
     return json({ userId })
 }
 // Action will get called when you submit the form
-export async function ChangePassword({ request }: ActionArgs) {
+export async function action({ request }: ActionArgs) {
     const { username, id } = await requireUser(request)
     try {
         const formData = await request.formData()
@@ -39,7 +39,7 @@ export async function ChangePassword({ request }: ActionArgs) {
     }
 }
 
-export default function () {
+export default function ChangePassword() {
     const actionData = useActionData<ActionData>()
     const transition = useTransition()
     const { userId } = useLoaderData<typeof loader>()
@@ -53,9 +53,9 @@ export default function () {
         >
             <Form method="post">
                 <h1>Change Password</h1>
-                <input type="password" name="password" id="password" placeholder="Current Password" />
+                <input type="password" name="password" id="currentPassword" placeholder="Current Password" />
                 {actionData?.errors?.fieldErrors.currentPassword && <span className="error-text">{actionData.errors.fieldErrors.currentPassword[0]}</span>}
-                <input type="password" name="password" id="password" placeholder="New Password" />
+                <input type="password" name="newPassword" id="newPassword" placeholder="New Password" />
                 {actionData?.errors?.fieldErrors.newPassword && <span className="error-text">{actionData.errors.fieldErrors.newPassword[0]}</span>}
                 <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" />
                 {actionData?.errors?.fieldErrors.confirmPassword && <span className="error-text">{actionData.errors.fieldErrors.confirmPassword[0]}</span>}
