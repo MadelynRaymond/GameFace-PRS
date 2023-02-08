@@ -1,9 +1,10 @@
 import { ActionArgs, LoaderArgs, json, redirect } from '@remix-run/node'
 import { Form, useActionData, useTransition } from '@remix-run/react'
 import { ZodError, z } from 'zod'
-import { changePassword} from '~/models/user.server'
+import { changePassword } from '~/models/user.server'
 import { requireUser, requireUserId } from '~/session.server'
 import { action } from '../staff/athletes/$athleteId/fetch'
+
 
 export const ChangePasswordSchema = z
     .object({
@@ -13,23 +14,24 @@ export const ChangePasswordSchema = z
     })
     .refine((data) => data.newPassword === data.confirmPassword, 'Passwords must match')
 
+// Loader will get called when the page loads
 export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
     return json({ userId })
 }
-
+// Action will get called when you submit the form
 export async function ChangePassword({ request }: ActionArgs) {
     const { username, id } = await requireUser(request)
     try {
         const formData = await request.formData()
         const data = await Object.fromEntries(formData)
         const validatedData = await ChangePasswordSchema.parseAsync(data)
-
+        
         await changePassword({ userId: id, password: validatedData.newPassword })
     } catch (error) {
-      if (error instanceof ZodError) {
-        return json({errors: error.flatten()})
-      }
+        if (error instanceof ZodError) {
+            return json({ errors: error.flatten() })
+        }
     }
 }
 
