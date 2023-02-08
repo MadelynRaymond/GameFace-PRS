@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client'
+import type { StudentProfile, User } from '@prisma/client'
 import { prisma } from '~/db.server'
 
 export async function getReportsFromAthlete(athleteId: User['id']) {
@@ -65,6 +65,36 @@ export async function getAthleteWithReports(athleteId: User['id']) {
                     firstName: true,
                     lastName: true,
                     grade: true,
+                },
+            },
+        },
+    })
+}
+
+export async function updateAthleteProfile(
+    userId: User['id'],
+    update: {
+        email?: User['email']
+        grade?: StudentProfile['grade'] | number
+        age?: StudentProfile['age'] | number
+        school?: StudentProfile['school']
+    }
+) {
+    const { email, grade, age, school } = update
+
+    const userWithEmail = await prisma.user.findUnique({ where: { email } })
+
+    if (userWithEmail && userWithEmail.id !== userId) throw new Error(`User with email ${email} already exists`)
+
+    return prisma.user.update({
+        where: { id: userId },
+        data: {
+            email: email || undefined,
+            profile: {
+                update: {
+                    grade: grade?.toString() || undefined,
+                    age: age?.toString() || undefined,
+                    school: school || undefined,
                 },
             },
         },
