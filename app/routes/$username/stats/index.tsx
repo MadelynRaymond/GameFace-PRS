@@ -169,8 +169,7 @@ export default function Overall() {
                             </svg>
                         </button>
                         {downloadReady && (
-                            <CSVLink className="btn export" headers={csvHeaders} data={csvData}>
-                                Export
+                            <CSVLink style={{display: 'flex', alignItems: 'center', paddingBottom: '6px'}} className="btn export" headers={csvHeaders} data={csvData}>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="export-icons">
                                     <path
                                         fillRule="evenodd"
