@@ -36,6 +36,8 @@ export async function action({ request }: ActionArgs) {
             return json({ errors: error.flatten() as ChangePasswordErrors })
         }
     }
+
+    return redirect(`/${username}/profile`)
 }
 
 export default function ChangePassword() {
