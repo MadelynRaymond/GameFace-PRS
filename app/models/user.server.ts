@@ -38,6 +38,7 @@ export async function createUser({
         data: {
             username,
             email,
+            status: 'ACTIVE',
             password: {
                 create: {
                     hash: hashedPassword,
