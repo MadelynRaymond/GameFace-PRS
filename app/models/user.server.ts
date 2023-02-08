@@ -97,3 +97,23 @@ export async function verifyLogin(email: User['email'], password: Password['hash
 
     return userWithoutPassword
 }
+
+export async function updateStatus(userId: User['id']) {
+    const status = await prisma.user.findUnique({select: {status: true}, where: {id: userId}})
+
+    const setStatus = (result: {status: string | null} | null) => {
+        if (!status) return null
+        return result?.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
+    }
+
+    return prisma.user.update({
+        data: {
+            status: setStatus(status) ?? 'INACTIVE'
+        },
+        where: {
+            id: userId,
+        }
+    })
+
+    
+}

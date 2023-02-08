@@ -1,12 +1,25 @@
 import type { StudentProfile, User } from '@prisma/client'
-import type { LoaderArgs } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData, useLocation, useNavigate } from '@remix-run/react'
+import { useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react'
+import invariant from 'tiny-invariant'
 import { getAthletes } from '~/models/athlete.server'
+import { updateStatus } from '~/models/user.server'
 
 export async function loader({ request }: LoaderArgs) {
     const athletes = await getAthletes()
     return json({ athletes })
+}
+
+export async function action({request}: ActionArgs) {
+    const formData = await request.formData()
+    const athleteId = formData.get("athleteId")
+
+    invariant(athleteId, "This should not happen")
+
+    await updateStatus(parseInt(athleteId as string))
+
+    return null
 }
 export default function Athletes() {
     const { athletes } = useLoaderData<typeof loader>()
@@ -18,6 +31,8 @@ export default function Athletes() {
             </div>
         )
     }
+
+    
 
     return (
         <div>
@@ -48,15 +63,20 @@ export default function Athletes() {
 function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | null; id: User['id'], status: User['status'] } }) {
     const navigate = useNavigate()
     const location = useLocation()
+    const fetcher = useFetcher<typeof action>()
+
+    const updateAthleteStatus = async (athleteId: number) => {
+        fetcher.submit({athleteId: athleteId.toString()}, {method: 'post'})
+    }
 
     return (
-        <tr style={{ cursor: 'pointer' }} onClick={(e) => navigate(`${location.pathname}/${athlete.id}`)} key={athlete.id}>
+        <tr style={{ cursor: 'pointer' }} key={athlete.id}>
             <td>{athlete.profile?.firstName}</td>
             <td>{athlete.profile?.lastName}</td>
             <td>{athlete.profile?.school}</td>
             <td>{athlete.profile?.grade}</td>
-            <td>{athlete.status}</td>
-            <td>...</td>
+            <td onClick={() => updateAthleteStatus(athlete.id)}>{athlete.status}</td>
+            <td onClick={() => navigate(`${location.pathname}/${athlete.id}`)} >...</td>
         </tr>
     )
 }
