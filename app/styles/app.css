@@ -375,12 +375,6 @@
   margin-top: 1rem;
 }
 
-.report-card-graph-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 2rem 4rem;
-}
-
 .report-card-graph {
   display: flex;
   flex-direction: column;
@@ -764,12 +758,6 @@
   body {
     font-size: 10pt;
   }
-}
-@media print and (color) {
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -778,10 +766,24 @@
     gap: 0.5rem;
   }
   .overall-graph-container {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
   button {
     visibility: hidden !important;
+  }
+  .recharts-wrapper, .recharts-surface, .recharts-legend-wrapper {
+    width: 100% !important;
+  }
+  .recharts-legend-item > svg {
+    width: auto !important;
+    display: inline-block !important;
+    right: inherit !important; /* align to left */
+  }
+}
+@media print and (color) {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
 .profile-btn {

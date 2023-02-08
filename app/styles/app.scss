@@ -369,12 +369,6 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 
-.report-card-graph-container{
-  display: flex;
-  justify-content: space-between;
-  margin: 2rem 4rem;
-}
-
 .report-card-graph{
   display: flex;
   flex-direction: column;
@@ -759,12 +753,6 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   body {
     font-size: 10pt;
   }
-}
-@media print and (color) {
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -773,11 +761,29 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     gap: 0.5rem;
   }
   .overall-graph-container {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
   button {
     visibility: hidden !important;
   }
+  //Recalculate width in print mode to fix the bug the graph isn't responsive when print.
+  .recharts-wrapper, .recharts-surface, .recharts-legend-wrapper {
+      width: 100%!important;
+  }
+  //Prevent recharts-legend-item have space between <svg> icon and <span> due to recalculate width: 100%
+  //try width: fit-content not work on safari
+  .recharts-legend-item > svg{
+      width: auto!important;
+      display: inline-block!important;
+      right:inherit!important; /* align to left */
+  }
+}
+@media print and (color) {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
 }
 
 .profile-btn {
