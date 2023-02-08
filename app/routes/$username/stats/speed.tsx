@@ -5,8 +5,8 @@ import { requireUser } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
-import { useEffect, useReducer, useState } from 'react'
-import { number, z } from 'zod'
+import { useEffect, useReducer } from 'react'
+import { z } from 'zod'
 
 const SpeedEntrySchema = z
     .object({

@@ -5,7 +5,7 @@ import { requireUser } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
-import { useState, useReducer, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
 
 let orange = '#EDA75C'

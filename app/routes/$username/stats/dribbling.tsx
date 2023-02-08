@@ -5,7 +5,7 @@ import { requireUser } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, toDateString } from '~/util'
-import { useState, useReducer, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
 
 const DribblingSpeedSchema = z

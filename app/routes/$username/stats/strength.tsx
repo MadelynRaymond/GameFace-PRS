@@ -5,7 +5,7 @@ import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
-import { useState, useReducer, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
 
 const SquatEntrySchema = z
