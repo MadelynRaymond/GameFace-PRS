@@ -82,7 +82,7 @@ export async function updateAthleteProfile(
 ) {
     const { email, grade, age, school } = update
 
-    const userWithEmail = await prisma.user.findUnique({ where: { email } })
+    const userWithEmail = await prisma.user.findFirst({ where: { email } })
 
     if (userWithEmail && userWithEmail.id !== userId) throw new Error(`User with email ${email} already exists`)
 

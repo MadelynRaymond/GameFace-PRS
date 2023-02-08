@@ -1,4 +1,4 @@
-import { ActionArgs, json, LoaderArgs } from '@remix-run/node'
+import { ActionArgs, json, LoaderArgs, redirect } from '@remix-run/node'
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
 import { useNavigate } from 'react-router-dom'
 import { requireUser } from '~/session.server'
@@ -8,11 +8,32 @@ import { updateAthleteProfile } from '~/models/athlete.server'
 
 const EditSchema = z.object({
     id: z.coerce.number(),
-    email: z.optional(z.string().email()).or(z.literal('')),
-    age: z.optional(z.coerce.number().min(8, 'Age must be at least 8')).or(z.literal('')),
-    grade: z.optional(z.coerce.number().min(6, 'Grade must be at least 6th').max(12, 'Grade must be at most 12th')).or(z.literal('')),
-    school: z.optional(z.string().min(3, 'School must have more than 3 characters')).or(z.literal('')),
-})
+    email: z.optional(
+        z
+            .string()
+            .email()
+            .or(z.literal(''))
+            .transform((d) => (d === '' ? undefined : d))
+    ),
+    age: z
+        .optional(z.coerce.number().min(8, 'Age must be at least 8'))
+        .or(z.literal(''))
+        .transform((d) => (d === '' ? undefined : d)),
+    grade: z
+        .optional(z.coerce.number().min(6, 'Grade must be at least 6th').max(12, 'Grade must be at most 12th'))
+        .or(z.literal(''))
+        .transform((d) => (d === '' ? undefined : d)),
+    school: z.optional(
+        z
+            .string()
+            .min(3, 'School must have more than 3 characters')
+            .or(z.literal(''))
+            .transform((d) => (d === '' ? undefined : d))
+    ),
+}).refine(data => {
+    const {id, ...partial} = data
+    return Object.values(partial).some(val => val !== undefined)
+}, {message: "At least one field must be filled"})
 
 type EditErrors = z.inferFlattenedErrors<typeof EditSchema>
 
@@ -28,7 +49,7 @@ export async function loader({ request }: LoaderArgs) {
         throw new Response('Not Found', { status: 404 })
     }
 
-    const {id, username} = user
+    const { id, username } = user
 
     return json({ id, username })
 }
@@ -39,13 +60,16 @@ export async function action({ request }: ActionArgs) {
     const entries = Object.fromEntries(formData)
 
     const result = await EditSchema.safeParseAsync(entries)
-
+    
     if (!result.success) {
         return json({ errors: result.error.flatten() })
     }
 
+
     invariant(result.success, 'This should not happen')
     const { id, ...update } = result.data
+    console.log(result.data)
+
 
     try {
         await updateAthleteProfile(id, update)
@@ -55,7 +79,9 @@ export async function action({ request }: ActionArgs) {
         }
     }
 
-    return null
+    const username = request.url.split('/')[2]
+
+    return redirect(`/${username}/profile`)
 }
 
 export default function EditProfile() {
@@ -80,7 +106,7 @@ export default function EditProfile() {
                             <span className="error-text">{actionData?.errors?.fieldErrors.grade && actionData.errors.fieldErrors.grade[0]}</span>
                         </div>
                         <div>
-                            <input type="text" name="school" placeholder="school"/>
+                            <input type="text" name="school" placeholder="school" />
                             <span className="error-text">{actionData?.errors?.fieldErrors.school && actionData.errors.fieldErrors.school[0]}</span>
                         </div>
                     </div>
@@ -88,10 +114,13 @@ export default function EditProfile() {
                 <div className="flex gap-2">
                     <input type="hidden" name="id" value={id} />
                     <input type="submit" className="btn" value="Save" />
-                    <Link style={{color: 'white'}} className='btn' to={`/${username}/profile`}>Cancel</Link>
+                    <Link style={{ color: 'white' }} className="btn" to={`/${username}/profile`}>
+                        Cancel
+                    </Link>
                 </div>
                 <span style={{ display: 'block' }} className="error-text">
                     {actionData?.updateError}
+                    {actionData?.errors?.formErrors}
                 </span>
             </Form>
         </div>
