@@ -1,12 +1,10 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
+import { useEffect, useState } from 'react'
+import { CSVLink } from 'react-csv'
 import { CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import {
-    getEntriesAggregate,
-    getEntriesByDrillLiteral,
-    getEntriesTotal,
-} from '~/models/drill-entry.server'
+import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesTotal } from '~/models/drill-entry.server'
 import { requireUser } from '~/session.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
@@ -29,8 +27,11 @@ export async function loader({ request }: LoaderArgs) {
         created_at: toDateString(e.created_at.toString()),
     }))
 
-    const passingData = await getEntriesByDrillLiteral({drillName: "Passing Drill", userId: id, interval})
-    const passingRatio = passingData.map(e => ({ratio: Math.floor(e.value / (e.outOf as number) * 100), created_at: toDateString(e.created_at.toString())}))
+    const passingData = await getEntriesByDrillLiteral({ drillName: 'Passing Drill', userId: id, interval })
+    const passingRatio = passingData.map((e) => ({
+        ratio: Math.floor((e.value / (e.outOf as number)) * 100),
+        created_at: toDateString(e.created_at.toString()),
+    }))
     const speedAggregations = await getEntriesAggregate({ drillName: 'Speed Drill', userId: id, interval })
     const dribblingAggregations = await getEntriesAggregate({ drillName: 'Dribbling Speed', userId: id, interval })
     const squatAggregations = await getEntriesAggregate({ drillName: 'Squat Drill', userId: id, interval })
@@ -47,7 +48,7 @@ export async function loader({ request }: LoaderArgs) {
         passingAggregations,
         jumpingAggregations,
         shootingRatio,
-        passingRatio
+        passingRatio,
     })
 }
 
@@ -64,7 +65,6 @@ export default function Overall() {
         username,
     } = useLoaderData<typeof loader>()
 
-
     const filter = useFetcher<typeof loader>()
 
     const lifetimePie = [
@@ -79,7 +79,59 @@ export default function Overall() {
             fill: orangeAccent,
         },
     ]
-    
+
+    const [downloadReady, setDownloadReady] = useState(false)
+
+    useEffect(() => {
+        setDownloadReady(true)
+    }, [])
+
+    const csvData = [
+        {
+            category: 'Speed',
+            averageTime: dbTimeToString((speedAggregations.average || filter?.data?.speedAggregations.average || null)),
+            bestTime: dbTimeToString(speedAggregations.min || filter?.data?.speedAggregations.min || null),
+        },
+        {
+            category: 'Shooting',
+            shotsMade: filter?.data?.shootingAggregations._sum.value || shootingAggregations._sum.value,
+            shotsAttempted: filter?.data?.shootingAggregations._sum.outOf || shootingAggregations._sum.outOf
+        },
+        {
+            category: 'Dribbling',
+            averageTime: dbTimeToString((dribblingAggregations.average || filter?.data?.dribblingAggregations.average || null)),
+            bestTime: dbTimeToString((dribblingAggregations.min || filter?.data?.dribblingAggregations.min || null))
+        },
+        {
+            category: 'Passing',
+            passesCompleted: filter?.data?.passingAggregations._sum.value || passingAggregations._sum.value,
+            passesAttempted: filter?.data?.passingAggregations._sum.outOf || passingAggregations._sum.outOf
+        },
+        {
+            category: 'Squat',
+            averageTime: dbTimeToString((squatAggregations.average || filter?.data?.squatAggregations.average || null)),
+            bestTime: dbTimeToString(squatAggregations.min || filter?.data?.squatAggregations.min || null),
+        },
+        {
+            category: 'Jumping',
+            averageJumpHeight: (filter?.data?.jumpingAggregations.average || jumpingAggregations.average)?.toFixed(1),
+            bestJumpHeight: (filter.data?.jumpingAggregations.max) || jumpingAggregations.max,
+        }
+
+    ]
+
+    const csvHeaders = [
+        { label: 'Category', key: 'category' },
+        { label: 'Average', key: 'averageTime' },
+        { label: 'Best', key: 'bestTime' },
+        { label: 'Shots Made', key: 'shotsMade'},
+        { label: 'Shots Attempted', key: 'shotsAttempted'},
+        {label: 'Passes Completed', key: 'passesCompleted'},
+        {label: 'Passes Attempted', key: 'passesAttempted'},
+        {label: "Average Jump Height", key: 'averageJumpHeight'},
+        {label: "Best Jump Height", key: 'bestJumpHeight'}
+    ]
+
     return (
         <div>
             <div className="report-card-header">
@@ -93,20 +145,25 @@ export default function Overall() {
                         <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button year">Year</button>
-                        <button onClick={() => filter.load(`/${username}/stats?index`)}  className="filter-button lifetime">Lifetime</button>
+                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button year">
+                            Year
+                        </button>
+                        <button onClick={() => filter.load(`/${username}/stats?index`)} className="filter-button lifetime">
+                            Lifetime
+                        </button>
                     </div>
                     <div className="export-button-group">
+
                     <button onClick={() => window.print()} className="print-btn no-print btn">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="export-icons">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
                         </svg>
                     </button>
-                    <button className="btn export">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="export-icons">
-                            <path fill-rule="evenodd" d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
+                        {downloadReady && (
+                            <CSVLink className="btn export" headers={csvHeaders} data={csvData}>
+                                Export
+                            </CSVLink>
+                        )}
                     </div>
                 </div>
             </div>
@@ -160,11 +217,11 @@ export default function Overall() {
                     <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'No data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Best Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r accent-2">
@@ -254,7 +311,7 @@ export default function Overall() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="ratio" stroke={orangeAccent} strokeWidth={strokeWidth}fillOpacity={1} fill="url(#colorUv2)" />
+                            <Line type="monotone" dataKey="ratio" stroke={orangeAccent} strokeWidth={strokeWidth} fillOpacity={1} fill="url(#colorUv2)" />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
