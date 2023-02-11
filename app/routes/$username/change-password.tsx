@@ -2,7 +2,7 @@ import { ActionArgs, LoaderArgs, json, redirect } from '@remix-run/node'
 import { Form, useActionData, useLoaderData, useTransition } from '@remix-run/react'
 import { ZodError, z } from 'zod'
 import { changePassword } from '~/models/user.server'
-import { requireUser, requireUserId } from '~/session.server'
+import { logout, requireUser, requireUserId } from '~/session.server'
 
 export const ChangePasswordSchema = z
     .object({
@@ -19,25 +19,23 @@ type ActionData = {
 // Loader will get called when the page loads
 export async function loader({ request }: LoaderArgs) {
     const userId = await requireUserId(request)
-    if (!userId) return redirect('/change-password/password')
     return json({ userId })
 }
 // Action will get called when you submit the form
 export async function action({ request }: ActionArgs) {
-    const { username, id } = await requireUser(request)
+    const { id } = await requireUser(request)
+    const formData = await request.formData()
+    const data = await Object.fromEntries(formData)
     try {
-        const formData = await request.formData()
-        const data = await Object.fromEntries(formData)
         const validatedData = await ChangePasswordSchema.parseAsync(data)
-
         await changePassword({ userId: id, password: validatedData.newPassword })
+        
     } catch (error) {
         if (error instanceof z.ZodError) {
             return json({ errors: error.flatten() as ChangePasswordErrors })
         }
     }
-
-    return redirect(`/${username}/profile`)
+    return await logout(request)
 }
 
 export default function ChangePassword() {
@@ -52,7 +50,7 @@ export default function ChangePassword() {
             }}
             className="form-center"
         >
-            <Form method="post" style={{maxWidth: '600px', padding: '1rem'}}>
+            <Form method="post" style={{ maxWidth: '600px', padding: '1rem' }}>
                 <h1>Change Password</h1>
                 <input type="password" name="newPassword" id="newPassword" placeholder="New Password" />
                 {actionData?.errors?.fieldErrors.newPassword && <span className="error-text">{actionData.errors.fieldErrors.newPassword[0]}</span>}
