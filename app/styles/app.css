@@ -177,18 +177,30 @@
   }
 }
 /*Stats page */
-.stats-menu__items {
+.stats-menu {
+  margin: 0 1rem;
+  border-bottom: 4px solid black;
+  margin-bottom: 0;
+}
+@media (min-width: 992px) {
+  .stats-menu {
+    margin: 0 4rem;
+  }
+}
+.stats-menu .stats-menu__items {
   display: flex;
-  gap: 2rem;
   padding: 1rem 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
   color: rgb(102, 102, 102);
   font-weight: 500;
 }
-
-.stats-menu {
-  border-bottom: 4px solid black;
-  margin: 2rem 4rem;
-  margin-bottom: 0;
+@media (min-width: 992px) {
+  .stats-menu .stats-menu__items {
+    justify-content: start;
+    gap: 2rem;
+  }
 }
 
 .stats-menu__athlete-name {
@@ -233,7 +245,7 @@
 .stat-box-group {
   display: grid;
   gap: 1rem;
-  align-content: start;
+  align-content: center;
 }
 @media (min-width: 992px) {
   .stat-box-group {
