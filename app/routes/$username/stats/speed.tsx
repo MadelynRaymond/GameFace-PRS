@@ -104,7 +104,7 @@ export default function Speed() {
 
 
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Speed Statistics </h2>
@@ -150,7 +150,7 @@ export default function Speed() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Speed Drill</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
@@ -179,7 +179,7 @@ export default function Speed() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Lifetime Overview: Best Speed per Session</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
@@ -208,7 +208,7 @@ export default function Speed() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Avg. vs. Best Speed</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart
                             width={500}
                             height={300}

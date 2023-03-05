@@ -101,7 +101,7 @@ export default function Jumping() {
     let strokeWidth = 4
 
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Jumping Statistics </h2>
@@ -148,7 +148,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Jump Height</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={filter?.data?.jumpHeightEntries || jumpHeightEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created_at" />
@@ -161,7 +161,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Jump Distance</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created_at" />
@@ -174,7 +174,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Jump Distance</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}

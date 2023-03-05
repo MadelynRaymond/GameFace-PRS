@@ -103,7 +103,7 @@ export default function Strength() {
     let strokeWidth = 4
     
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Strength Statistics </h2>
@@ -144,7 +144,7 @@ export default function Strength() {
                 </div>
                 <div className="flex align-center flex-col gap-1 graph-container">
                     <p>{state.text} Jump Distance</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={730} height={400} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created"></XAxis>
@@ -159,7 +159,7 @@ export default function Strength() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Squat Duration w/Weight</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
@@ -172,7 +172,7 @@ export default function Strength() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Lifetime Overview: Best Squat Duration w/Weights</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">

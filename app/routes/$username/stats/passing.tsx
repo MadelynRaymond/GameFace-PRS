@@ -120,7 +120,7 @@ export default function Shooting() {
 
 
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Passing Statistics </h2>
@@ -168,7 +168,7 @@ export default function Shooting() {
                 <div className="flex graph-container">
                     <div className="flex flex-col align-center gap-1 h-full w-full">
                         <p>Last 30 Days: Missed vs. Landed</p>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="99%" height="99%">
                             <PieChart width={800} height={400}>
                                 <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill={orangeAccent} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
@@ -178,7 +178,7 @@ export default function Shooting() {
                     </div>
                     <div className="flex flex-col align-center gap-1 h-full w-full">
                         <p>Lifetime: Missed vs. Landed</p>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="99%" height="99%">
                             <PieChart width={800} height={400}>
                                 <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill={orange} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
@@ -189,7 +189,7 @@ export default function Shooting() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Pass Success Rate</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={filter?.data?.lastSevenSessions || lastSevenSessions}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created" />
@@ -203,7 +203,7 @@ export default function Shooting() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Pass Success Rate (percent)</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
