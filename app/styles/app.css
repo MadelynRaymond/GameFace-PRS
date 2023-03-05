@@ -364,6 +364,12 @@
   font-weight: lighter;
 }
 
+@media (min-width: 992px) {
+  .stats-summary {
+    padding: 1rem 4rem;
+  }
+}
+
 .stat-row h4 {
   font-family: "Press Start 2P", cursive;
   font-size: 0.8rem;
@@ -402,18 +408,26 @@
 
 .report-card-header {
   display: flex;
-  justify-content: space-between;
-  margin: 1rem 4rem 0rem 4rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
-.report-card-title {
+.report-card-header .report-card-title {
   font-size: 1rem;
   font-family: "Press Start 2P", cursive;
 }
-
-.report-card-title p {
+.report-card-header .report-card-title > * {
+  text-align: center;
+}
+.report-card-header .report-card-title p {
   color: gray;
   font-family: "Montserrat", sans-serif;
+}
+@media (min-width: 992px) {
+  .report-card-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 .filter-heading {

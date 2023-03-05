@@ -89,7 +89,7 @@ export default function Dribbling() {
     let strokeWidth = 4
     
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Dribbling Statistics </h2>

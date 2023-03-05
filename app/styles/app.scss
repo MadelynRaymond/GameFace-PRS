@@ -358,6 +358,12 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   font-weight: lighter;
 }
 
+.stats-summary {
+  @include responsive('md') {
+    padding: 1rem 4rem;
+  }
+}
+
 .stat-row h4{
   font-family: 'Press Start 2P', cursive;
   font-size: 0.8rem;
@@ -397,18 +403,30 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .report-card-header {
   display: flex;
-  justify-content: space-between;
-  margin: 1rem 4rem 0rem 4rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .report-card-title {
+    font-size: 1rem;
+    font-family: 'Press Start 2P', cursive;
+    > * {
+      text-align: center;
+    }
+
+    p {
+      color: gray;
+      font-family: 'Montserrat', sans-serif;
+    }
+  }
+
+  @include responsive('md') {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
-.report-card-title{
-  font-size: 1rem;
-  font-family: 'Press Start 2P', cursive;
-}
-.report-card-title p {
-  color: gray;
-  font-family: 'Montserrat', sans-serif;
-}
+
 .filter-heading{
   margin-top: 1rem;
 }
