@@ -17,14 +17,14 @@ const SquatEntrySchema = z
     .array()
     .transform((data) => data.map((s) => ({ time: s.value, created_at: s.created_at })))
 
-const JumpDistanceEntrySchema = z
+const CalisthenicEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
         value: z.coerce.number(),
         outOf: z.nullable(z.number()),
     })
     .array()
-    .transform((data) => data.map((s) => ({ distance: s.value, created_at: s.created_at })))
+    .transform((data) => data.map((s) => ({ amount: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
     const {username, id} = await requireUser(request)
@@ -36,31 +36,35 @@ export async function loader({ request }: LoaderArgs) {
     const interval = dateFromDaysOptional(intervalLiteral)
 
     const squatEntryData = await getEntriesByDrillLiteral({drillName: "Squat Drill", userId, interval})
-    const jumpDistanceData = await getEntriesByDrillLiteral({drillName: "Jump Distance Drill", userId, interval})
+    const pushUpData = await getEntriesByDrillLiteral({drillName: 'Push Up Drill', userId, interval})
+    const pullUpData = await getEntriesByDrillLiteral({drillName: "Pull Up Drill", userId, interval})
 
-    const insufficientData = squatEntryData.length === 0 || jumpDistanceData.length === 0
+    const insufficientData = squatEntryData.length === 0 || pushUpData.length === 0
 
     if (insufficientData) {
         throw new Response('Not enough data', { status: 404 })
     }
 
     try {
-        const [squatEntries, jumpDistanceEntries] = await Promise.all([
+        const [squatEntries, pushUpEntries, pullUpEntries] = await Promise.all([
             SquatEntrySchema.parseAsync(squatEntryData),
-            JumpDistanceEntrySchema.parseAsync(jumpDistanceData)
+            CalisthenicEntrySchema.parseAsync(pushUpData),
+            CalisthenicEntrySchema.parseAsync(pullUpData)
         ])
 
-        const jumpDistanceAggregate = await getEntriesAggregate({drillName: "Jump Distance Drill", userId, interval})
-        const [bestJumpDistance, averageJumpDistance] = [jumpDistanceAggregate.max, jumpDistanceAggregate.average]
         const squatAverage = await (await getEntriesAverage({drillName: "Squat Drill", userId, interval}))._avg
+        const pushUpMax = await (await getEntriesAggregate({drillName: "Push Up Drill", userId, interval})).max
+        const pullUpMax = await (await getEntriesAggregate({drillName: "Pull Up Drill", userId, interval})).max
+
 
         return json({
-            bestJumpDistance,
-            averageJumpDistance,
             username,
             squatEntries,
-            jumpDistanceEntries,
-            squatAverage
+            pushUpEntries,
+            squatAverage,
+            pushUpMax,
+            pullUpEntries,
+            pullUpMax
         })
     }
     catch (error) {
@@ -70,7 +74,7 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Strength() {
-    const {username, bestJumpDistance, averageJumpDistance, jumpDistanceEntries, squatEntries, squatAverage} = useLoaderData<typeof loader>()
+    const {username, pushUpEntries, pushUpMax, squatEntries, squatAverage, pullUpEntries, pullUpMax} = useLoaderData<typeof loader>()
     
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -121,16 +125,16 @@ export default function Strength() {
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent">
-                        <p className="stat-box__title">Best Jump (Distance)</p>
+                        <p className="stat-box__title">Max Amount of Push Ups</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.bestJumpDistance || bestJumpDistance}ft</p>
+                            <p className="stat-box__figure">{filter?.data?.pushUpMax || pushUpMax}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box dots">
-                        <p className="stat-box__title">Avg. Jump (Distance)</p>
+                        <p className="stat-box__title">Max Amount of Pull Ups</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.averageJumpDistance?.toFixed(1) || averageJumpDistance?.toFixed(1)}</p>
+                            <p className="stat-box__figure">{filter?.data?.pullUpMax|| pullUpMax}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
@@ -143,30 +147,30 @@ export default function Strength() {
                     </div>
                 </div>
                 <div className="flex align-center flex-col gap-1 graph-container">
-                    <p>{state.text} Jump Distance</p>
+                    <p>{state.text} Pull Ups</p>
                     <ResponsiveContainer width="99%" height="99%">
-                        <BarChart width={730} height={400} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
+                        <BarChart width={730} height={400} data={filter?.data?.pullUpEntries || pullUpEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created"></XAxis>
                             <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="distance" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}>
+                            <Bar dataKey="amount" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}>
                                 <Label value="Session Date" position="top" />
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>{state.text}: Squat Duration w/Weight</p>
+                    <p>{state.text}: Push Ups</p>
                     <ResponsiveContainer width="99%" height="99%">
-                        <BarChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>
+                        <BarChart width={730} height={250} data={filter?.data?.pushUpEntries || pushUpEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="time" stackId="a"  fill={orange} stroke={black} strokeWidth={strokeWidth}/>
+                            <Bar dataKey="amount" stackId="a"  fill={orange} stroke={black} strokeWidth={strokeWidth}/>
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
