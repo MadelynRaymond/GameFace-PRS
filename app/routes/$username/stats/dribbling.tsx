@@ -139,7 +139,7 @@ export default function Dribbling() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Dribbling Drill Completion Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
@@ -170,7 +170,7 @@ export default function Dribbling() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last 7 Sessions: Dribbling Drill Completion Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
@@ -199,7 +199,7 @@ export default function Dribbling() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Current vs Best Dribbling Drill Completion Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart
                             width={500}
                             height={300}

@@ -210,30 +210,55 @@
 .stat-grid {
   margin: 0 auto;
   max-width: 1800px;
-  justify-content: center;
-  align-content: center;
-  padding: 0 2rem;
+  padding: 0 1rem;
+  margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(400px, 900px));
-  grid-template-rows: repeat(2, minmax(350px, 375px));
+  gap: 1rem;
+  overflow: hidden;
+}
+.stat-grid .graph-container {
+  min-height: 400px;
+  max-height: 500px;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  padding-top: 0.5rem;
+  background-color: white;
+}
+@media (min-width: 992px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .stat-box-group {
-  margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1rem;
+  align-content: start;
+}
+@media (min-width: 992px) {
+  .stat-box-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1450px) {
+  .stat-box-group {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .stat-box {
   min-width: 200px;
-  max-height: 250px;
+  min-height: 250px;
   padding: 1rem;
   border: 4px solid black;
   border-bottom: 8px solid black;
   border-radius: 8px;
   background-color: white;
+}
+@media (min-width: 1450px) {
+  .stat-box {
+    min-height: 275px;
+  }
 }
 
 .stat-box__title {
@@ -510,14 +535,6 @@
   padding: 4rem;
   padding-top: 0.5rem;
   gap: 4rem;
-}
-
-.graph-container {
-  border: 4px solid black;
-  border-bottom: 8px solid black;
-  padding-top: 0.5rem;
-  margin: 0.75rem 2rem;
-  background-color: white;
 }
 
 /*STAFF ATHLETE TABLE */
