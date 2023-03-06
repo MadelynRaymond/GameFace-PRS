@@ -557,16 +557,23 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .overall-graph-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 350px;
-  padding: 4rem;
-  padding-top: 0.5rem;
-  gap: 4rem;
+  margin: 1rem;
+  gap: 2rem;
+
+  > * {
+    min-height: 400px;
+  }
+
+
+  @include responsive('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include responsive('xl') {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.graph-container{
-  
-}
 
 /*STAFF ATHLETE TABLE */
 .athlete-table {

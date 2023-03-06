@@ -343,24 +343,33 @@
 /*Dashboard pages*/
 .overall-stat-table {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: flex-end;
   gap: 1rem;
-  margin: 2rem 4rem;
+  margin: 0 1rem;
 }
-
-.stat-row {
+.overall-stat-table .stat-row {
   height: 100%;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   font-weight: bold;
   align-items: center;
   align-content: center;
   border: 4px solid black;
   border-bottom: 10px solid black;
   background-color: white;
+}
+@media (min-width: 992px) {
+  .overall-stat-table {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .overall-stat-table .stat-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1200px) {
+  .overall-stat-table {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .dots {
@@ -542,11 +551,21 @@
 
 .overall-graph-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 350px;
-  padding: 4rem;
-  padding-top: 0.5rem;
-  gap: 4rem;
+  margin: 1rem;
+  gap: 2rem;
+}
+.overall-graph-container > * {
+  min-height: 400px;
+}
+@media (min-width: 992px) {
+  .overall-graph-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1450px) {
+  .overall-graph-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /*STAFF ATHLETE TABLE */

@@ -132,7 +132,7 @@ export default function Overall() {
     ]
 
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Training Report Card</h2>
