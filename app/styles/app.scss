@@ -73,7 +73,7 @@
 
 /*NAVBAR */
 .navbar {
-  display: flex;
+  display: none;
   justify-content: space-between;
   padding-left: 1rem;
   text-align: start;
@@ -81,10 +81,14 @@
   background-color: rgb(255, 255, 255);
   color: black;
   border: 4px solid black;
-  margin: 2rem 6rem;
   border-radius: 8px;
   border-bottom: 8px solid black;
   min-height: 5rem;
+  margin: 2rem 4rem;
+
+  @include responsive('md') {
+    display: flex;
+  }
 }
 
 .menu-text{
