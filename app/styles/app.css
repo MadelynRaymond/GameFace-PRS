@@ -679,20 +679,31 @@
 }
 
 .registration-form {
-  margin: 2rem 30rem;
-  padding: 2rem 4rem;
+  max-width: 1000px;
+  padding: 2rem;
+  margin: 0 auto;
   border: 4px solid black;
   border-bottom: 8px solid black;
 }
-
-.registration-form-row {
+.registration-form .registration-form-header {
   display: flex;
-  gap: 1rem;
   justify-content: space-between;
+  flex-grow: 0.01;
+  padding-bottom: 1rem;
 }
-
-.registration-form-row > div {
+.registration-form .registration-form-header img {
+  object-fit: contain;
+  max-width: 125px;
+}
+.registration-form .registration-form-row > div {
   flex: 1;
+}
+@media (min-width: 767px) {
+  .registration-form .registration-form-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
 }
 
 .register-link {
@@ -747,18 +758,6 @@
 .register-btn button:hover {
   box-shadow: none;
   transform: translate(1px, 1px);
-}
-
-.registration-form-header {
-  display: flex;
-  justify-content: space-between;
-  flex-grow: 0.01;
-  padding-bottom: 1rem;
-}
-
-.registration-form-header img {
-  object-fit: contain;
-  max-width: 125px;
 }
 
 .registration-form-header h2 {
