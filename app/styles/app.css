@@ -785,10 +785,13 @@
   border: 4px solid black;
   border-bottom: 8px solid black;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: space-between;
   gap: 4rem;
   font-family: "Press Start 2P", cursive;
+}
+@media (min-width: 992px) {
+  .profile-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .profile-container h3 {
@@ -802,17 +805,19 @@
 }
 
 .profile-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   min-height: 8rem;
   background-color: #DF7861;
   border: 4px solid black;
   border-bottom: none;
-  display: flex;
-  justify-content: space-between;
   font-family: "Press Start 2P", cursive;
   font-size: 0.75rem;
+}
+@media (min-width: 992px) {
+  .profile-banner > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .profile-banner button {
