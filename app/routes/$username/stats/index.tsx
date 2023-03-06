@@ -254,7 +254,7 @@ export default function Overall() {
             <div className="overall-graph-container">
                 <div className="report-card-graph">
                     <p>Shots Made Over Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <LineChart
                             width={730}
                             height={250}
@@ -283,7 +283,7 @@ export default function Overall() {
                 </div>
                 <div className="report-card-graph">
                     <p>Shots Made vs Attempted</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <PieChart width={800} height={400}>
                             <Pie
                                 data={lifetimePie}
@@ -303,7 +303,7 @@ export default function Overall() {
                 </div>
                 <div className="report-card-graph">
                     <p>Successful Pass Rate Over Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <LineChart
                             width={730}
                             height={250}

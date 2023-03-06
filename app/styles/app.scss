@@ -479,8 +479,12 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .button-group { /* All dashboard buttons (filters, print, and export) */
-  display: flex;
+  display: none;
   gap: 2rem;
+
+  @include responsive('md') {
+    display: flex;
+  }
 }
 
 .export-button-group { /* Print and export grouping */

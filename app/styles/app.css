@@ -481,8 +481,13 @@
 }
 
 .button-group { /* All dashboard buttons (filters, print, and export) */
-  display: flex;
+  display: none;
   gap: 2rem;
+}
+@media (min-width: 992px) {
+  .button-group {
+    display: flex;
+  }
 }
 
 .export-button-group { /* Print and export grouping */
