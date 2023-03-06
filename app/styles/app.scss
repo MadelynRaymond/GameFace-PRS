@@ -334,25 +334,37 @@
 /*Dashboard pages*/
 .overall-stat-table {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: flex-end;
   gap: 1rem;
-  margin: 2rem 4rem;
+  margin: 0 1rem;
+
+  .stat-row {
+    height: 100%;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    display: grid;
+    font-weight: bold;
+    align-items: center;
+    align-content: center;
+    border: 4px solid black;
+    border-bottom: 10px solid black;
+    background-color: white;
+  }
+
+  @include responsive('md') {
+    grid-template-columns: repeat(2, 1fr);
+
+    .stat-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @include responsive('lg') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
 }
 
-.stat-row {
-  height: 100%;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  font-weight: bold;
-  align-items: center;
-  align-content: center;
-  border: 4px solid black;
-  border-bottom: 10px solid black;
-  background-color: white;
-}
+
 
 .dots{
   background-color: #ffffff;
