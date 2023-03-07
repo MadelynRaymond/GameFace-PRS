@@ -579,12 +579,23 @@
 }
 
 /*STAFF ATHLETE TABLE */
+.athlete-table-container {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.athlete-table-container > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.athlete-table-container input {
+  width: 500px;
+}
+
 .athlete-table {
   text-align: center;
   border-collapse: collapse;
   width: 100%;
-  max-width: 1500px;
-  margin: 25px auto;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 400px;
@@ -616,6 +627,8 @@
   display: flex;
   max-width: 1350px;
   margin: 0 auto;
+  max-height: 1000px;
+  overflow-y: auto;
 }
 
 .athlete-reports {

@@ -584,12 +584,24 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 
 /*STAFF ATHLETE TABLE */
+
+.athlete-table-container {
+  max-width: 1500px;
+  margin: 0 auto;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  input {
+    width: 500px;
+  }
+}
 .athlete-table {
   text-align: center;
   border-collapse: collapse;
   width: 100%;
-  max-width: 1500px;
-  margin: 25px auto;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 400px;
@@ -617,6 +629,8 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   display: flex;
   max-width: 1350px;
   margin: 0 auto;
+  max-height: 1000px;
+  overflow-y: auto;
 }
 
 .athlete-reports {
