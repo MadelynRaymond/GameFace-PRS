@@ -19,7 +19,7 @@ export default function Profile() {
     return (
             <div className='profile'>
                 <div className="profile-banner">
-                    <div className="w-full h-full flex align-center justify-between">
+                    <div className="">
                         <h2>Welcome back, {profile?.firstName}!</h2>
                         <div className="profile-btn-group">
                             <Link style={{color: 'white'}} to="edit" className='btn'>Edit Profile</Link>
@@ -43,6 +43,14 @@ export default function Profile() {
                     <div>
                         <h3>School:</h3>
                         <p>{profile?.school}</p>
+                    </div>
+                    <div>
+                        <h3>Guardian Name:</h3>
+                        <p>{profile?.guardianName}</p>
+                    </div>
+                    <div>
+                        <h3>Guardian Phone:</h3>
+                        <p>{profile?.guardianPhone}</p>
                     </div>
                 </div>
             </div>

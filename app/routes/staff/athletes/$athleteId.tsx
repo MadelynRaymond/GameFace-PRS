@@ -12,6 +12,7 @@ import { createEntryOnReport } from '~/models/drill-entry.server'
 import { createAthleteReport } from '~/models/athlete-report.server'
 import { z, ZodError } from 'zod'
 import { toDateString } from '~/util'
+import { requireStaff } from '~/session.server'
 
 const EntrySchema = z.object({
     unit: z.string(),
@@ -30,6 +31,7 @@ type FormActivity = { mode: 'edit' | 'new'; selectedReportId?: number }
 //type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
 export async function loader({ request, params }: LoaderArgs) {
+    await requireStaff(request)
     invariant(params.athleteId, 'Not athlete id in params')
 
     const athleteId = parseInt(params.athleteId)

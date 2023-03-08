@@ -7,6 +7,7 @@ import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 let orange = '#EDA75C'
 let orangeAccent = '#E58274'
@@ -24,7 +25,7 @@ export const ShootingEntrySchema = z
     .transform((data) => data.map((s) => ({ scored: s.value, attempted: s.outOf, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const { username, id } = await requireUser(request)
+    const { id, ...athleteInfo } = await requireUser(request)
     const userId = id
 
     //fetch time interval from url
@@ -59,7 +60,7 @@ export async function loader({ request }: LoaderArgs) {
             attempted,
             scored,
             successPercentage,
-            username,
+            athleteInfo,
         })
     } catch (error) {
         console.log(error)
@@ -67,7 +68,8 @@ export async function loader({ request }: LoaderArgs) {
     }
 }
 export default function Shooting() {
-    const { scored, attempted, successPercentage, username, lastSevenSessions, shootingEntries } = useLoaderData<typeof loader>()
+    const { scored, attempted, successPercentage, athleteInfo, lastSevenSessions, shootingEntries } = useLoaderData<typeof loader>()
+    const {profile, username} = athleteInfo
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -106,41 +108,9 @@ export default function Shooting() {
         },
     ]
 
-    const percentPie = [
-        {
-            name: 'Shots Attempted as % (last 30 days)',
-            value: 100 - (filter?.data?.successPercentage || successPercentage),
-            fill: orange,
-        },
-        {
-            name: 'Shots Scored as % (last 30 days)',
-            value: filter?.data?.successPercentage || successPercentage,
-            fill: orangeAccent,
-        },
-    ]
-
     return (
-        <div>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Shooting Statistics </h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
-                            Month
-                        </button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
-                            Year
-                        </button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">
-                            Lifetime
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div className='stats-summary'>
+            <ReportCardHeader header={'Shooting Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box">
@@ -168,7 +138,7 @@ export default function Shooting() {
                 <div className="flex graph-container">
                     <div className="flex flex-col align-center gap-1 h-full w-full">
                         <p>Last 30 Days: Shots Landed/Attempted</p>
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="99%" height="99%">
                             <PieChart width={800} height={400}>
                                 <Pie data={lifetimePie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
                                 <Tooltip />
@@ -176,20 +146,11 @@ export default function Shooting() {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="flex flex-col align-center gap-1 h-full w-full">
-                        <p>Lifetime Overview: Shots Landed/Attempted</p>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart width={800} height={400}>
-                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
-                                <Tooltip />
-                                <Legend verticalAlign="bottom" align="center" />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+          
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Shots Landed vs. Attempted</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={lastSevenSessions}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created" />
@@ -203,7 +164,7 @@ export default function Shooting() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Shots scored vs attempted</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <LineChart
                             width={730}
                             height={250}
@@ -215,23 +176,13 @@ export default function Shooting() {
                                 bottom: 0,
                             }}
                         >
-                            <defs>
-                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
                             <XAxis dataKey="created" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorUv)" />
-                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorPv)"/>
+                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} />
+                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

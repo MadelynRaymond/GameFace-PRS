@@ -1,4 +1,4 @@
-import type { Password, User } from '@prisma/client'
+import type { Password, StudentProfile, User } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { prisma } from '~/db.server'
 
@@ -29,10 +29,10 @@ export async function createUser({
     username: User['username']
     email: User['email']
     password: string
-    profile: Profile
+    profile: Omit<StudentProfile, 'userId'>
 }) {
     const hashedPassword = await bcrypt.hash(password, 10)
-    const { grade, school, age, firstName, lastName } = profile
+    const { grade, school, age, firstName, lastName, guardianName, guardianPhone } = profile
 
     return prisma.user.create({
         data: {
@@ -51,6 +51,8 @@ export async function createUser({
                     grade,
                     school,
                     age,
+                    guardianName,
+                    guardianPhone
                 },
             },
         },
