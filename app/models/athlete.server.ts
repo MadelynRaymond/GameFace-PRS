@@ -81,11 +81,8 @@ export async function updateAthleteProfile(
     const userWithEmail = await prisma.user.findFirst({ where: { email } })
 
     if (userWithEmail?.email === email) {
-        if (userWithEmail?.id === userId) {
-            throw new Error(`You must change the email from the current email`)
-        }
-        else {
-            throw new Error(`User with email ${email} already exists`)
+        if (userWithEmail?.id !== userId) {
+            throw new Error(`Could not update email.`)
         }
     }
 
