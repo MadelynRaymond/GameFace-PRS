@@ -8,6 +8,7 @@ import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useEffect, useReducer } from 'react'
 import { z } from 'zod'
 import invariant from 'tiny-invariant'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 const SpeedEntrySchema = z
     .object({
@@ -20,7 +21,7 @@ const SpeedEntrySchema = z
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
-    const { username, id } = user
+    const { id, ...athleteInfo } = user
     const userId = id
 
     //fetch time interval from url
@@ -63,7 +64,7 @@ export async function loader({ request }: LoaderArgs) {
         const lastSevenSessionsWithBest = lastSevenSessions.map(x => ({...x, best: bestSpeedRaw}))
         const averageSpeedWithOverallAverage = speedEntries.map(x => ({...x, average: averageSpeedRaw}))
 
-        return json({ averageSpeed, lastSessionSpeed, lastSevenSessionsWithBest, bestSpeed, speedEntries, username, averageSpeedWithOverallAverage })
+        return json({ averageSpeed, lastSessionSpeed, lastSevenSessionsWithBest, bestSpeed, speedEntries, athleteInfo, averageSpeedWithOverallAverage })
 
     } catch (error) {
         throw new Response('Internal server error', { status: 500 })
@@ -71,7 +72,8 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Speed() {
-    const { lastSessionSpeed, averageSpeed, bestSpeed, lastSevenSessionsWithBest, username, speedEntries, averageSpeedWithOverallAverage } = useLoaderData<typeof loader>()
+    const { lastSessionSpeed, averageSpeed, bestSpeed, lastSevenSessionsWithBest, athleteInfo, speedEntries, averageSpeedWithOverallAverage } = useLoaderData<typeof loader>()
+    const {profile, username} = athleteInfo
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -106,24 +108,7 @@ export default function Speed() {
 
     return (
         <div className='stats-summary'>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Speed Statistics </h2>
-                    <p>Athlete: Danielle Williams</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
-                            Month
-                        </button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
-                            Year
-                        </button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">Lifetime</button>
-                    </div>
-                </div>
-            </div>
+            <ReportCardHeader header={'Strength Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent-2">

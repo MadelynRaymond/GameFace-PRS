@@ -7,6 +7,7 @@ import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 const SquatEntrySchema = z
     .object({
@@ -27,7 +28,7 @@ const CalisthenicEntrySchema = z
     .transform((data) => data.map((s) => ({ amount: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const {username, id} = await requireUser(request)
+    const {id, ...athleteInfo} = await requireUser(request)
     const userId = id
 
     const url = new URL(request.url)
@@ -58,7 +59,7 @@ export async function loader({ request }: LoaderArgs) {
 
 
         return json({
-            username,
+            athleteInfo,
             squatEntries,
             pushUpEntries,
             squatAverage,
@@ -74,7 +75,8 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Strength() {
-    const {username, pushUpEntries, pushUpMax, squatEntries, squatAverage, pullUpEntries, pullUpMax} = useLoaderData<typeof loader>()
+    const {athleteInfo, pushUpEntries, pushUpMax, squatEntries, squatAverage, pullUpEntries, pullUpMax} = useLoaderData<typeof loader>()
+    const {profile, username} = athleteInfo
     
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -108,20 +110,7 @@ export default function Strength() {
     
     return (
         <div className='stats-summary'>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Strength Statistics </h2>
-                    <p>Athlete: Danielle Williams</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">Month</button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">Year</button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">Lifetime</button>
-                    </div>
-                </div>
-                </div>
+            <ReportCardHeader header={'Strength Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent">

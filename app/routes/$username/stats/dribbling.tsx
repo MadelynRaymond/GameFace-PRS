@@ -7,6 +7,7 @@ import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports }
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 const DribblingSpeedSchema = z
     .object({
@@ -18,7 +19,7 @@ const DribblingSpeedSchema = z
     .transform((data) => data.map((s) => ({ time: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const { username, id } = await requireUser(request)
+    const { id, ...athleteInfo } = await requireUser(request)
     const userId = id
 
     const url = new URL(request.url)
@@ -50,14 +51,15 @@ export async function loader({ request }: LoaderArgs) {
         const [bestTime, averageTime] = [min, average]
         const lastSessionAverage = dribblingSpeedEntries[0].time
 
-        return json({ averageTime, bestTime, lastSevenSessions, dribblingSpeedEntries, username, lastSessionAverage })
+        return json({ averageTime, bestTime, lastSevenSessions, dribblingSpeedEntries, athleteInfo, lastSessionAverage })
 
     } catch (error) {
         throw new Response('Not enough data', { status: 404 })
     }
 }
 export default function Dribbling() {
-    const { averageTime, bestTime, dribblingSpeedEntries, lastSessionAverage, username, lastSevenSessions} = useLoaderData<typeof loader>()
+    const { averageTime, bestTime, dribblingSpeedEntries, lastSessionAverage, athleteInfo, lastSevenSessions} = useLoaderData<typeof loader>()
+    const {profile, username} = athleteInfo
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -90,26 +92,7 @@ export default function Dribbling() {
     
     return (
         <div className='stats-summary'>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Dribbling Statistics </h2>
-                    <p>Athlete: Danielle Williams</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
-                            Month
-                        </button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
-                            Year
-                        </button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">
-                            Lifetime
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <ReportCardHeader header={'Dribbling Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent">
