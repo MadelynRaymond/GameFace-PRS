@@ -610,8 +610,8 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   text-align: center;
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.9em;
-  font-family: sans-serif;
+  font-size: 1rem;
+  margin-bottom: 4rem;
   min-width: 400px;
   border: 2px solid black;
   box-shadow: 7px 8px 0px 0px rgba(0, 0, 0, 0.86);
@@ -620,6 +620,8 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 .athlete-table thead tr {
   background-color: #DF7861;
+  font-size: 0.75rem;
+  font-family: 'Press Start 2P', cursive;
 }
 .athlete-table th, .athlete-table td {
   padding: 24px 15px;
@@ -630,6 +632,12 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .athlete-table tbody tr.active-row {
   font-weight: bold;
   color: #009879;
+}
+
+.student-table-btn-group{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /*DRILL ENTRY PAGE */
@@ -758,6 +766,10 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .btn--green {
   background-color: #009879;
+}
+
+.btn--yellow{
+  background-color: #EDA75C;
 }
 
 .register-btn {
