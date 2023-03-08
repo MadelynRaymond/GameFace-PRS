@@ -872,13 +872,14 @@
   }
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
+    page-break-after: always;
   }
   .stat-row {
-    padding: 1rem;
+    padding: 0.5rem;
     gap: 0.5rem;
   }
   .overall-graph-container {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
   button {
     visibility: hidden !important;
