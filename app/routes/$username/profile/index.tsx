@@ -44,6 +44,14 @@ export default function Profile() {
                         <h3>School:</h3>
                         <p>{profile?.school}</p>
                     </div>
+                    <div>
+                        <h3>Guardian Name:</h3>
+                        <p>{profile?.guardianName}</p>
+                    </div>
+                    <div>
+                        <h3>Guardian Phone:</h3>
+                        <p>{profile?.guardianPhone}</p>
+                    </div>
                 </div>
             </div>
     )

@@ -73,16 +73,10 @@ export async function getAthleteWithReports(athleteId: User['id']) {
 
 export async function updateAthleteProfile(
     userId: User['id'],
-    update: {
-        email?: User['email']
-        grade?: StudentProfile['grade'] | number
-        age?: StudentProfile['age'] | number
-        school?: StudentProfile['school']
-    }
+    update: Omit<Partial<StudentProfile>, 'age' | 'grade'> & {email?: string, age?: number, grade?: number}
 ) {
-    const { email, grade, age, school } = update
+    const { email, grade, age, school, guardianName, guardianPhone } = update
 
-    console.log(email)
     const userWithEmail = await prisma.user.findFirst({ where: { email } })
 
     if (userWithEmail?.email === email) {
@@ -102,7 +96,9 @@ export async function updateAthleteProfile(
                 update: {
                     grade: grade?.toString(),
                     age: age?.toString(),
-                    school: school,
+                    guardianName: guardianName,
+                    guardianPhone,
+                    school: school
                 },
             },
         },

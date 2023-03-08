@@ -6,6 +6,7 @@ import { z } from 'zod'
 import invariant from 'tiny-invariant'
 import { updateAthleteProfile } from '~/models/athlete.server'
 
+const phoneRegex = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
 const EditSchema = z.object({
     id: z.coerce.number(),
     email: z.optional(
@@ -30,6 +31,21 @@ const EditSchema = z.object({
             .or(z.literal(''))
             .transform((d) => (d === '' ? undefined : d))
     ),
+    guardianName: z.optional(
+        z
+            .string()
+            .min(5, "Guardian name must be at least 5 characters")
+            .max(30, "Guardian name must be at most 30 characters")
+            .or(z.literal(''))
+            .transform((d) => (d === '' ? undefined : d))
+    ),
+    guardianPhone: z.optional(
+        z
+            .string()
+            .regex(new RegExp(phoneRegex), "Must be a valid phone number")
+            .or(z.literal(''))
+            .transform((d) => (d === '' ? undefined : d))
+    )
 }).refine(data => {
     const {id, ...partial} = data
     return Object.values(partial).some(val => val !== undefined)
@@ -108,6 +124,16 @@ export default function EditProfile() {
                         <div>
                             <input type="text" name="school" placeholder="school" />
                             <span className="error-text">{actionData?.errors?.fieldErrors.school && actionData.errors.fieldErrors.school[0]}</span>
+                        </div>
+                    </div>
+                    <div className="edit-group">
+                        <div>
+                            <input type="text" name="guardianName" id="guardian-name" placeholder='guardian name'/>
+                            <span className="error-text">{actionData?.errors?.fieldErrors.guardianName && actionData.errors.fieldErrors.guardianName[0]}</span>
+                        </div>
+                        <div>
+                            <input type="text" name="guardianPhone" id="guardian-phone" placeholder='guardian phone'/>
+                            <span className="error-text">{actionData?.errors?.fieldErrors.guardianPhone && actionData.errors.fieldErrors.guardianPhone[0]}</span>
                         </div>
                     </div>
                 </div>
