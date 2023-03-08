@@ -32,6 +32,7 @@ export async function sendEmail(
             to: recipient,
             subject: email.subject,
             text: email.body,
+            //This need to include flexbox from Scss and fix padding/margin/align content as well as email link not being in one line(embed)
             html: 
             `<div style="background-color: #e6e6e6; width: 100%; height: 1463.5px; padding: 20px;">
             <div style="background-color: #ffffff; width: 600px; height: 785.5px; padding: 20px; margin: auto;">
