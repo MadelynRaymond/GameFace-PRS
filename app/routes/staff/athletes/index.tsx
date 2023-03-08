@@ -6,8 +6,10 @@ import { SyntheticEvent, useRef } from 'react'
 import invariant from 'tiny-invariant'
 import { getAthletes } from '~/models/athlete.server'
 import { updateStatus } from '~/models/user.server'
+import { requireStaff } from '~/session.server'
 
 export async function loader({ request }: LoaderArgs) {
+    await requireStaff(request)
     const athletes = await getAthletes()
     const url = new URL(request.url)
     const name = url.searchParams.get('name-filter')
@@ -24,7 +26,6 @@ export async function loader({ request }: LoaderArgs) {
 
     ) : athletes
 
-    console.log(filteredAthletes)
 
     return json({ filteredAthletes })
 }
