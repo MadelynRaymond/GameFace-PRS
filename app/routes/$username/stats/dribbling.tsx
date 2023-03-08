@@ -133,7 +133,7 @@ export default function Dribbling() {
                         </p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{lastSessionAverage}s</p>
-                            <p className="stat-box__desc">in last 30 days</p>
+                            <p className="stat-box__desc">Last session</p>
                         </div>
                     </div>
                 </div>
