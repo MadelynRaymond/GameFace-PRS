@@ -453,21 +453,20 @@
     border: 4px solid black;
     border-bottom: 10px solid black;
     background-color: white;
-  }
+    
+    @include responsive('md') {
+      grid-template-columns: repeat(2, 1fr);
 
-  @include responsive('md') {
-    grid-template-columns: repeat(2, 1fr);
+      .stat-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
 
-    .stat-row {
+    @include responsive('lg') {
       grid-template-columns: repeat(3, 1fr);
     }
-  }
-
-  @include responsive('lg') {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
 }
+
 
 
 
@@ -595,7 +594,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
       font-size: 1rem;
     }
   }
-}
+
 
 
 .filter-heading{
@@ -704,16 +703,6 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   > * {
     min-height: 400px;
   }
-
-
-  @include responsive('md') {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include responsive('xl') {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
 
   @include responsive('md') {
