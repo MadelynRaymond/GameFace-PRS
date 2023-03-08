@@ -5,12 +5,7 @@
     import { createTokenForUser } from '~/models/token.server'
     import { getUserByEmail } from '~/models/user.server'
     import { isProbablyEmail } from '~/util'
-    // async function sendEmailWithButton({subject, resetLink}, email) {
-    //     const html = `<p>${subject}</p>
-    //     <a href="${resetLink}"><button>Reset Password</button></a>`
-    //     await sendEmail({subject, body: html}, email)
-    // }
-    
+
     export async function action({ request }: ActionArgs) {
         const formData = await request.formData()
         const email = formData.get('email')
