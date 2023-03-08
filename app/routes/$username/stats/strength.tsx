@@ -152,7 +152,7 @@ export default function Strength() {
                         <BarChart width={730} height={400} data={filter?.data?.pullUpEntries || pullUpEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created"></XAxis>
-                            <YAxis label={{ value: 'Distance', angle: -90, position: 'insideLeft' }} />
+                            <YAxis/>
                             <Tooltip />
                             <Legend />
                             <Bar dataKey="amount" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth}>

@@ -193,23 +193,13 @@ export default function Shooting() {
                                 bottom: 0,
                             }}
                         >
-                            <defs>
-                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#DF7861" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#DF7861" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#ECB390" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#ECB390" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
                             <XAxis dataKey="created" />
                             <YAxis />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorUv)" />
-                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} fill="url(#colorPv)"/>
+                            <Line dataKey="scored" stroke={orange} strokeWidth={strokeWidth} />
+                            <Line dataKey="attempted" stroke={orange} strokeWidth={strokeWidth} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
