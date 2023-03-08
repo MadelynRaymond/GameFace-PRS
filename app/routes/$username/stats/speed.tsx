@@ -108,7 +108,7 @@ export default function Speed() {
 
     return (
         <div className='stats-summary'>
-            <ReportCardHeader header={'Strength Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
+            <ReportCardHeader header={'Speed Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent-2">
