@@ -93,7 +93,7 @@ export default function Dribbling() {
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Dribbling Statistics </h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
+                    <p>Athlete: Danielle Williams</p>
                 </div>
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>

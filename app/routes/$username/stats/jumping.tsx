@@ -105,7 +105,7 @@ export default function Jumping() {
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Jumping Statistics </h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
+                    <p>Athlete: Danielle Williams</p>
                 </div>
                 <div className="button-group">
                     <p className="filter-heading">Select Filter:</p>

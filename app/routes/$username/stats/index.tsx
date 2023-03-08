@@ -136,7 +136,7 @@ export default function Overall() {
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Training Report Card</h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
+                    <p>Athlete: Danielle Williams</p>
                 </div>
                 <div className="button-group no-print">
                     <p className="filter-heading">Select Filter:</p>
