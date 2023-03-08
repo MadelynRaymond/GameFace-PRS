@@ -120,8 +120,8 @@
     margin-left: 1rem;
   }
   .navbar .nav-links {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    align-content: center;
     text-align: center;
     position: static;
     width: auto;
@@ -129,6 +129,7 @@
   .navbar .nav-links > * {
     display: inline-block;
     padding: 1rem 0.5rem;
+    border-left: 4px solid black;
     font-size: 0.8rem;
     height: 100%;
   }

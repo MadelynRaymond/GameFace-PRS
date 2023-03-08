@@ -48,8 +48,8 @@ function Navbar() {
     return (
         <nav className="navbar no-print">
             <p className='nav-logo'>GameFace</p>
-            {open && <MobileLinks user={true}/>}
-            <NavLinks user={true}/>
+            {open && <MobileLinks user={user}/>}
+            <NavLinks user={user}/>
             <div className="hamburger" onClick={() => setOpen(!open)}>
                 <img width="50px" height="50px" src={Basketball} alt="" />
             </div>
