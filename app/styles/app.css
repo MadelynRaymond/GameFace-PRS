@@ -71,7 +71,7 @@
 
 /*NAVBAR */
 .navbar {
-  display: flex;
+  display: none;
   justify-content: space-between;
   padding-left: 1rem;
   text-align: start;
@@ -79,10 +79,15 @@
   background-color: rgb(255, 255, 255);
   color: black;
   border: 4px solid black;
-  margin: 2rem 6rem;
   border-radius: 8px;
   border-bottom: 8px solid black;
   min-height: 5rem;
+  margin: 2rem 4rem;
+}
+@media (min-width: 992px) {
+  .navbar {
+    display: flex;
+  }
 }
 
 .menu-text {
@@ -177,18 +182,30 @@
   }
 }
 /*Stats page */
-.stats-menu__items {
+.stats-menu {
+  margin: 0 1rem;
+  border-bottom: 4px solid black;
+  margin-bottom: 0;
+}
+@media (min-width: 992px) {
+  .stats-menu {
+    margin: 0 4rem;
+  }
+}
+.stats-menu .stats-menu__items {
   display: flex;
-  gap: 2rem;
   padding: 1rem 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
   color: rgb(102, 102, 102);
   font-weight: 500;
 }
-
-.stats-menu {
-  border-bottom: 4px solid black;
-  margin: 2rem 4rem;
-  margin-bottom: 0;
+@media (min-width: 992px) {
+  .stats-menu .stats-menu__items {
+    justify-content: start;
+    gap: 2rem;
+  }
 }
 
 .stats-menu__athlete-name {
@@ -210,30 +227,54 @@
 .stat-grid {
   margin: 0 auto;
   max-width: 1800px;
-  justify-content: center;
-  align-content: center;
-  padding: 0 2rem;
+  padding: 0 1rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(400px, 900px));
-  grid-template-rows: repeat(2, minmax(350px, 375px));
+  gap: 3rem;
+  overflow: hidden;
+}
+.stat-grid .graph-container {
+  min-height: 350px;
+  max-height: 500px;
+  border: 4px solid black;
+  border-bottom: 8px solid black;
+  padding-top: 0.5rem;
+  background-color: white;
+}
+@media (min-width: 992px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .stat-box-group {
-  margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1rem;
+  align-content: center;
+}
+@media (min-width: 992px) {
+  .stat-box-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1450px) {
+  .stat-box-group {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .stat-box {
   min-width: 200px;
-  max-height: 250px;
+  min-height: 250px;
   padding: 1rem;
   border: 4px solid black;
   border-bottom: 8px solid black;
   border-radius: 8px;
   background-color: white;
+}
+@media (min-width: 1450px) {
+  .stat-box {
+    min-height: 275px;
+  }
 }
 
 .stat-box__title {
@@ -306,24 +347,33 @@
 /*Dashboard pages*/
 .overall-stat-table {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: flex-end;
   gap: 1rem;
-  margin: 2rem 4rem;
+  margin: 0 1rem;
 }
-
-.stat-row {
+.overall-stat-table .stat-row {
   height: 100%;
   border-radius: 0.5rem;
   padding: 1.25rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   font-weight: bold;
   align-items: center;
   align-content: center;
   border: 4px solid black;
   border-bottom: 10px solid black;
   background-color: white;
+}
+@media (min-width: 992px) {
+  .overall-stat-table {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .overall-stat-table .stat-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1200px) {
+  .overall-stat-table {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .dots {
@@ -413,20 +463,25 @@
   justify-content: center;
 }
 .report-card-header .report-card-title {
-  font-size: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
   font-family: "Press Start 2P", cursive;
-}
-.report-card-header .report-card-title > * {
-  text-align: center;
 }
 .report-card-header .report-card-title p {
   color: gray;
   font-family: "Montserrat", sans-serif;
+  margin-bottom: 1rem;
 }
 @media (min-width: 992px) {
   .report-card-header {
     flex-direction: row;
     justify-content: space-between;
+  }
+  .report-card-header h2 {
+    font-size: 1.5rem;
+  }
+  .report-card-header p {
+    font-size: 1rem;
   }
 }
 
@@ -435,8 +490,14 @@
 }
 
 .button-group { /* All dashboard buttons (filters, print, and export) */
-  display: flex;
+  display: none;
   gap: 2rem;
+  margin-right: 1rem;
+}
+@media (min-width: 992px) {
+  .button-group {
+    display: flex;
+  }
 }
 
 .export-button-group { /* Print and export grouping */
@@ -505,28 +566,41 @@
 
 .overall-graph-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 350px;
-  padding: 4rem;
-  padding-top: 0.5rem;
-  gap: 4rem;
+  margin: 1rem;
+  gap: 2rem;
 }
-
-.graph-container {
-  border: 4px solid black;
-  border-bottom: 8px solid black;
-  padding-top: 0.5rem;
-  margin: 0.75rem 2rem;
-  background-color: white;
+.overall-graph-container > * {
+  min-height: 400px;
+}
+@media (min-width: 992px) {
+  .overall-graph-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1450px) {
+  .overall-graph-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /*STAFF ATHLETE TABLE */
+.athlete-table-container {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.athlete-table-container > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.athlete-table-container input {
+  width: 500px;
+}
+
 .athlete-table {
   text-align: center;
   border-collapse: collapse;
   width: 100%;
-  max-width: 1500px;
-  margin: 25px auto;
   font-size: 0.9em;
   font-family: sans-serif;
   min-width: 400px;
@@ -558,6 +632,8 @@
   display: flex;
   max-width: 1350px;
   margin: 0 auto;
+  max-height: 1000px;
+  overflow-y: auto;
 }
 
 .athlete-reports {
@@ -621,20 +697,31 @@
 }
 
 .registration-form {
-  margin: 2rem 30rem;
-  padding: 2rem 4rem;
+  max-width: 1000px;
+  padding: 2rem;
+  margin: 0 auto;
   border: 4px solid black;
   border-bottom: 8px solid black;
 }
-
-.registration-form-row {
+.registration-form .registration-form-header {
   display: flex;
-  gap: 1rem;
   justify-content: space-between;
+  flex-grow: 0.01;
+  padding-bottom: 1rem;
 }
-
-.registration-form-row > div {
+.registration-form .registration-form-header img {
+  object-fit: contain;
+  max-width: 125px;
+}
+.registration-form .registration-form-row > div {
   flex: 1;
+}
+@media (min-width: 767px) {
+  .registration-form .registration-form-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
 }
 
 .register-link {
@@ -691,18 +778,6 @@
   transform: translate(1px, 1px);
 }
 
-.registration-form-header {
-  display: flex;
-  justify-content: space-between;
-  flex-grow: 0.01;
-  padding-bottom: 1rem;
-}
-
-.registration-form-header img {
-  object-fit: contain;
-  max-width: 125px;
-}
-
 .registration-form-header h2 {
   align-self: flex-end;
 }
@@ -727,10 +802,13 @@
   border: 4px solid black;
   border-bottom: 8px solid black;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: space-between;
   gap: 4rem;
   font-family: "Press Start 2P", cursive;
+}
+@media (min-width: 992px) {
+  .profile-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .profile-container h3 {
@@ -744,17 +822,19 @@
 }
 
 .profile-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   min-height: 8rem;
   background-color: #DF7861;
   border: 4px solid black;
   border-bottom: none;
-  display: flex;
-  justify-content: space-between;
   font-family: "Press Start 2P", cursive;
   font-size: 0.75rem;
+}
+@media (min-width: 992px) {
+  .profile-banner > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .profile-banner button {
@@ -792,13 +872,14 @@
   }
   .overall-stat-table {
     grid-template-columns: repeat(2, 1fr);
+    page-break-after: always;
   }
   .stat-row {
-    padding: 1rem;
+    padding: 0.5rem;
     gap: 0.5rem;
   }
   .overall-graph-container {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
   button {
     visibility: hidden !important;

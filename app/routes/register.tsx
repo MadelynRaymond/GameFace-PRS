@@ -5,12 +5,13 @@ import { Form, Link, useActionData } from '@remix-run/react'
 import { createUser, getUserByEmail } from '~/models/user.server'
 import { z } from 'zod'
 
+const phoneRegex = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
 const RegisterSchema = z.object({
     username: z.string().min(5, 'Username must be at least 5 characters').max(15, 'Username must be at most 15 characters'),
     email: z.string().email('Email must be a valid email'),
     password: z.string().min(8, 'Password must be at least 8 characters').max(16, 'Password must be less than 16 characters'),
     firstName: z.string().min(2, 'First name must be at least 2 characters').max(25, 'First name must be less than 25 characters'),
-    lastName: z.string().min(2, 'Last name must be at least 2 characters').max(25, 'Last name must be less than 25 characters'),
+    lastName: z.string().min(2, 'Last name must be at least 2 characters').max(30, 'Last name must be less than 30 characters'),
     grade: z.enum(['6', '7', '8', '9', '10', '11', '12'], { errorMap: () => ({ message: 'Grade must be between 6 and 12' }) }),
     age: z
         .number()
@@ -18,6 +19,8 @@ const RegisterSchema = z.object({
         .max(18)
         .transform((val) => val.toString()),
     school: z.string().min(1, 'School is required'),
+    guardianName: z.string().min(3, "Guardian name must be at least 3 characters").max(25, "Guardian name must be less than 25 characters"),
+    guardianPhone: z.string().regex(new RegExp(phoneRegex))
 })
 type RegisterFields = z.infer<typeof RegisterSchema>
 type RegisterErrors = z.inferFlattenedErrors<typeof RegisterSchema>
@@ -115,6 +118,20 @@ export default function Register() {
                     <label>School</label>
                     <input type="text" placeholder="First Coast High School" name="school"></input>
                     {actionData?.errors?.fieldErrors.school && <span className="error-text">{actionData.errors.fieldErrors.school[0]}</span>}
+
+                    <div className="registration-form-row">
+                            <div>
+                                <label htmlFor="Guardian Name">Guardian Name</label>
+                                <input type="text" name="guardianName" id="guardian-name" />
+                                {actionData?.errors?.fieldErrors.guardianName && <span className="error-text">{actionData.errors.fieldErrors.guardianName[0]}</span>}
+                            </div>
+
+                            <div>
+                                <label htmlFor="Guardian Phone">Guardian Phone</label>
+                                <input type="text" name="guardianPhone" id="guardian-phone" />
+                                {actionData?.errors?.fieldErrors.guardianPhone && <span className="error-text">{actionData.errors.fieldErrors.guardianPhone[0]}</span>}
+                            </div>
+                    </div>
 
                     <div className="register-btn">
                         <button style={{ cursor: 'pointer' }} type="submit" className="register-btn">

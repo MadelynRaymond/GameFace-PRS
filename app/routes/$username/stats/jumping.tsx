@@ -7,6 +7,7 @@ import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 const JumpDistanceEntrySchema = z
     .object({
@@ -27,7 +28,7 @@ const JumpHeightEntrySchema = z
     .transform((data) => data.map((s) => ({ height: s.value, created_at: s.created_at })))
 
 export async function loader({ request }: LoaderArgs) {
-    const { username, id } = await requireUser(request)
+    const { id, ...athleteInfo } = await requireUser(request)
     const userId = id
 
     const url = new URL(request.url)
@@ -61,14 +62,15 @@ export async function loader({ request }: LoaderArgs) {
             jumpHeightAverage,
             jumpHeightBest,
             lastSevenSessions,
-            username,
+            athleteInfo
         })
     } catch (error) {
         throw new Response('Internal server error', { status: 500 })
     }
 }
 export default function Jumping() {
-    const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, username, lastSevenSessions } = useLoaderData<typeof loader>()
+    const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, lastSevenSessions, athleteInfo } = useLoaderData<typeof loader>()
+    const {username, profile} = athleteInfo
    
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -101,27 +103,8 @@ export default function Jumping() {
     let strokeWidth = 4
 
     return (
-        <div>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Jumping Statistics </h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
-                            Month
-                        </button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
-                            Year
-                        </button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">
-                            Lifetime
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div className='stats-summary'>
+            <ReportCardHeader header={'Jumping Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent">
@@ -148,7 +131,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Jump Height</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={filter?.data?.jumpHeightEntries || jumpHeightEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created_at" />
@@ -161,7 +144,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Jump Distance</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart width={500} height={300} data={filter?.data?.jumpDistanceEntries || jumpDistanceEntries}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="created_at" />
@@ -174,7 +157,7 @@ export default function Jumping() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Jump Distance</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}

@@ -55,11 +55,13 @@ export async function action({ request }: ActionArgs) {
         )
     }
 
+    const redirectTo = user.role === 'STAFF' ? '/staff/athletes' : `/${user.username}/stats`
+
     return createUserSession({
         request,
         userId: user.id,
         remember: true,
-        redirectTo: `/${user.username}/stats`,
+        redirectTo,
     })
 }
 

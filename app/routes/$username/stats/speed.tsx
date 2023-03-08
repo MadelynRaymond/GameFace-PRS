@@ -1,12 +1,14 @@
-import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Line, LineChart } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUser } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
-import { getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
+import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useEffect, useReducer } from 'react'
 import { z } from 'zod'
+import invariant from 'tiny-invariant'
+import ReportCardHeader from '~/components/ReportCardHeader'
 
 const SpeedEntrySchema = z
     .object({
@@ -19,7 +21,7 @@ const SpeedEntrySchema = z
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
-    const { username, id } = user
+    const { id, ...athleteInfo } = user
     const userId = id
 
     //fetch time interval from url
@@ -51,18 +53,18 @@ export async function loader({ request }: LoaderArgs) {
             SpeedEntrySchema.parseAsync(speedSessionData),
         ])
 
-        //idk what this is
-        const dbAverageTimeMonth = await getEntriesAverage({ drillName: 'Speed Drill', userId, interval })
-        const dbBestTimeMonth = await getEntriesMin({ drillName: 'Speed Drill', userId, interval })
+        const speedAggregations = await getEntriesAggregate({drillName: "Speed Drill", userId, interval})
 
-        //idk what this is either
-        const averageTimeMonth = dbTimeToString(dbAverageTimeMonth._avg.value)
-        const bestTimeMonth = dbTimeToString(dbBestTimeMonth._min.bestScore)
+        const [averageSpeedRaw, bestSpeedRaw] = [speedAggregations.average, speedAggregations.min]
 
-        //last entry for the speed drill
-        const lastSessionSpeedDrill = lastSevenSessions[0].time
 
-        return json({ averageTimeMonth, bestTimeMonth, lastSevenSessions, lastSessionAverage: lastSessionSpeedDrill, speedEntries, username })
+
+        const [averageSpeed, bestSpeed] = [dbTimeToString(averageSpeedRaw), dbTimeToString(bestSpeedRaw)]
+        const lastSessionSpeed = dbTimeToString(speedEntries[0].time)
+        const lastSevenSessionsWithBest = lastSevenSessions.map(x => ({...x, best: bestSpeedRaw}))
+        const averageSpeedWithOverallAverage = speedEntries.map(x => ({...x, average: averageSpeedRaw}))
+
+        return json({ averageSpeed, lastSessionSpeed, lastSevenSessionsWithBest, bestSpeed, speedEntries, athleteInfo, averageSpeedWithOverallAverage })
 
     } catch (error) {
         throw new Response('Internal server error', { status: 500 })
@@ -70,7 +72,8 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Speed() {
-    const { averageTimeMonth, bestTimeMonth, lastSevenSessions, lastSessionAverage, username, speedEntries } = useLoaderData<typeof loader>()
+    const { lastSessionSpeed, averageSpeed, bestSpeed, lastSevenSessionsWithBest, athleteInfo, speedEntries, averageSpeedWithOverallAverage } = useLoaderData<typeof loader>()
+    const {profile, username} = athleteInfo
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -104,45 +107,28 @@ export default function Speed() {
 
 
     return (
-        <div>
-            <div className="report-card-header">
-                <div className="report-card-title">
-                    <h2>Speed Statistics </h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
-                </div>
-                <div className="button-group">
-                    <p className="filter-heading">Select Filter:</p>
-                    <div className="filter-button-group">
-                        <button onClick={() => dispatch({type: 'update', payload: 30})} className="filter-button month">
-                            Month
-                        </button>
-                        <button onClick={() => dispatch({type: 'update', payload: 365})} className="filter-button year">
-                            Year
-                        </button>
-                        <button onClick={() => dispatch({type: 'update'})} className="filter-button lifetime">Lifetime</button>
-                    </div>
-                </div>
-            </div>
+        <div className='stats-summary'>
+            <ReportCardHeader header={'Strength Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
                 <div className="stat-box-group">
                     <div className="stat-box accent-2">
                         <p className="stat-box__title">Overall (Avg time)</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.averageTimeMonth || averageTimeMonth}s</p>
+                            <p className="stat-box__figure">{filter?.data?.averageSpeed || averageSpeed}s</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box crosses">
                         <p className="stat-box__title">Best Speed</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{bestTimeMonth}s</p>
+                            <p className="stat-box__figure">{filter?.data?.bestSpeed || bestSpeed}s</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box accent">
                         <p className="stat-box__title">Last Session Avg. Speed</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{lastSessionAverage}s</p>
+                            <p className="stat-box__figure">{filter?.data?.lastSessionSpeed || lastSessionSpeed}s</p>
 
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
@@ -150,7 +136,7 @@ export default function Speed() {
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>{state.text}: Speed Drill</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
                             width={730}
                             height={250}
@@ -169,7 +155,7 @@ export default function Speed() {
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="created_at" />
-                            <YAxis />
+                            <YAxis/>
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
@@ -178,12 +164,12 @@ export default function Speed() {
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
-                    <p>Lifetime Overview: Best Speed per Session</p>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart
+                    <p>{state.text}: Speed vs. Average Speed</p>
+                    <ResponsiveContainer width="99%" height="99%">
+                        <LineChart
                             width={730}
                             height={250}
-                            data={filter?.data?.speedEntries || speedEntries}
+                            data={filter?.data?.averageSpeedWithOverallAverage || averageSpeedWithOverallAverage}
                             margin={{
                                 top: 10,
                                 right: 30,
@@ -202,17 +188,18 @@ export default function Speed() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Legend />
-                            <Area type="monotone" dataKey="time" stroke={black} strokeWidth={strokeWidth}  fillOpacity={1} fill="url(#colorUv2)" />
-                        </AreaChart>
+                            <Line dataKey="time" stroke={orange} strokeWidth={strokeWidth} />
+                            <Line dataKey="average" stroke={orange} strokeWidth={strokeWidth} />
+                        </LineChart>
                     </ResponsiveContainer>
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Avg. vs. Best Speed</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <BarChart
                             width={500}
                             height={300}
-                            data={lastSevenSessions}
+                            data={filter.data?.lastSevenSessionsWithBest || lastSevenSessionsWithBest }
                             margin={{
                                 top: 5,
                                 right: 30,
@@ -225,7 +212,7 @@ export default function Speed() {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="time" fill={orange} stroke={black} strokeWidth={strokeWidth} />
+                            <Bar dataKey="best" fill={orange} stroke={black} strokeWidth={strokeWidth} />
                             <Bar dataKey="time" fill={orangeAccent} stroke={black} strokeWidth={strokeWidth} />
                         </BarChart>
                     </ResponsiveContainer>

@@ -15,7 +15,7 @@ let strokeWidth = 4
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
-    const { username, id } = user
+    const { id, ...athleteInfo } = user
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null
@@ -40,7 +40,7 @@ export async function loader({ request }: LoaderArgs) {
     const jumpingAggregations = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId: id, interval })
 
     return json({
-        username,
+        athleteInfo,
         speedAggregations,
         dribblingAggregations,
         squatAggregations,
@@ -62,7 +62,7 @@ export default function Overall() {
         shootingAggregations,
         passingAggregations,
         jumpingAggregations,
-        username,
+        athleteInfo,
     } = useLoaderData<typeof loader>()
 
     const filter = useFetcher<typeof loader>()
@@ -131,12 +131,14 @@ export default function Overall() {
         { label: 'Best Jump Height', key: 'bestJumpHeight' },
     ]
 
+    const {profile, username} = athleteInfo
+
     return (
-        <div>
+        <div className='stats-summary'>
             <div className="report-card-header">
                 <div className="report-card-title">
                     <h2>Training Report Card</h2>
-                    <p>Athlete: Danielle Williams (Year Overview)</p>
+                    <p>Athlete: {profile?.firstName} {profile?.lastName}</p>
                 </div>
                 <div className="button-group no-print">
                     <p className="filter-heading">Select Filter:</p>
@@ -254,7 +256,7 @@ export default function Overall() {
             <div className="overall-graph-container">
                 <div className="report-card-graph">
                     <p>Shots Made Over Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <LineChart
                             width={730}
                             height={250}
@@ -283,7 +285,7 @@ export default function Overall() {
                 </div>
                 <div className="report-card-graph">
                     <p>Shots Made vs Attempted</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <PieChart width={800} height={400}>
                             <Pie
                                 data={lifetimePie}
@@ -303,7 +305,7 @@ export default function Overall() {
                 </div>
                 <div className="report-card-graph">
                     <p>Successful Pass Rate Over Time</p>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="99%" height="99%">
                         <LineChart
                             width={730}
                             height={250}

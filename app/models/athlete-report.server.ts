@@ -1,4 +1,4 @@
-import { DrillEntry, Prisma, PrismaPromise } from '@prisma/client'
+import { DrillEntry, Prisma } from '@prisma/client'
 import { prisma } from '~/db.server'
 import { Entry } from '~/routes/staff/athletes/$athleteId'
 

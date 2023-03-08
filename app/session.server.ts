@@ -55,6 +55,13 @@ export async function requireUser(request: Request) {
     throw await logout(request)
 }
 
+export async function requireStaff(request: Request) {
+    const user = await requireUser(request)
+    const isStaff = user.role === 'STAFF'
+    if (!isStaff) throw redirect('/')
+
+}
+
 export async function createUserSession({
     request,
     userId,

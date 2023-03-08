@@ -16,7 +16,7 @@
         "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
     },
     "dependencies": {
-        "@prisma/client": "^4.7.0",
+        "@prisma/client": "^4.11.0",
         "@remix-run/node": "^1.8.0",
         "@remix-run/react": "^1.8.0",
         "@remix-run/serve": "^1.8.0",
