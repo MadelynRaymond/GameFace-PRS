@@ -122,7 +122,7 @@ export default function Jumping() {
                         </div>
                     </div>
                     <div className="stat-box accent">
-                        <p className="stat-box__title">Avg. Jump (Height)</p>
+                        <p className="stat-box__title">Avg. Jump (Distance)</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
