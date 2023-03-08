@@ -106,19 +106,6 @@ export default function Shooting() {
         },
     ]
 
-    const percentPie = [
-        {
-            name: 'Shots Attempted as % (last 30 days)',
-            value: 100 - (filter?.data?.successPercentage || successPercentage),
-            fill: orange,
-        },
-        {
-            name: 'Shots Scored as % (last 30 days)',
-            value: filter?.data?.successPercentage || successPercentage,
-            fill: orangeAccent,
-        },
-    ]
-
     return (
         <div className='stats-summary'>
             <div className="report-card-header">
@@ -176,16 +163,7 @@ export default function Shooting() {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="flex flex-col align-center gap-1 h-full w-full">
-                        <p>Lifetime Overview: Shots Landed/Attempted</p>
-                        <ResponsiveContainer width="99%" height="99%">
-                            <PieChart width={800} height={400}>
-                                <Pie data={percentPie} innerRadius={75} outerRadius={125} fill="#8884d8" paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
-                                <Tooltip />
-                                <Legend verticalAlign="bottom" align="center" />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+          
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Shots Landed vs. Attempted</p>

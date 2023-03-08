@@ -92,32 +92,16 @@ export default function Shooting() {
 
     const lifetimePie = [
         {
-            name: 'Passes Attempted (lifetime)',
+            name: 'Passes Attempted',
             value: filter?.data?.passesAttempted || passesAttempted,
             fill: orange,
         },
         {
-            name: 'Passes Made (lifetime)',
+            name: 'Passes Made',
             value: filter?.data?.passesMade || passesMade,
             fill: orangeAccent,
         },
     ]
-
-    const lastMonthPie = [
-        {
-            name: 'Passes Attempted (last 30 days)',
-            value: filter?.data?.passesAttempted || passesAttempted,
-            fill: orange,
-        },
-        {
-            name: 'Passes Made (last 30 days)',
-            value: filter?.data?.passesMade || passesMade,
-            fill: orangeAccent,
-        },
-    ]
-
-    
-
 
     return (
         <div className='stats-summary'>
@@ -176,16 +160,7 @@ export default function Shooting() {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="flex flex-col align-center gap-1 h-full w-full">
-                        <p>Lifetime: Missed vs. Landed</p>
-                        <ResponsiveContainer width="99%" height="99%">
-                            <PieChart width={800} height={400}>
-                                <Pie data={lastMonthPie} innerRadius={75} outerRadius={125} fill={orange} paddingAngle={0} dataKey="value" stroke={black} strokeWidth={strokeWidth}></Pie>
-                                <Tooltip />
-                                <Legend verticalAlign="bottom" align="center" />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+
                 </div>
                 <div className="flex flex-col align-center gap-1 graph-container">
                     <p>Last Seven Sessions: Pass Success Rate</p>
