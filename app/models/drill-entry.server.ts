@@ -67,7 +67,7 @@ export async function getEntriesByDrillLiteral({
     userId: User['id']
     interval?: Date
 }) {
-    return prisma.drillEntry.findMany({
+    const entries = await prisma.drillEntry.findMany({
         select: {
             value: true,
             outOf: true,
@@ -84,7 +84,11 @@ export async function getEntriesByDrillLiteral({
                 gte: interval
             }
         },
+        orderBy: {
+            created_at: 'asc'
+        }
     })
+    return entries
 }
 
 export async function getEntriesAverage({ drillName, userId, interval }: { drillName: Drill['name']; userId: User['id']; interval?: Date }) {

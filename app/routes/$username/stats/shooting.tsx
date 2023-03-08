@@ -98,12 +98,12 @@ export default function Shooting() {
     const lifetimePie = [
         {
             name: 'Shots Attempted',
-            value: attempted,
+            value: filter?.data?.attempted || attempted,
             fill: orange,
         },
         {
             name: 'Shots Scored',
-            value: scored,
+            value: filter?.data?.scored || scored,
             fill: orangeAccent,
         },
     ]
