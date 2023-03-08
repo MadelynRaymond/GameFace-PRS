@@ -73,29 +73,79 @@
 
 /*NAVBAR */
 .navbar {
-  display: none;
-  justify-content: space-between;
-  padding-left: 1rem;
-  text-align: start;
-  font-size: 1rem;
-  background-color: rgb(255, 255, 255);
   color: black;
-  border: 4px solid black;
-  border-radius: 8px;
-  border-bottom: 8px solid black;
-  min-height: 5rem;
-  margin: 2rem 4rem;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  font-family: 'Press Start 2P', cursive;
+  position: relative;
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
+  background-color: #ffffff;
+  min-height: 4rem;
+
+  .nav-logo, .nav-links {
+    display: none;
+  }
+
+  .nav-links-mobile {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    > * {
+      display: flex;
+      height: 4rem;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+  }
+
 
   @include responsive('md') {
-    display: flex;
+    flex-direction: row;
+    padding: 0;
+    justify-content: space-between;
+    margin: 2rem 4rem;
+    border: 4px solid black;
+    border-bottom: 8px solid black;
+    border-radius: 8px;
+
+    .hamburger, .nav-links-mobile {
+      display: none;
+    }
+
+    .nav-logo {
+      display: block;
+      align-self: center;
+      margin-left: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-content: center;
+      text-align: center;
+      position: static;
+      width: auto;
+
+      > * {
+        display: inline-block;
+        padding: 1rem 0.5rem;
+        border-left: 4px solid black;
+        font-size: 0.8rem;
+        height: 100%;
+      }
+    }
   }
 }
 
 .menu-text{
   margin-top: 1.25rem;
-}
-.navbar > div, .navbar > div ul {
-  display: flex;
 }
 .navbar ul {
   margin: 0;
@@ -105,9 +155,7 @@
   text-decoration: none;
   list-style: none;
 }
-.nav-logo{
-  padding-top: 1.25rem;
-}
+
 
 .welcome-back-txt{
   font-family: 'Press Start 2P', cursive;
@@ -123,12 +171,6 @@
   margin: 0.5rem 1rem;
 }
 
-.left-nav-container > *{
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.75rem;
-  border-left: 4px solid black;
-  padding: 0.5rem 0.75rem;
-}
 
 
 .nav-logo{
