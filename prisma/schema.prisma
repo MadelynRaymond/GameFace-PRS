@@ -35,6 +35,8 @@ model StudentProfile {
   lastName String
   school String
   age String
+  guardianName String?
+  guardianPhone String?
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId Int  @unique
 }
