@@ -2,7 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { requireUser } from '~/session.server'
-import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
+import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMax } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
@@ -52,6 +52,8 @@ export async function loader({ request }: LoaderArgs) {
         ])
         const jumpHeightAggregate = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId, interval })
         const [jumpHeightAverage, jumpHeightBest] = [jumpHeightAggregate.average, jumpHeightAggregate.max]
+        const longestJump = await (await getEntriesAggregate({drillName: "Jump Distance Drill", userId, interval})).max ?? 0
+
         const lastSevenSessions = await JumpDistanceEntrySchema.parseAsync(
             await getEntriesLastNReports({ drillName: 'Jump Distance Drill', userId, sessions: 7 })
         )
@@ -62,14 +64,15 @@ export async function loader({ request }: LoaderArgs) {
             jumpHeightAverage,
             jumpHeightBest,
             lastSevenSessions,
-            athleteInfo
+            athleteInfo,
+            longestJump
         })
     } catch (error) {
         throw new Response('Internal server error', { status: 500 })
     }
 }
 export default function Jumping() {
-    const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, lastSevenSessions, athleteInfo } = useLoaderData<typeof loader>()
+    const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, lastSevenSessions, athleteInfo, longestJump } = useLoaderData<typeof loader>()
     const {username, profile} = athleteInfo
    
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
@@ -122,9 +125,9 @@ export default function Jumping() {
                         </div>
                     </div>
                     <div className="stat-box accent">
-                        <p className="stat-box__title">Avg. Jump (Distance)</p>
+                        <p className="stat-box__title">Overall Longest Jump</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.jumpHeightAverage?.toFixed(1) || jumpHeightAverage?.toFixed(1)}ft</p>
+                            <p className="stat-box__figure">{filter?.data?.longestJump?.toFixed(1) || longestJump?.toFixed(1)}ft</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
