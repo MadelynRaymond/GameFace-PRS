@@ -1,5 +1,5 @@
 import { ActionArgs, LoaderArgs, json, redirect } from '@remix-run/node'
-import { Form, useActionData, useLoaderData, useTransition } from '@remix-run/react'
+import { Form, Link, useActionData, useLoaderData, useTransition } from '@remix-run/react'
 import { ZodError, z } from 'zod'
 import { changePassword } from '~/models/user.server'
 import { logout, requireUser, requireUserId } from '~/session.server'
@@ -57,10 +57,15 @@ export default function ChangePassword() {
                 <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" />
                 {actionData?.errors?.fieldErrors.confirmPassword && <span className="error-text">{actionData.errors.fieldErrors.confirmPassword[0]}</span>}
                 <input type="hidden" name="user-id" value={userId} />
-                <div>
+                <div className="flex gap-3">
                     <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Change password" />
                     {actionData?.errors?.formErrors && <span className="error-text">{actionData.errors.formErrors[0]}</span>}
+                    <input type="hidden" name="id" value={userId} />
+                    <Link style={{ color: 'white' }} className="btn" to={`/${userId}/profile`}>
+                        Cancel
+                    </Link>
                 </div>
+
             </Form>
         </div>
     )
