@@ -130,7 +130,7 @@ export default function Shooting() {
                     <div className="stat-box dots">
                         <p className="stat-box__title">Success Rate</p>
                         <div className="stat-box__data">
-                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}</p>
+                            <p className="stat-box__figure">{filter?.data?.successPercentage || successPercentage || 'No data'}%</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
