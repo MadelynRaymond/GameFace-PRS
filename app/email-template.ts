@@ -28,11 +28,7 @@ width="100%">
                         line-height: 27px;
                         padding: 55px 12.5% 40px 12.5%;
                       ">
-<<<<<<< HEAD
                       Hi <span style="color: #333; text-decoration: none;"> ${recipient},</span><br/>
-=======
-                      Hi <span style="color: #333; text-decoration: none;"> ${recipient},</span><<br />
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
                       &nbsp;
                       <h1 style="
                           color: #df7861;
@@ -167,13 +163,7 @@ width="100%">
 </tbody>
 </table>
 </body>
-<<<<<<< HEAD
-</html>`
-    return htmlTemplate
-}
-=======
 </html>`;
 return htmlTemplate;
   }
   
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)

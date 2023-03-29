@@ -1,11 +1,7 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
-<<<<<<< HEAD
 import { passwordResetTemplate } from './email-template'
-=======
-import { passwordResetHtml } from './email-template'
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
 
 export async function sendEmail(
     email: {
@@ -32,10 +28,9 @@ export async function sendEmail(
             }
         })
 
-<<<<<<< HEAD
-const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
-=======
+const passwordResetEmail= await passwordResetTemplate(recipient, email.body);
+
 
         const email_template_html = `
         <body>
@@ -215,6 +210,8 @@ const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body
   </table>
 
 </body>`
+=======
+>>>>>>> 580dced (Removed Old Template Design)
 const passwordResetEmailHtml = await passwordResetHtml(recipient, email.body);
 
 >>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
