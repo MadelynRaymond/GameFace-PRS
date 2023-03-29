@@ -1,4 +1,4 @@
-export async function passwordResetHtml(recipient: string, resetLink: string): Promise<string> {
+export async function passwordResetTemplate(recipient: string, resetLink: string): Promise<string> {
     const htmlTemplate = `
     <html>
     <body>
@@ -61,7 +61,7 @@ width="100%">
                                   style="
                                     font-size: 18px;
                                     font-family: Arial, Helvetica,
-                                      sans-serif;
+                                    sans-serif;
                                     font-weight: bold;
                                     color: #ffffff;
                                     text-decoration: none;

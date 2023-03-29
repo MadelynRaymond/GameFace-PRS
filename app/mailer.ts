@@ -1,11 +1,15 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
+<<<<<<< HEAD
 import { passwordResetHtml } from './email-template'
 <<<<<<< HEAD
 >>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
 =======
 >>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
+=======
+import { passwordResetTemplate } from './email-template'
+>>>>>>> 25734c5 (Fixed formatting and name of function issues)
 
 export async function sendEmail(
     email: {
@@ -60,7 +64,7 @@ export async function sendEmail(
         })
 =======
 
-const passwordResetEmailHtml = await passwordResetHtml(recipient, email.body);
+const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
         transporter.sendMail({
             
