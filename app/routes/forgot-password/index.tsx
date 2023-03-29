@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, useActionData, useCatch, useTransition } from '@remix-run/react'
+import { Form, useActionData, useTransition } from '@remix-run/react'
 
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
@@ -38,6 +38,7 @@ export async function action({ request }: ActionArgs) {
     if (!token) {
         throw new Response('Unexpected Error Occured', { status: 500 })
     }
+
 
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/reset-password/link?id=${user.id}&token=${token.token}`
 
