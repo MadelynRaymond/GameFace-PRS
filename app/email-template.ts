@@ -1,5 +1,5 @@
-export async function passwordResetHtml(recipient: string,resetLink:string): Promise<string> {
-    const htmlTemplate= `
+export async function passwordResetHtml(recipient: string, resetLink: string): Promise<string> {
+    const htmlTemplate = `
     <html>
     <body>
 <table align="center" bgcolor="#e6e6e6" border="0" cellpadding="0" cellspacing="0" style="padding-top: 10px"
@@ -177,7 +177,6 @@ width="100%">
 </tbody>
 </table>
 </body>
-</html>`;
-return htmlTemplate;
-  }
-  
+</html>`
+    return htmlTemplate
+}
