@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
+import { passwordResetHtml } from './email-template'
+
 export async function sendEmail(
     email: {
         subject: string
@@ -9,6 +11,7 @@ export async function sendEmail(
     recipient: string
 ) {
     try {
+
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -24,6 +27,7 @@ export async function sendEmail(
                 console.log('Server is ready to take our messages')
             }
         })
+
 
         const email_template_html = `
         <body>
@@ -185,7 +189,6 @@ export async function sendEmail(
                               style="color: #0070c0; text-decoration: underline" target="_blank"
                               data-saferedirecturl="https://www.gameface413.org/?utm_source=BenchmarkEmail&utm_campaign=March_Newsletter_-_FINAL&utm_medium=email"><span
                                 class="il">GameFace</span>.com</a>
-                            |
                             <a href=""
                               style="color: #0070c0; text-decoration: underline" target="_blank"
                               data-saferedirecturl="">Privacy
@@ -203,18 +206,17 @@ export async function sendEmail(
     </tbody>
   </table>
 
-</body>
+</body>`
+const passwordResetEmailHtml = await passwordResetHtml(recipient, email.body);
 
-        `
-
-        await transporter.sendMail({
+        transporter.sendMail({
+            
             from: 'GameFace 413 <foo@gamefaceprs.com>',
             to: recipient,
             subject: email.subject,
-            text: email.body,
-            //This need to include flexbox from Scss and fix padding/margin/align content as well as email link not being in one line(embed)
-            html: email_template_html,
-        })
+            html: passwordResetEmailHtml,
+
+        });
     } catch (error: unknown) {
         if (error instanceof Error) {
             return error
