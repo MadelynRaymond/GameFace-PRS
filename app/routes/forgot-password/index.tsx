@@ -1,6 +1,7 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Form, useActionData, useTransition } from '@remix-run/react'
+
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 import { getUserByEmail } from '~/models/user.server'
@@ -38,13 +39,15 @@ export async function action({ request }: ActionArgs) {
         throw new Response('Unexpected Error Occured', { status: 500 })
     }
 
+
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/reset-password/link?id=${user.id}&token=${token.token}`
 
     await sendEmail(
         {
             subject: 'Reset Password',
             body: `<p>Please click the button below to reset your password:</p>
-                <a href="${resetLink}" style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:84px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
+                <a href="${resetLink}" 
+                style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:84px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
                   Reset Password
                 </a>`,
         },

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
-import { passwordResetHtml } from './email-template'
+import { passwordResetTemplate } from './email-template'
 
 export async function sendEmail(
     email: {
@@ -28,7 +28,7 @@ export async function sendEmail(
             }
         })
 
-const passwordResetEmailHtml = await passwordResetHtml(recipient, email.body);
+const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
         transporter.sendMail({
             
