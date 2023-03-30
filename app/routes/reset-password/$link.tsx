@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react'
 import jwtDecode from 'jwt-decode'
 import jwt from 'jsonwebtoken'
 import { changePassword } from '~/models/user.server'
@@ -19,14 +19,17 @@ export async function loader({ request }: LoaderArgs) {
     const token = url.searchParams.get('token')
     const userId = url.searchParams.get('id')
 
+
     if (!userId || !token) {
         throw new Response('Not Found', { status: 404 })
     }
 
+    //Checks if the token is expired
     if (!jwt.verify(token, 'SECRET')) {
         throw new Response('Not Authorized', { status: 400 })
     }
-
+    
+    //Verify a token symmetric - synchronous
     const decoded: Token = jwtDecode(token)
 
     if (decoded.data && decoded.data.userId === parseInt(userId)) {
@@ -59,6 +62,7 @@ export async function action({ request }: ActionArgs) {
         throw new Response('Not Authorized', { status: 400 })
     }
 
+
     await changePassword({ userId: parseInt(userId as string), password })
     return redirect('/login')
 }
@@ -82,7 +86,7 @@ export default function () {
                 <input type="hidden" name="user-id" value={userId} />
                 <input type="hidden" name="token" value={token.exp} />
                 <span className="error-text">{actionData?.errors?.confirmPassword}</span>
-                <button style={{ display: 'block' }} type="submit">
+                <button className ="btn" style={{ display: 'block' }} type="submit">
                     Change Password
                 </button>
             </Form>
