@@ -41,12 +41,14 @@ export async function action({ request }: ActionArgs) {
 
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/reset-password/link?id=${user.id}&token=${token.token}`
 
+    
+
     await sendEmail(
         {
             subject: 'Reset Password',
             body: `
-                <a href="${resetLink}" 
-                style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:24px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
+                <a  href="${resetLink}" 
+                style="background-color:#df7861; border:2px solid black; color:white; padding:1rem 1.5rem; margin:auto; margin-top:6px; display:block; width:183px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">
                   Reset Password
                 </a>`,
         },
@@ -83,13 +85,6 @@ export function CatchBoundary() {
         return (
             <div className="flex justify-center">
                 <h2>Email-Address-Error: No Account Exists With Email Address</h2>
-            </div>
-        )
-    }
-    if (caught.status === 500) {
-        return (
-            <div className="flex justify-center">
-                <h2>Password-Reset-Error: Link Expired</h2>
             </div>
         )
     }
