@@ -87,6 +87,16 @@ export function CatchBoundary() {
                 <h2>Email-Address-Error: No Account Exists With Email Address</h2>
             </div>
         )
+<<<<<<< HEAD
+=======
+    }
+    if (caught.status === 500) {
+        return (
+            <div className="flex justify-center">
+                <h2>Password-Reset-Error: Link Expired</h2>
+            </div>
+        )
+>>>>>>> d062a94 (Email Formatting Btn Fixed)
     }
 
     throw new Error(`Unexpected caught response with status: ${caught.status}`)
