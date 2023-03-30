@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, useActionData, useTransition } from '@remix-run/react'
+import { Form, useActionData, useCatch, useTransition } from '@remix-run/react'
 
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
@@ -39,7 +39,6 @@ export async function action({ request }: ActionArgs) {
         throw new Response('Unexpected Error Occured', { status: 500 })
     }
 
-
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/reset-password/link?id=${user.id}&token=${token.token}`
 
     await sendEmail(
@@ -75,4 +74,23 @@ export default function Index() {
             </Form>
         </div>
     )
+}
+export function CatchBoundary() {
+    const caught = useCatch()
+
+    if (caught.status === 404) {
+        return (
+            <div className="flex justify-center">
+                <h2>No account found with that email address</h2>
+            </div>
+        )
+    } else if (caught.status === 500) {
+        return (
+            <div className="flex justify-center">
+                <h2>Password reset link expired</h2>
+            </div>
+        )
+    }
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
 }
