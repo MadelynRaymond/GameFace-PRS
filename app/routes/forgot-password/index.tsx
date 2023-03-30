@@ -75,19 +75,20 @@ export default function Index() {
         </div>
     )
 }
+//The CatchBoundary component only handles errors that are thrown during rendering
 export function CatchBoundary() {
     const caught = useCatch()
 
     if (caught.status === 404) {
         return (
             <div className="flex justify-center">
-                <h2>No account found with that email address</h2>
+                <h2>Email-Address-Error: No Account Exists With Email Address</h2>
             </div>
         )
     } else if (caught.status === 500) {
         return (
             <div className="flex justify-center">
-                <h2>Password reset link expired</h2>
+                <h2>Password-Reset-Error: Link Expired</h2>
             </div>
         )
     }
