@@ -44,7 +44,7 @@ export async function action({ request }: ActionArgs) {
     await sendEmail(
         {
             subject: 'Reset Password',
-            body: `<p>Please click the button below to reset your password:</p>
+            body: `
                 <a href="${resetLink}" 
                 style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:84px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
                   Reset Password
