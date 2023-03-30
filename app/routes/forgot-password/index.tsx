@@ -62,7 +62,7 @@ export async function action({ request }: ActionArgs) {
             subject: 'Reset Password',
             body: `
                 <a href="${resetLink}" 
-                style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:84px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
+                style="background-color:#DF7861;border:2px solid black;color:white;padding:1rem 1.5rem;margin:auto;margin-top:24px;display:block;width:200px;font-family:'Montserrat',sans-serif!important;border-radius:50px;transition-duration:0.1s;transition-timing-function:ease-in;box-shadow:4px 4px 0 black;text-align:center;text-decoration:none;">
                   Reset Password
                 </a>`,
         },
@@ -103,7 +103,8 @@ export function CatchBoundary() {
                 <h2>Email-Address-Error: No Account Exists With Email Address</h2>
             </div>
         )
-    } else if (caught.status === 500) {
+    }
+    if (caught.status === 500) {
         return (
             <div className="flex justify-center">
                 <h2>Password-Reset-Error: Link Expired</h2>
