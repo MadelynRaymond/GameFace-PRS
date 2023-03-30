@@ -96,7 +96,6 @@ export function CatchBoundary() {
                 <h2>Password-Reset-Error: Link Expired</h2>
             </div>
         )
->>>>>>> d062a94 (Email Formatting Btn Fixed)
     }
 
     throw new Error(`Unexpected caught response with status: ${caught.status}`)
