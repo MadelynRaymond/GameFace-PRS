@@ -1,24 +1,51 @@
-import { User } from "@prisma/client";
-import { Form, Link } from "@remix-run/react";
+import type { User } from '@prisma/client'
+import { useSubmit } from '@remix-run/react'
+import { Form, Link } from '@remix-run/react'
+import { useDetectClickOutside } from 'react-detect-click-outside'
 
-export default function MobileLinks({user}: {user: Omit<User, 'createdAt' | 'updatedAt'> | null}) {
+export default function MobileLinks({
+    user,
+    close,
+    navigate,
+}: {
+    user: Omit<User, 'createdAt' | 'updatedAt'> | null
+    close: () => void
+    navigate: (url: string) => void
+}) {
+    const ref = useDetectClickOutside({ onTriggered: close })
+    const submit = useSubmit()
 
-  if (user) {
+    const handleLogout = () => {
+        close()
+        submit(null, { method: 'post', action: '/logout' })
+    }
+
+    if (user) {
+        return (
+            <ul ref={ref} className="nav-links-mobile">
+                <Link onClick={close} className="orange-background" to={''}>
+                    Main Site
+                </Link>
+                <Link onClick={close} className="purple-background" to={`/${user.username}/stats`}>
+                    My Stats
+                </Link>
+                <li className="logout-btn orange-background" onClick={handleLogout}>
+                    Logout
+                </li>
+                <Link onClick={close} className="red-background" to={`/${user.username}/profile`}>
+                    Profile
+                </Link>
+            </ul>
+        )
+    }
     return (
-      <ul className="nav-links-mobile">
-        <Link className="orange-background" to={''}>Main Site</Link>
-        <Link className="purple-background" to={`/${user.username}/stats`}>My Stats</Link>
-        <Form className="logout-btn orange-background" method="post" action="/logout">
-          <button style={{width: '100%', height: '100%'}} type="submit">Logout</button>
-        </Form>
-        <Link className="red-background"to={`/${user.username}/profile`}>Profile</Link>
-      </ul>
+        <ul ref={ref} className="nav-links-mobile">
+            <Link onClick={close} className="orange-background" to={'/login'}>
+                Login
+            </Link>
+            <Link style={{ backgroundColor: '#DF7861' }} to={'/register'}>
+                Register
+            </Link>
+        </ul>
     )
-  }
-  return (
-    <ul className='nav-links-mobile'>
-        <Link className="orange-background" to={'/login'}>Login</Link>
-        <Link style={{backgroundColor: '#DF7861'}} to={'/register'}>Register</Link>
-    </ul>
-  )
 }
