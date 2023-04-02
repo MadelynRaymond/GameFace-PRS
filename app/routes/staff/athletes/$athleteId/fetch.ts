@@ -3,7 +3,6 @@ import { json } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import { getAthleteReport } from "~/models/athlete-report.server";
-import { getEntriesOnReport } from "~/models/drill-entry.server";
 
 export async function action({request}: ActionArgs) {
   const formData = await request.formData()

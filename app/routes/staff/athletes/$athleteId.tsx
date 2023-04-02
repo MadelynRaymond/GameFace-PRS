@@ -16,8 +16,8 @@ import { requireStaff } from '~/session.server'
 
 const EntrySchema = z.object({
     unit: z.string(),
-    value: z.coerce.number().gt(0),
-    outOf: z.optional(z.coerce.number().gt(0)),
+    value: z.coerce.number().gte(0),
+    outOf: z.optional(z.coerce.number().gte(0)),
     drillId: z.coerce.number(),
     userId: z.coerce.number(),
 })
@@ -153,7 +153,7 @@ export default function AthleteDetails() {
                         />
                     ))}
                     <button type="submit">Submit</button>
-                    <span className="error-text">{}</span>
+                    <span className="error-text">{actionData?.errors}</span>
                 </Form>
             </div>
         </div>
