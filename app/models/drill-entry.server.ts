@@ -34,26 +34,15 @@ export async function getEntriesLastNReports({ drillName, userId, sessions }: { 
             userId,
             drill: {
                 name: drillName
-            }
+            },
+            value: {
+                gt: 0
+            },
         },
         orderBy: {
             created_at: 'desc'
         },
         take: sessions
-    })
-}
-
-export async function getEntries({userId, drillName, interval = new Date()}: {userId: User['id'], drillName: Drill['name'], interval: Date}) {
-    return prisma.drillEntry.findMany({
-        where: {
-            userId,
-            drill: {
-                name: drillName
-            },
-            created_at: {
-                gte: interval
-            }
-        }
     })
 }
 
@@ -81,6 +70,9 @@ export async function getEntriesByDrillLiteral({
             },
             created_at: {
                 gte: interval
+            },
+            value: {
+                gt: 0
             }
         },
         orderBy: {
@@ -106,6 +98,9 @@ export async function getEntriesAverage({ drillName, userId, interval }: { drill
             created_at: {
                 gte: interval,
             },
+            value: {
+                gt: 0
+            }
         },
     })
 }
@@ -126,6 +121,9 @@ export async function getEntriesMax({ drillName, userId, interval }: { drillName
             created_at: {
                 gte: interval,
             },
+            value: {
+                gt: 0
+            }
         },
     })
 }
@@ -146,6 +144,9 @@ export async function getEntriesMin({ drillName, userId, interval }: { drillName
             created_at: {
                 gte: interval,
             },
+            value: {
+                gt: 0
+            }
         },
     })
 }
@@ -167,6 +168,9 @@ export async function getEntriesTotal({ drillName, userId, interval }: { drillNa
             created_at: {
                 gte: interval,
             },
+            value: {
+                gt: 0
+            }
         },
     })
 }
@@ -193,6 +197,9 @@ export async function getEntriesAggregate({ drillName, userId, interval }: { dri
             created_at: {
                 gte: interval,
             },
+            value: {
+                gt: 0
+            }
         },
     })
 

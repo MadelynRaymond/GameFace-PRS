@@ -243,6 +243,7 @@ function EntryField({
                     <input
                         ref={value}
                         type="number"
+                        step="any"
                         name={`entries[${index}][${valueOne}]`}
                         defaultValue={formMode === 'edit' ? valueDefault : undefined}
                         id=""
