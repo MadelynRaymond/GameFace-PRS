@@ -137,7 +137,7 @@ export default function AthleteDetails() {
                 </select>{' '}
                 <Form method="post" ref={formRef} action={state.mode === 'new' ? `/staff/athletes/${athlete.id}` : `${state.selectedReportId}`}>
                     <div>
-                        <input type="date" name="created_at" id="created_at" />
+                        <input defaultValue={reportQuery.data?.created_at} type="date" name="created_at" id="created_at" />
                     </div>
                     {drills.map((drill, i) => (
                         <EntryField

@@ -18,7 +18,7 @@ export async function action({ request, params }: ActionArgs) {
 
     if (!result.success) {
         if (result.error instanceof ZodError) {
-            return json({ errors: 'Please fill all required fields' })
+            return json({ errors: 'Please fix form errors' })
         }
     }
 
@@ -26,7 +26,9 @@ export async function action({ request, params }: ActionArgs) {
 
     const formData = result.data
 
-    await updateAthleteReport(reportId, formData.entries)
+    await updateAthleteReport(reportId, formData)
+
+    console.log('REACHED')
 
     return redirect('/staff/athletes')
 }
