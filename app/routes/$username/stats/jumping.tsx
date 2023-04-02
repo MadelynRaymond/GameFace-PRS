@@ -12,7 +12,7 @@ import ReportCardHeader from '~/components/ReportCardHeader'
 const JumpDistanceEntrySchema = z
     .object({
         created_at: z.coerce.string().transform((data) => toDateString(data)),
-        value: z.coerce.number(),
+        value: z.number(),
         outOf: z.nullable(z.number()),
     })
     .array()
@@ -50,7 +50,9 @@ export async function loader({ request }: LoaderArgs) {
             JumpHeightEntrySchema.parseAsync(jumpHeightData),
             JumpDistanceEntrySchema.parseAsync(jumpDistanceData),
         ])
+
         const jumpHeightAggregate = await getEntriesAggregate({ drillName: 'Jump Height Drill', userId, interval })
+        console.log(jumpHeightAggregate)
         const [jumpHeightAverage, jumpHeightBest] = [jumpHeightAggregate.average, jumpHeightAggregate.max]
         const longestJump = await (await getEntriesAggregate({drillName: "Jump Distance Drill", userId, interval})).max ?? 0
 

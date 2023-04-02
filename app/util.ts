@@ -26,8 +26,7 @@ export function dbTimeToString(dbTime: number | null): string {
 
 export function toDateString(dbDate: string): string {
   const dateObj = new Date(dbDate)
-
-  return `${dateObj.getMonth()}/${dateObj.getDate()}/${dateObj.getFullYear()}`
+  return dateObj.toLocaleDateString('en-US')
 }
 
 export function dateFromDaysOptional(days: number | null): Date | undefined {

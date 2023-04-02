@@ -5,7 +5,7 @@ import qs from 'qs'
 import invariant from 'tiny-invariant'
 import { ZodError } from 'zod'
 import { updateAthleteReport } from '~/models/athlete-report.server'
-import { EntriesSchema } from '../$athleteId'
+import { AthleteFormData } from '../$athleteId'
 
 export async function action({ request, params }: ActionArgs) {
     invariant(params.reportId, 'No athlete Id')
@@ -14,11 +14,11 @@ export async function action({ request, params }: ActionArgs) {
     const text = await request.text()
     const jsonData = qs.parse(text) as unknown
 
-    const result = await EntriesSchema.safeParseAsync(jsonData)
+    const result = await AthleteFormData.safeParseAsync(jsonData)
 
     if (!result.success) {
         if (result.error instanceof ZodError) {
-            return json({ errors: 'Please fill all required fields' })
+            return json({ errors: 'Please fix form errors' })
         }
     }
 
@@ -26,7 +26,9 @@ export async function action({ request, params }: ActionArgs) {
 
     const formData = result.data
 
-    await updateAthleteReport(reportId, formData.entries)
+    await updateAthleteReport(reportId, formData)
+
+    console.log('REACHED')
 
     return redirect('/staff/athletes')
 }

@@ -16,17 +16,19 @@ import { requireStaff } from '~/session.server'
 
 const EntrySchema = z.object({
     unit: z.string(),
-    value: z.coerce.number().gt(0),
-    outOf: z.optional(z.coerce.number().gt(0)),
+    value: z.coerce.number().gte(0),
+    outOf: z.optional(z.coerce.number().gte(0)),
     drillId: z.coerce.number(),
     userId: z.coerce.number(),
 })
 
-export const EntriesSchema = z.object({
+export const AthleteFormData = z.object({
+    created_at: z.string().transform(d => d === '' ? new Date() : d).pipe( z.coerce.date()),
     entries: z.array(EntrySchema),
 })
 
 export type Entry = z.infer<typeof EntrySchema>
+export type AthleteFormDataType = z.infer<typeof AthleteFormData>
 type FormActivity = { mode: 'edit' | 'new'; selectedReportId?: number }
 //type EntryErrors = z.inferFlattenedErrors<typeof EntrySchema>
 
@@ -56,19 +58,21 @@ export async function action({ request, params }: ActionArgs) {
     const text = await request.text()
     const jsonData = qs.parse(text) as unknown
 
-    const result = await EntriesSchema.safeParseAsync(jsonData)
+    //check if data is valid
+    const result = await AthleteFormData.safeParseAsync(jsonData)
 
     if (!result.success) {
         if (result.error instanceof ZodError) {
-            return json({ errors: 'Please fill all required fields' })
+            return json({ errors: 'Please fix form errors' })
         }
     }
 
     invariant(result.success, 'This should not happen')
 
+    //create new report
     const formData = result.data
     const report = await createAthleteReport(athleteId)
-    await createEntryOnReport(report.id, formData.entries)
+    await createEntryOnReport(report.id, formData)
 
     return redirect('/staff/athletes')
 }
@@ -111,6 +115,7 @@ export default function AthleteDetails() {
                 <div className="report-list">
                     {reports.map((report) => (
                         <Report
+                            selected={state.mode === 'edit' && state.selectedReportId === report.id}
                             key={report.id}
                             id={report.id}
                             createdAt={report.created_at}
@@ -129,8 +134,11 @@ export default function AthleteDetails() {
                             {category.name}
                         </option>
                     ))}
-                </select>
+                </select>{' '}
                 <Form method="post" ref={formRef} action={state.mode === 'new' ? `/staff/athletes/${athlete.id}` : `${state.selectedReportId}`}>
+                    <div>
+                        <input defaultValue={reportQuery.data?.created_at} type="date" name="created_at" id="created_at" />
+                    </div>
                     {drills.map((drill, i) => (
                         <EntryField
                             visible={drill.categoryId === category || category === 0}
@@ -158,15 +166,17 @@ function Report({
     athleteFirstName,
     athleteLastName,
     handleReportClick,
+    selected,
 }: {
     id: number
     athleteFirstName?: string
     athleteLastName?: string
     createdAt: string
     handleReportClick: (id: number) => void
+    selected: boolean
 }) {
     return (
-        <div onClick={() => handleReportClick(id)} className="athlete-report">
+        <div style={{ background: selected ? 'orange' : 'white' }} onClick={() => handleReportClick(id)} className="athlete-report">
             <p>{id}</p>
             <p>
                 {athleteFirstName} {athleteLastName}
@@ -233,6 +243,7 @@ function EntryField({
                     <input
                         ref={value}
                         type="number"
+                        step="any"
                         name={`entries[${index}][${valueOne}]`}
                         defaultValue={formMode === 'edit' ? valueDefault : undefined}
                         id=""
