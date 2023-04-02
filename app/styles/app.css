@@ -106,7 +106,7 @@
     flex-direction: row;
     padding: 0;
     justify-content: space-between;
-    margin: 2rem 4rem;
+    margin: 1rem 4rem;
     border: 4px solid black;
     border-bottom: 8px solid black;
     border-radius: 8px;
@@ -763,12 +763,11 @@
 
 /*DRILL ENTRY PAGE */
 .athlete-overview-container {
+  background-color: white;
   display: flex;
   max-width: 1350px;
   margin: 0 auto;
-  max-height: 1000px;
-  overflow-y: auto;
-  max-height: 1000px;
+  max-height: 850px;
   overflow-y: auto;
 }
 

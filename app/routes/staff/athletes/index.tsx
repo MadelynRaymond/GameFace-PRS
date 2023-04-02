@@ -112,7 +112,6 @@ function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | nul
             <td>
                 <div className="student-table-btn-group">
                     <button style={{ fontSize: '0.75em' }} className="btn" onClick={() => navigate(`${location.pathname}/${athlete.id}`)}>Update Stats</button>
-                    <button style={{ fontSize: '0.75em' }} className="btn btn--yellow" onClick={() => navigate(`/${athlete.id}/stats`)}>View Stats</button>
                 </div>
             
             </td>
