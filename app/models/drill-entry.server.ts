@@ -1,16 +1,15 @@
 import type { AthleteReport, Drill, User } from '@prisma/client'
 import { prisma } from '~/db.server'
+import type { AthleteFormDataType } from '~/routes/staff/athletes/$athleteId'
 
-type DrillEntry = {
-    userId: number
-    drillId: number
-    value: number
-    outOf?: number
-    bestScore?: number
-    unit: string
-}
 
-export async function createEntryOnReport(reportId: number, entries: DrillEntry[]) {
+export async function createEntryOnReport(reportId: number, data: AthleteFormDataType) {
+    const {entries, created_at} = data
+
+    //update report date
+    const res = await prisma.athleteReport.update({where: {id: reportId}, data: {created_at}})
+    console.log(res)
+
     return prisma.drillEntry.createMany({
         data: entries.map((entry) => {
             const { userId, drillId, ...score } = entry
