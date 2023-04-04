@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
 import { passwordResetTemplate } from './email-template'
 
-
 export async function sendEmail(
     email: {
         subject: string
@@ -28,34 +27,6 @@ export async function sendEmail(
                 console.log('Server is ready to take our messages')
             }
         })
-
-// 900 x 1463.5
-// 600 x 1453.5
-        await transporter.sendMail({
-            from: 'GameFace 413 <foo@gamefaceprs.com>',
-            to: recipient,
-            subject: email.subject,
-            text: email.body,
-            //This need to include flexbox from Scss and fix padding/margin/align content as well as email link not being in one line(embed)
-            html: 
-            `<div style="background-color: #e6e6e6; width: 100%; height: 1463.5px; padding: 20px;">
-            <div style="background-color: #ffffff; width: 600px; height: 785.5px; padding: 20px; margin: auto;">
-              <div style="text-align: center;">
-                <img src="assets/GameFace413_Logo_FINAL.png" alt="GameFace413 Logo" style="max-width: 125px;">
-              </div>
-              <div style="padding-top: 20px; padding: 55px 12.5% 40px 12.5%;">
-                <h2 style="font-size: 18px; font-weight:100; text-decoration: none; color: #333;">Hi <span style="color: #333; text-decoration: none;"> ${recipient},</span></h2>
-                <p style="color: #333; margin: 0 0 27px 0;line-height: 27px; font-size:20px;margin-top:43px;">There was a request to change your password! If you did not make this request then please ignore this email. Otherwise, please click the link to change your password:<br></px>
-                <div>${email.body}</div>
-
-              
-                </div>
-            </div>
-          </div>
-        `
-
-        })
-
 
 const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
