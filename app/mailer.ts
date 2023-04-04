@@ -1,8 +1,12 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
+<<<<<<< HEAD
 import { passwordResetHtml } from './email-template'
 >>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
+=======
+import { passwordResetTemplate } from './email-template'
+>>>>>>> 6c315ef8cc20ca8e5a6ff1d27b98157b9570046f
 
 export async function sendEmail(
     email: {
@@ -212,11 +216,12 @@ const passwordResetEmail= await passwordResetTemplate(recipient, email.body);
 
 </body>`
 const passwordResetEmailHtml = await passwordResetHtml(recipient, email.body);
-=======
-const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
->>>>>>> 25734c5 (Fixed formatting and name of function issues)
 
 >>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
+=======
+const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
+
+>>>>>>> 6c315ef8cc20ca8e5a6ff1d27b98157b9570046f
         transporter.sendMail({
             
             from: 'GameFace 413 <foo@gamefaceprs.com>',
