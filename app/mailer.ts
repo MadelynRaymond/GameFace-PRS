@@ -1,15 +1,8 @@
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 import { getUserByEmail } from './models/user.server'
-<<<<<<< HEAD
-import { passwordResetHtml } from './email-template'
-<<<<<<< HEAD
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
-=======
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
-=======
 import { passwordResetTemplate } from './email-template'
->>>>>>> 25734c5 (Fixed formatting and name of function issues)
+
 
 export async function sendEmail(
     email: {
@@ -35,7 +28,7 @@ export async function sendEmail(
                 console.log('Server is ready to take our messages')
             }
         })
-<<<<<<< HEAD
+
 // 900 x 1463.5
 // 600 x 1453.5
         await transporter.sendMail({
@@ -48,7 +41,7 @@ export async function sendEmail(
             `<div style="background-color: #e6e6e6; width: 100%; height: 1463.5px; padding: 20px;">
             <div style="background-color: #ffffff; width: 600px; height: 785.5px; padding: 20px; margin: auto;">
               <div style="text-align: center;">
-                <img src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_564,h_564,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png" alt="GameFace413 Logo" style="max-width: 125px;">
+                <img src="assets/GameFace413_Logo_FINAL.png" alt="GameFace413 Logo" style="max-width: 125px;">
               </div>
               <div style="padding-top: 20px; padding: 55px 12.5% 40px 12.5%;">
                 <h2 style="font-size: 18px; font-weight:100; text-decoration: none; color: #333;">Hi <span style="color: #333; text-decoration: none;"> ${recipient},</span></h2>
@@ -62,7 +55,7 @@ export async function sendEmail(
         `
 
         })
-=======
+
 
 const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
@@ -74,7 +67,6 @@ const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body
             html: passwordResetEmailHtml,
 
         });
->>>>>>> c65fe80 (Seperated ResetPassEmailTemp)
     } catch (error: unknown) {
         if (error instanceof Error) {
             return error

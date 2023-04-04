@@ -12,7 +12,7 @@ width="100%">
           <tr>
             <td align="center" valign="top">
               <img alt="GameFace" border="0" height="115"
-                src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_564,h_564,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png"
+                src="/app/assets/GameFace413_Logo_FINAL.png"
                 style="display: block" width="115" class="" data-bit="iit" />
             </td>
           </tr>
