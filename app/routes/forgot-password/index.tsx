@@ -76,27 +76,36 @@ export async function action({ request }: ActionArgs) {
     return redirect(email)
 }
 
-    export default function Index() {
-        const actionData = useActionData<typeof action>()
-        const transition = useTransition()
+export default function Index() {
+    const actionData = useActionData<typeof action>()
+    const transition = useTransition()
+    return (
+        <div
+            style={{
+                height: '75vh',
+            }}
+            className="form-center"
+        >
+            <Form method="post">
+                <h1>Forgot Password</h1>
+                <input type="text" name="email" id="email" placeholder="Account Email" />
+                <span className="error-text">{actionData?.error}</span>
+                <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
+            </Form>
+        </div>
+    )
+}
+//The CatchBoundary component only handles errors that are thrown during rendering
+export function CatchBoundary() {
+    const caught = useCatch()
+
+    if (caught.status === 404) {
         return (
-<<<<<<< HEAD
             <div className="flex justify-center">
                 <h2>Email-Address-Error: No Account Exists With Email Address</h2>
-=======
-            <div
-                style={{
-                    height: '75vh',
-                }}
-                className="form-center"
-            >
-                <Form method="post">
-                    <h1>Forgot Password</h1>
-                    <input type="text" name="email" id="email" placeholder="Account Email" />
-                    <span className="error-text">{actionData?.error}</span>
-                    <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
-                </Form>
->>>>>>> ba21a7486f6df84ae75c29200f249c1b3e6e0af4
             </div>
         )
     }
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
+}
