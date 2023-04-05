@@ -570,7 +570,7 @@
   margin-top: 0.5rem;
   font-size: 0.75rem;
   margin-top: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 1rem;
   margin-left: 1rem;
   font-family: "Montserrat", sans-serif;
 }
@@ -971,6 +971,7 @@
 .profile {
   max-width: 1200px;
   margin: 0 auto;
+  background-color: white;
 }
 .profile > * {
   padding: 2rem;
@@ -1143,6 +1144,14 @@
 .login-btn {
   color: black;
   font-size: 1rem;
+}
+
+.edit-profile-btn {
+  background-color: #C9AFC9;
+}
+
+.edit-profile-btn:hover {
+  background-color: #EDA75C;
 }
 
 /*EDIT PROFILE PAGE*/

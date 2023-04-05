@@ -140,7 +140,7 @@ export default function EditProfile() {
                 <div className="flex gap-2">
                     <input type="hidden" name="id" value={id} />
                     <input type="submit" className="btn" value="Save" />
-                    <Link style={{ color: 'white' }} className="btn" to={`/${username}/profile`}>
+                    <Link className="btn" to={`/${username}/profile`}>
                         Cancel
                     </Link>
                 </div>
