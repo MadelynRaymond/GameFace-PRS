@@ -112,7 +112,7 @@ export default function Shooting() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Shooting Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box">
                         <p className="stat-box__title">Shots Scored</p>
                         <div className="stat-box__data">
@@ -162,7 +162,7 @@ export default function Shooting() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>{state.text}: Shots scored vs attempted</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <LineChart

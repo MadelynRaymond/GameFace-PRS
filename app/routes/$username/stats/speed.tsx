@@ -110,7 +110,7 @@ export default function Speed() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Speed Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box accent-2">
                         <p className="stat-box__title">Overall (Avg time)</p>
                         <div className="stat-box__data">
@@ -193,7 +193,7 @@ export default function Speed() {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>Last Seven Sessions: Avg. vs. Best Speed</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <BarChart

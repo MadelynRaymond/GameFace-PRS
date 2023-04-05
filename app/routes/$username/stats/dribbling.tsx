@@ -94,7 +94,7 @@ export default function Dribbling() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Dribbling Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Dribbling Speed Drill Completion</p>
                         <div className="stat-box__data">
@@ -180,7 +180,7 @@ export default function Dribbling() {
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>{state.text}: Current vs Best Dribbling Drill Completion Time</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <BarChart

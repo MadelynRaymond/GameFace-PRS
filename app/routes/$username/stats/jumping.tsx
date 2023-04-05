@@ -111,7 +111,7 @@ export default function Jumping() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Jumping Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box accent">
                         <p className="stat-box__title">Avg. Jump (Height)</p>
                         <div className="stat-box__data">
@@ -160,7 +160,7 @@ export default function Jumping() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>Last Seven Sessions: Jump Distance</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
