@@ -111,27 +111,33 @@ export default function EditProfile() {
             <Form method="post">
                 <div className="">
                     <div className="edit-group">
+                        <label htmlFor="email">Email</label>
                         <input type="text" name="email" placeholder="email" defaultValue={email}/>
                         <span className="error-text">{actionData?.errors?.fieldErrors.email && actionData.errors.fieldErrors.email[0]}</span>
+                        <label htmlFor="age">Age</label>
                         <input type="text" name="age" placeholder="age" defaultValue={profile?.age} />
                         <span className="error-text">{actionData?.errors?.fieldErrors.age && actionData.errors.fieldErrors.age[0]}</span>
                     </div>
                     <div className="edit-group">
                         <div>
+                            <label htmlFor="grade">Grade</label>
                             <input type="number" name="grade" placeholder="grade" defaultValue={profile?.grade} />
                             <span className="error-text">{actionData?.errors?.fieldErrors.grade && actionData.errors.fieldErrors.grade[0]}</span>
                         </div>
                         <div>
+                            <label htmlFor="school">School</label>
                             <input type="text" name="school" placeholder="school" defaultValue={profile?.school} />
                             <span className="error-text">{actionData?.errors?.fieldErrors.school && actionData.errors.fieldErrors.school[0]}</span>
                         </div>
                     </div>
                     <div className="edit-group">
                         <div>
+                            <label htmlFor="guardianName">Guardian Name</label>
                             <input type="text" name="guardianName" id="guardian-name" placeholder='guardian name' defaultValue={profile?.guardianName ?? undefined}/>
                             <span className="error-text">{actionData?.errors?.fieldErrors.guardianName && actionData.errors.fieldErrors.guardianName[0]}</span>
                         </div>
                         <div>
+                            <label htmlFor="guardianPhone">Guardian Phone</label>
                             <input type="text" name="guardianPhone" id="guardian-phone" placeholder='guardian phone' defaultValue={profile?.guardianPhone ?? undefined}/>
                             <span className="error-text">{actionData?.errors?.fieldErrors.guardianPhone && actionData.errors.fieldErrors.guardianPhone[0]}</span>
                         </div>
