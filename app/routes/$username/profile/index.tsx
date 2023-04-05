@@ -22,12 +22,20 @@ export default function Profile() {
                     <div className="">
                         <h2>Welcome back, {profile?.firstName}!</h2>
                         <div className="profile-btn-group">
-                            <Link style={{color: 'white'}} to="edit" className='btn'>Edit Profile</Link>
-                            <Link style={{color: 'white'}}to={`/${username}/change-password`} className="btn">Change Password</Link>
+                            <Link to="edit" className='btn edit-profile-btn'>Edit Profile</Link>
+                            <Link to={`/${username}/change-password`} className="btn edit-profile-btn">Change Password</Link>
                         </div>
                     </div>
                 </div>
                 <div className="profile-container">
+                    <div>
+                        <h3>First Name:</h3>
+                        <p>{profile?.firstName}</p>
+                    </div>
+                    <div>
+                        <h3>Last Name:</h3>
+                        <p>{profile?.lastName}</p>
+                    </div>
                     <div>
                         <h3>Email:</h3>
                         <p>{email}</p>

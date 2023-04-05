@@ -105,13 +105,13 @@ function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | nul
             <td>{athlete.profile?.school}</td>
             <td>{athlete.profile?.grade}</td>
             <td onClick={() => updateAthleteStatus(athlete.id)}>
-                <button style={{ fontSize: '0.75em' }} className={athlete.status === 'ACTIVE' ? 'btn btn--green' : 'btn btn--red'}>
+                <button className={athlete.status === 'ACTIVE' ? 'btn btn--green athlete-table-btn' : 'btn btn--red athlete-table-btn' }>
                     {athlete.status}
                 </button>
             </td>
             <td>
                 <div className="student-table-btn-group">
-                    <button style={{ fontSize: '0.75em' }} className="btn" onClick={() => navigate(`${location.pathname}/${athlete.id}`)}>Update Stats</button>
+                    <button className="btn athlete-table-btn" onClick={() => navigate(`${location.pathname}/${athlete.id}`)}>Update Stats</button>
                 </div>
             
             </td>

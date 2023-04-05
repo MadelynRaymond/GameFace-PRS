@@ -79,7 +79,8 @@ $font-primary: 'Montserrat', sans-serif;
 .navbar {
   color: black;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.5rem;
   font-family: $font-primary;
   position: relative;
@@ -89,9 +90,10 @@ $font-primary: 'Montserrat', sans-serif;
   min-height: 4rem;
   font-weight: 1.25rem;
 
-  .nav-logo, .nav-links {
+  .nav-links {
     display: none;
   }
+
 
   .nav-links-mobile {
     display: flex;
@@ -101,6 +103,8 @@ $font-primary: 'Montserrat', sans-serif;
     position: absolute;
     top: 100%;
     left: 0;
+    border-top: 4px solid black;
+   
 
     > * {
       display: flex;
@@ -108,14 +112,21 @@ $font-primary: 'Montserrat', sans-serif;
       justify-content: center;
       align-items: center;
       color: white;
+      border-bottom: 4px solid black;
+      border-left: 4px solid black;
+      border-right: 4px solid black;
     }
   }
 
+  .hamburger-icon{
+    width: 40px;
+    height:40px;
+  }
 
   @include responsive('md') {
     flex-direction: row;
     padding: 0;
-    justify-content: space-between;
+    align-items: stretch;
     margin: 1rem 4rem;
     border: 4px solid black;
     border-bottom: 8px solid black;
@@ -124,6 +135,7 @@ $font-primary: 'Montserrat', sans-serif;
     .hamburger, .nav-links-mobile {
       display: none;
     }
+
 
     .nav-logo {
       display: block;
@@ -140,9 +152,9 @@ $font-primary: 'Montserrat', sans-serif;
 
       > * {
         display: inline-block;
-        padding: 1rem 0.5rem;
+        padding: 1rem 1rem;
         border-left: 4px solid black;
-        font-size: 0.8rem;
+        font-size: 1rem;
         height: 100%;
       }
     }
@@ -432,6 +444,7 @@ $font-primary: 'Montserrat', sans-serif;
     border: 4px solid black;
     border-bottom: 10px solid black;
     background-color: white;
+    gap: 1rem;
   }
 
   @include responsive('md') {
@@ -524,7 +537,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .stat-row h4{
   font-family: $font-primary;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 .stat-box__figure{
@@ -564,12 +577,13 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 0.5rem;
 
   .report-card-title {
     margin-top: 0.5rem;
     font-size: 0.75rem;
     margin-top: 0.5rem;
-    font-size: 0.75rem;
+    font-size: 1rem;
     margin-left: 1rem;
     font-family: $font-primary;
 
@@ -641,7 +655,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   justify-content: flex-end;
   box-shadow: 4px 4px 0 black;
   transition-duration: 0.2s;
-  transition-timing-function: ease;  
+  transition-timing-function: ease; 
 }
 
 .filter-button {
@@ -670,7 +684,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .print-btn:hover, .export:hover {
-  background-color: #EDA75C;
+  background-color: #EDA75C !important;
   color: black;
   cursor: pointer;
   
@@ -752,7 +766,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   text-align: center;
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.9em;
+  font-size: 1rem;
   font-family: sans-serif;
   min-width: 400px;
   border: 2px solid black;
@@ -762,9 +776,14 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 .athlete-table thead tr {
   background-color: #DF7861;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-family: $font-primary;
 }
+
+.athlete-table-btn{
+  color: white;
+}
+
 .athlete-table th, .athlete-table td {
   padding: 24px 15px;
 }
@@ -912,11 +931,10 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .btn {
   background-color: #DF7861;
   border: 2px solid black;
-  color: white;
   margin: 2px;
   padding: 1rem 1.5rem;
   font-family: $font-primary;
-  font-size: 0.75rem;
+  font-size: 1rem;
   border-radius: 0.25rem;
   transition-duration: 0.1s;
   transition-timing-function: ease-in;
@@ -929,7 +947,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 //get rid of these later
 .btn--red {
-  background-color: rgb(161, 62, 62);
+  background-color: #DF7861;
 }
 
 .btn--green {
@@ -983,6 +1001,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .profile {
   max-width: 1200px;
   margin: 0 auto;
+  background-color: white;
 
   & > * {
     padding: 2rem;
@@ -1047,9 +1066,9 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .profile-banner button {
-  font-size: 0.75rem;
+  font-size: 1rem;
   background-color: black;
-  color: white;
+  color: black;
   border-radius: 3px;
   margin-bottom: 1rem;
 }
@@ -1058,6 +1077,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   display: flex;
   gap: 1rem;
 }
+
 
 .pfp {
   display: flex;
@@ -1147,11 +1167,17 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .export, .print-btn{
   border: 3px solid black;
-  background-color: white;
   color: black;
-  padding: 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
 
+.print-btn{
+  background-color: #C9AFC9 !important;
+  padding-top: 0.75rem;
+}
 
+.export-btn{
+  background-color: #E58274 !important;
 }
 
 
@@ -1169,6 +1195,15 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
 .login-btn{
   color: black;
+  font-size: 1rem;
+}
+
+.edit-profile-btn{
+  background-color:#C9AFC9;
+}
+
+.edit-profile-btn:hover{
+  background-color:#EDA75C;
 }
 
 /*EDIT PROFILE PAGE*/
