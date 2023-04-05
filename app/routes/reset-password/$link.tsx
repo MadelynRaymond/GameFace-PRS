@@ -80,9 +80,9 @@ export default function () {
         >
             <Form method="post">
                 <h1>Reset Password</h1>
-                <input type="text" name="password" id="password" placeholder="Password" />
+                <input type="password" name="password" id="password" placeholder="Password" />
                 <span className="error-text">{actionData?.errors?.password}</span>
-                <input type="text" name="confirm-password" id="confirm-password" placeholder="Confirm Password" />
+                <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password" />
                 <input type="hidden" name="user-id" value={userId} />
                 <input type="hidden" name="token" value={token.exp} />
                 <span className="error-text">{actionData?.errors?.confirmPassword}</span>
