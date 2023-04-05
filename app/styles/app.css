@@ -75,12 +75,13 @@
   display: flex;
   justify-content: flex-end;
   padding: 0.5rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   position: relative;
   border-top: 4px solid black;
   border-bottom: 4px solid black;
   background-color: #ffffff;
   min-height: 4rem;
+  font-weight: 1.25rem;
 }
 .navbar .nav-logo, .navbar .nav-links {
   display: none;
@@ -150,7 +151,7 @@
 }
 
 .welcome-back-txt {
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.4rem;
 }
 
@@ -164,8 +165,9 @@
 }
 
 .nav-logo {
-  font-size: 1.25rem;
-  font-family: "Press Start 2P", cursive;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 }
 
 .logout-btn > button {
@@ -512,12 +514,12 @@
 }
 
 .stat-row h4 {
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
 }
 
 .stat-box__figure {
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.9rem;
   margin-top: 1rem;
 }
@@ -559,7 +561,7 @@
   margin-top: 0.5rem;
   font-size: 0.75rem;
   margin-left: 1rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
 }
 .report-card-header .report-card-title p {
   color: gray;
@@ -739,7 +741,7 @@
 .athlete-table thead tr {
   background-color: #DF7861;
   font-size: 0.75rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
 }
 
 .athlete-table th, .athlete-table td {
@@ -827,7 +829,7 @@
 
 /* Registration Page */
 .registration-header-txt {
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.25rem;
 }
 
@@ -892,7 +894,7 @@
   color: white;
   margin: 2px;
   padding: 1rem 1.5rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   border-radius: 0.25rem;
   transition-duration: 0.1s;
@@ -927,7 +929,7 @@
   color: white;
   margin: 2px;
   padding: 1rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
   border-radius: 0.25rem;
   transition-duration: 0.1s;
@@ -965,7 +967,7 @@
   border-bottom: 8px solid black;
   display: grid;
   gap: 4rem;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
 }
 @media (min-width: 992px) {
   .profile-container {
@@ -993,7 +995,7 @@
   background-color: #DF7861;
   border: 4px solid black;
   border-bottom: none;
-  font-family: "Press Start 2P", cursive;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.75rem;
 }
 @media (min-width: 992px) {
@@ -1041,6 +1043,9 @@
   .no-print {
     display: none !important;
   }
+  .page-break {
+    page-break-before: always;
+  }
   body {
     font-size: 10pt;
   }
@@ -1065,6 +1070,9 @@
     width: auto !important;
     display: inline-block !important;
     right: inherit !important; /* align to left */
+  }
+  .page-break {
+    page-break-before: always;
   }
 }
 @media print and (color) {
