@@ -112,23 +112,23 @@ export default function Strength() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Strength Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box accent">
-                        <p className="stat-box__title">Max Amount of Push Ups</p>
+                        <p className="stat-box__title">Max No. of Push Ups</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.pushUpMax || pushUpMax}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box dots">
-                        <p className="stat-box__title">Max Amount of Pull Ups</p>
+                        <p className="stat-box__title">Max No. of Pull Ups</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.pullUpMax|| pullUpMax}</p>
                             <p className="stat-box__desc">{state.text}</p>
                         </div>
                     </div>
                     <div className="stat-box accent-2">
-                        <p className="stat-box__title">Avg. Squat Duration</p>
+                        <p className="stat-box__title">Average Squat Duration</p>
                         <div className="stat-box__data">
                             <p className="stat-box__figure">{filter?.data?.squatAverage?.value?.toFixed(1) || squatAverage?.value?.toFixed(1)}s</p>
                             <p className="stat-box__desc">{state.text}</p>
@@ -163,7 +163,7 @@ export default function Strength() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>Lifetime Overview: Best Squat Duration w/Weights</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <AreaChart width={730} height={250} data={filter?.data?.squatEntries || squatEntries}>

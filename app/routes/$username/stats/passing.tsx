@@ -109,7 +109,7 @@ export default function Shooting() {
         <div className='stats-summary'>
             <ReportCardHeader header={'Passing Statistics'} firstName={profile?.firstName} lastName={profile?.lastName} dispatch={dispatch} />
             <div className="stat-grid">
-                <div className="stat-box-group">
+                <div className="stat-box-group no-print">
                     <div className="stat-box accent-2">
                         <p className="stat-box__title">Successful Passes</p>
                         <div className="stat-box__data">
@@ -159,7 +159,7 @@ export default function Shooting() {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="flex flex-col align-center gap-1 graph-container">
+                <div className="flex flex-col align-center gap-1 graph-container page-break">
                     <p>{state.text}: Pass Success Rate (percent)</p>
                     <ResponsiveContainer width="99%" height="99%">
                         <AreaChart
