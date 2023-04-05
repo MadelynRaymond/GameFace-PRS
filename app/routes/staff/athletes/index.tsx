@@ -2,7 +2,7 @@ import type { StudentProfile, User } from '@prisma/client'
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Form, useFetcher, useLoaderData, useLocation, useNavigate } from '@remix-run/react'
-import { SyntheticEvent, useRef } from 'react'
+import { SyntheticEvent, useMemo, useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { getAthletes } from '~/models/athlete.server'
 import { updateStatus } from '~/models/user.server'
@@ -44,6 +44,18 @@ export default function Athletes() {
     const { filteredAthletes } = useLoaderData<typeof loader>()
     const nameFilterRef = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
+    const [showInactive, setShowInactive] = useState(true)
+
+    const toggleShowInactive = () => {
+        setShowInactive(!showInactive)
+    }
+
+    function filterInactive (athletes: typeof filteredAthletes, showInactive: boolean) {
+        return showInactive ? athletes : athletes.filter(a => a.status === 'ACTIVE')  
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const athletes = useMemo(() => filterInactive(filteredAthletes, showInactive), [showInactive, filteredAthletes])
 
 
     const clearNameFilter = (e: SyntheticEvent) => {
@@ -66,6 +78,7 @@ export default function Athletes() {
                         <input ref={nameFilterRef} type="text" name="name-filter" id="name-filter" placeholder="Filter by Name" />
                     </Form>
                     <button className='btn' onClick={clearNameFilter}>Reset</button>
+                    <button className='btn' onClick={toggleShowInactive}>{showInactive ? 'Hide Inactive' : 'Show Inactive'}</button>
                 </div>
                 <table className="athlete-table">
                     <thead>
@@ -79,7 +92,7 @@ export default function Athletes() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredAthletes.map((athlete) => (
+                        {athletes.map((athlete) => (
                             <AthleteTableRow key={athlete.id} athlete={athlete} />
                         ))}
                     </tbody>
