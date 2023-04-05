@@ -6,22 +6,28 @@ import { createUser, getUserByEmail } from '~/models/user.server'
 import { z } from 'zod'
 
 const phoneRegex = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
-const RegisterSchema = z.object({
-    username: z.string().min(5, 'Username must be at least 5 characters').max(15, 'Username must be at most 15 characters'),
-    email: z.string().email('Email must be a valid email'),
-    password: z.string().min(8, 'Password must be at least 8 characters').max(16, 'Password must be less than 16 characters'),
-    firstName: z.string().min(2, 'First name must be at least 2 characters').max(25, 'First name must be less than 25 characters'),
-    lastName: z.string().min(2, 'Last name must be at least 2 characters').max(30, 'Last name must be less than 30 characters'),
-    grade: z.enum(['6', '7', '8', '9', '10', '11', '12'], { errorMap: () => ({ message: 'Grade must be between 6 and 12' }) }),
-    age: z
-        .number()
-        .min(10)
-        .max(18)
-        .transform((val) => val.toString()),
-    school: z.string().min(1, 'School is required'),
-    guardianName: z.string().min(3, "Guardian name must be at least 3 characters").max(25, "Guardian name must be less than 25 characters"),
-    guardianPhone: z.string().regex(new RegExp(phoneRegex))
-})
+const RegisterSchema = z
+    .object({
+        username: z.string().min(5, 'Username must be at least 5 characters').max(15, 'Username must be at most 15 characters'),
+        email: z.string().email('Email must be a valid email'),
+        password: z.string().min(8, 'Password must be at least 8 characters').max(16, 'Password must be less than 16 characters'),
+        confirmPassword: z
+            .string()
+            .min(8, 'Password Confirmation must be at least 8 characters')
+            .max(16, 'Password Confirmation must be less than 16 characters'),
+        firstName: z.string().min(2, 'First name must be at least 2 characters').max(25, 'First name must be less than 25 characters'),
+        lastName: z.string().min(2, 'Last name must be at least 2 characters').max(30, 'Last name must be less than 30 characters'),
+        grade: z.enum(['6', '7', '8', '9', '10', '11', '12'], { errorMap: () => ({ message: 'Grade must be a number between between 6 and 12' }) }),
+        age: z
+            .number()
+            .min(1, 'Age must be at least one')
+            .max(100, 'Age must be less than or equal to 100')
+            .transform((val) => val.toString()),
+        school: z.string().min(1, 'School is required'),
+        guardianName: z.string().min(3, 'Guardian name must be at least 3 characters').max(25, 'Guardian name must be less than 25 characters'),
+        guardianPhone: z.string().regex(new RegExp(phoneRegex), 'Must be a valid phone number'),
+    })
+    .refine((data) => data.password === data.confirmPassword, { message: 'Password and password confirmation must match', path: ['confirmPassword'] })
 type RegisterFields = z.infer<typeof RegisterSchema>
 type RegisterErrors = z.inferFlattenedErrors<typeof RegisterSchema>
 type ActionData = {
@@ -87,21 +93,28 @@ export default function Register() {
                             {actionData?.errors?.fieldErrors.lastName && <span className="error-text">{actionData.errors.fieldErrors.lastName[0]}</span>}
                         </div>
                     </div>
+                    <div>
+                        <label>Username</label>
+                        <input type="text" placeholder="Ex. jsmith123" name="username"></input>
+                        {actionData?.errors?.fieldErrors.username && <span className="error-text">{actionData.errors.fieldErrors.username[0]}</span>}
+                    </div>
+                    <label>Email</label>
+                    <input type="text" placeholder="Ex. johnsmith@gmail.com" name="email"></input>
+                    {actionData?.errors?.fieldErrors.email && <span className="error-text">{actionData.errors.fieldErrors.email[0]}</span>}
                     <div className="registration-form-row">
-                        <div>
-                            <label>Username</label>
-                            <input type="text" placeholder="Ex. jsmith123" name="username"></input>
-                            {actionData?.errors?.fieldErrors.username && <span className="error-text">{actionData.errors.fieldErrors.username[0]}</span>}
-                        </div>
                         <div>
                             <label>Password</label>
                             <input type="password" placeholder="Ex. v3rySecu4e!" name="password"></input>
                             {actionData?.errors?.fieldErrors.password && <span className="error-text">{actionData.errors.fieldErrors.password[0]}</span>}
                         </div>
+                        <div>
+                            <label>Confirm Password</label>
+                            <input type="password" placeholder="Ex. v3rySecu4e!" name="confirmPassword"></input>
+                            {actionData?.errors?.fieldErrors.confirmPassword && (
+                                <span className="error-text">{actionData.errors.fieldErrors.confirmPassword[0]}</span>
+                            )}
+                        </div>
                     </div>
-                    <label>Email</label>
-                    <input type="text" placeholder="Ex. johnsmith@gmail.com" name="email"></input>
-                    {actionData?.errors?.fieldErrors.email && <span className="error-text">{actionData.errors.fieldErrors.email[0]}</span>}
 
                     <div className="registration-form-row">
                         <div>
@@ -120,17 +133,21 @@ export default function Register() {
                     {actionData?.errors?.fieldErrors.school && <span className="error-text">{actionData.errors.fieldErrors.school[0]}</span>}
 
                     <div className="registration-form-row">
-                            <div>
-                                <label htmlFor="Guardian Name">Guardian Name</label>
-                                <input type="text" name="guardianName" id="guardian-name" />
-                                {actionData?.errors?.fieldErrors.guardianName && <span className="error-text">{actionData.errors.fieldErrors.guardianName[0]}</span>}
-                            </div>
+                        <div>
+                            <label htmlFor="Guardian Name">Guardian Name</label>
+                            <input type="text" name="guardianName" id="guardian-name" />
+                            {actionData?.errors?.fieldErrors.guardianName && (
+                                <span className="error-text">{actionData.errors.fieldErrors.guardianName[0]}</span>
+                            )}
+                        </div>
 
-                            <div>
-                                <label htmlFor="Guardian Phone">Guardian Phone</label>
-                                <input type="text" name="guardianPhone" id="guardian-phone" />
-                                {actionData?.errors?.fieldErrors.guardianPhone && <span className="error-text">{actionData.errors.fieldErrors.guardianPhone[0]}</span>}
-                            </div>
+                        <div>
+                            <label htmlFor="Guardian Phone">Guardian Phone</label>
+                            <input type="text" name="guardianPhone" id="guardian-phone" />
+                            {actionData?.errors?.fieldErrors.guardianPhone && (
+                                <span className="error-text">{actionData.errors.fieldErrors.guardianPhone[0]}</span>
+                            )}
+                        </div>
                     </div>
 
                     <div className="register-btn">
