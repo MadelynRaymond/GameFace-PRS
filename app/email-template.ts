@@ -11,8 +11,16 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
               <tbody>
                 <tr>
                   <td align="center" valign="top">
-                    <img alt="GameFace" border="0" height="115" src="/app/assets/GameFace413_Logo_FINAL.png"
-                      style="display: block" width="115" class="" data-bit="iit" />
+                    <img
+                    src="https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_117,h_113,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png"
+                    alt="GameFace413_Logo_FINAL.png"
+                    style="display:block; width: 115px; height: 115px;"
+                    srcset="
+                      https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_117,h_113,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png 1x,
+                      https://static.wixstatic.com/media/b0e244_4c7a1af456f447cea4b26dade5e2d182~mv2_d_1280_1280_s_2.png/v1/fill/w_234,h_226,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/GameFace413_Logo_FINAL.png 2x
+                    "
+                    fetchpriority="high"
+                  />  
                   </td>
                 </tr>
                 <tr>
