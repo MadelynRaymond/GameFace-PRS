@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, useActionData, useCatch, useTransition } from '@remix-run/react'
+import { Form, Link, useActionData, useCatch, useTransition } from '@remix-run/react'
 
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
@@ -41,8 +41,6 @@ export async function action({ request }: ActionArgs) {
 
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/reset-password/link?id=${user.id}&token=${token.token}`
 
-    
-
     await sendEmail(
         {
             subject: 'Reset Password',
@@ -70,9 +68,16 @@ export default function Index() {
         >
             <Form method="post">
                 <h1>Forgot Password</h1>
-                <input type="text" name="email" id="email" placeholder="Account Email" />
-                <span className="error-text">{actionData?.error}</span>
-                <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
+                <div>
+                    <input type="text" name="email" id="email" placeholder="Account Email" />
+                    <span className="error-text">{actionData?.error}</span>
+                </div>
+                <div className="flex gap-3">
+                    <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send reset link" />
+                    <Link style={{ color: 'white' }} className="btn" to={`/login`}>
+                        Back to login
+                    </Link>
+                </div>
             </Form>
         </div>
     )
