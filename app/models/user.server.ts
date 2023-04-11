@@ -71,6 +71,16 @@ export async function changePassword({ userId, password }: { userId: User['id'];
         },
     })
 }
+export async function changeEmail({ userId, email }: { userId: User['id']; email: string }) {
+    return prisma.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            email,
+        },
+    })
+}
 
 export async function deleteUserByEmail(email: User['email']) {
     return prisma.user.delete({ where: { email } })
