@@ -57,7 +57,7 @@ export async function createEmailConfirmToken(userEmail: string): Promise<string
     return jwt.sign(
       {
         data: {
-          email: user.email,
+            userId: user.id,
         },
       },
       'SECRET',
