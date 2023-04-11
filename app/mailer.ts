@@ -28,7 +28,7 @@ export async function sendEmail(
             }
         })
 
-const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
+    const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
 
         transporter.sendMail({
             
@@ -48,6 +48,23 @@ const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body
 }
 
 //TODO: change secret
+export async function createEmailConfirmToken(userEmail: string): Promise<string | undefined> {
+    const user = await getUserByEmail(userEmail)
+    if (!user) {
+      return undefined
+    }
+  
+    return jwt.sign(
+      {
+        data: {
+          email: user.email,
+        },
+      },
+      'SECRET',
+      { expiresIn: '1h' }
+    )
+  }
+
 export async function createResetToken(userEmail: string): Promise<string | undefined> {
     const user = await getUserByEmail(userEmail)
     if (!user) {
