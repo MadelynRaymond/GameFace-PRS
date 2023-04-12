@@ -20,6 +20,7 @@ export async function loader({ request }: LoaderArgs) {
     const token = url.searchParams.get('token')
     const userId = url.searchParams.get('id')
 
+
     if (!userId || !token) {
         throw new Response('Not Found', { status: 404 })
     }
@@ -60,12 +61,12 @@ export async function action({ request }: ActionArgs) {
     }
     await changeEmail({ userId: parseInt(userId as string), email: emailValue })
 
-    return await logout(request)
+    return await logout(request) 
+    // return redirect(`/${username}/profile`)
 }
 
 export default function () {
     const { userId, token } = useLoaderData<typeof loader>()
-
 
     return (
         <div
