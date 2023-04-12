@@ -1,12 +1,25 @@
-import type { ActionArgs } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
-import { Form, Link, useActionData, useTransition } from '@remix-run/react'
+import { Form, Link, useActionData, useLoaderData, useTransition } from '@remix-run/react'
 import { createEmailConfirmToken, sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 import { getUserByEmail } from '~/models/user.server'
 import { isProbablyEmail } from '~/util'
-import EditProfile from './edit'
-import Profile from '.'
+import { requireUser } from '~/session.server'
+
+export async function loader({ request }: LoaderArgs) {
+    const user = await requireUser(request)
+
+    if (!user) {
+        throw new Response('Not Found', { status: 404 })
+    }
+
+    const { id, profile, username, email } = user
+
+    return json({ id, profile ,username, email})
+    
+}
+
 export async function action({ request }: ActionArgs) {
     const formData = await request.formData()
     const email = formData.get('email')
@@ -59,13 +72,13 @@ export async function action({ request }: ActionArgs) {
         },
         email
     )
-    // const username = request.url.split('/')[2]    
-    // return redirect(`/${username}/profile`)
-    return(email)
+    const username = request.url.split('/')[2]    
+    return redirect(`/${username}/profile`)
 }
 
+
 export default function Index() {
-    const actionData = useActionData<typeof action>()
+    const {username } = useLoaderData<typeof loader>()
     const transition = useTransition()
 
     return (
@@ -84,7 +97,7 @@ export default function Index() {
                 <div className="flex gap-3">
                     
                     <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send Confirmation Email" />
-                    <Link style={{ color: 'white' }} className="btn" to={`/profile`}>
+                    <Link style={{ color: 'white' }} className="btn" to={`/${username}/profile`}>
                         Cancel
                     </Link>
                 </div>
