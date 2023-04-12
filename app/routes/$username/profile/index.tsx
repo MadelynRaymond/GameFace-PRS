@@ -24,6 +24,7 @@ export default function Profile() {
                         <div className="profile-btn-group">
                             <Link to="edit" className='btn edit-profile-btn'>Edit Profile</Link>
                             <Link to={`/${username}/change-password`} className="btn edit-profile-btn">Change Password</Link>
+                            <Link to={`/${username}/profile/email`} className="btn edit-profile-btn">Change Email</Link>
                         </div>
                     </div>
                 </div>

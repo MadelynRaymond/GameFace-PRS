@@ -78,7 +78,7 @@ export async function action({ request }: ActionArgs) {
 
 
 export default function Index() {
-    const {username } = useLoaderData<typeof loader>()
+    const {username,email } = useLoaderData<typeof loader>()
     const transition = useTransition()
 
     return (
@@ -90,7 +90,14 @@ export default function Index() {
         >
             <Form method="post">
                 <h1>Change Email Address</h1>
+                <br></br>
                 <div>
+                    <label htmlFor="email">Current Email:</label>
+                    <input type="text" name="email" placeholder="email" defaultValue={email} readOnly/>  
+                    {/* <span className="error-text">{actionData?.error}</span> */}
+                </div>
+                <div>
+                    <label htmlFor="email">New Email</label>
                     <input type="text" name="email" id="email" placeholder="New Email Address" />
                     {/* <span className="error-text">{actionData?.error}</span> */}
                 </div>
