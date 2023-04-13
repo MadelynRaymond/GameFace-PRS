@@ -17,10 +17,10 @@ export default function ChangeEmail() {
     const { username, email } = useLoaderData<typeof loader>()
     // The countdown state is initialized with a value of 15.
     const [countdown, setCountdown] = useState(15)
-  
+
     // This useEffect hook is used to update the countdown and redirect the user after 15 seconds.
     useEffect(() => {
-        // If the countdown is greater than 0, set a countdown timer to update the countdown value every 1 second using setTimeout.
+        // Set a countdown timer to update the countdown value every 1 second using setTimeout.
         if (countdown > 0) {
             const countdownTimer = setTimeout(() => {
                 setCountdown(countdown - 1)

@@ -1,11 +1,12 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Form, Link, useActionData, useLoaderData, useTransition } from '@remix-run/react'
-import { createEmailConfirmToken, sendEmail } from '~/mailer'
+import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 import { getUserByEmail } from '~/models/user.server'
 import { isProbablyEmail } from '~/util'
 import { requireUser } from '~/session.server'
+import { typeToFlattenedError, z } from 'zod'
 
 export async function loader({ request }: LoaderArgs) {
     const user = await requireUser(request)
@@ -58,10 +59,11 @@ export async function action({ request }: ActionArgs) {
         throw new Response('Unexpected Error Occured', { status: 500 })
     }
 
+
     const resetLink = `http://${process.env.BASE_URL || 'localhost:3002'}/profile/reset-email/change?email=${user.email}&id=${user.id}&token=${token.token}`
     await sendEmail(
         {
-            subject: 'Confirm Email Address Change',
+            subject: 'Change Email Address',
             reqMsg: 'Email-Address',
             body: `
                 <a  href="${resetLink}" 
@@ -87,17 +89,12 @@ export default function Index() {
             className="form-center"
         >
             <Form method="post">
-                <h1>Change Email Address</h1>
-                <br></br>
+                <h1>Change Email-Address Request</h1>
                 <div>
                     <label htmlFor="email">Current Email: {email} </label>
                     <input type="text" name="email" placeholder="email" defaultValue={email} readOnly />
                     {/* <span className="error-text">{actionData?.error}</span> */}
                 </div>
-                {/* <div>
-                    <label htmlFor="email">New Email</label>
-                    <input type="text" name="email" id="email" placeholder="New Email Address" />
-                </div> */}
                 <div className="flex gap-3">
                     <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send Confirmation Email" />
                     <Link style={{ color: 'white' }} className="btn" to={`/${username}/profile`}>
