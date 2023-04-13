@@ -7,8 +7,9 @@ export async function sendEmail(
     email: {
         subject: string
         body: string
+        reqMsg: string
     },
-    recipient: string
+    recipient: string,
 ) {
     try {
 
@@ -28,10 +29,10 @@ export async function sendEmail(
             }
         })
 
-    const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
+        const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body,email.reqMsg);
 
         transporter.sendMail({
-            
+
             from: 'GameFace 413 <foo@gamefaceprs.com>',
             to: recipient,
             subject: email.subject,
