@@ -54,7 +54,7 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             If you did not initiate this request, please disregard
                             this email and take no further action. However, if you
                             did, please click on the following link to securely
-                            update your password.
+                            update your ${email_req_msg}.
                           </td>
                         </tr>
                         <tr>
@@ -114,13 +114,13 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-size: 18px;
                           line-height: 27px;
                           font-style: normal;
-                        ">This request to reset your password will expire
+                        ">This request to change your ${email_req_msg} will expire
                               after 5 mins</strong><br />
                             <br />
                             This email is conducted on behalf of
                             <span class="il">Gameface 4:13 Training Academy.</span>
                             You have received this
-                            <span class="il">Password Reset</span> email link
+                            <span class="il">${email_req_msg}</span> email link
                             because you provided
                             <span class="il">GameFace</span> your email address,
                             either in person or via their web site, and you
@@ -128,7 +128,7 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             <span class="il">the Gameface Performace Review System</span>. Please do not forward this
                             email to others because
                             you have been given a unique URL that can change your
-                            account password.<br />
+                            account&nbsp;${email_req_msg}.<br />
                             <br />
                             Please do not reply directly to this email as all
                             replies go to an unattended inbox. If you’d like to
