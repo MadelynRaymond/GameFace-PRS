@@ -62,6 +62,7 @@ export async function action({ request }: ActionArgs) {
     await sendEmail(
         {
             subject: 'Confirm Email Address Change',
+            reqMsg: 'Email-Address',
             body: `
                 <a  href="${resetLink}" 
                 style="background-color:#df7861; border:2px solid black; color:white; padding:1rem 1.5rem; margin:auto; margin-top:6px; display:block; width:183px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">
@@ -94,10 +95,10 @@ export default function Index() {
                     <input type="text" name="email" placeholder="email" defaultValue={email} readOnly />
                     {/* <span className="error-text">{actionData?.error}</span> */}
                 </div>
-                <div>
+                {/* <div>
                     <label htmlFor="email">New Email</label>
                     <input type="text" name="email" id="email" placeholder="New Email Address" />
-                </div>
+                </div> */}
                 <div className="flex gap-3">
                     <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send Confirmation Email" />
                     <Link style={{ color: 'white' }} className="btn" to={`/${username}/profile`}>
