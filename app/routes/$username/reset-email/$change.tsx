@@ -98,7 +98,7 @@ export default function () {
                     <button className="btn" style={{ display: 'block' }} type="submit">
                         Change Email
                     </button>
-                    <Link style={{ color: 'white' }} className="btn" to={`/profile`}>
+                    <Link style={{ color: 'white' }} className="btn" to={`/`}>
                         Cancel
                     </Link>
                     </div>
