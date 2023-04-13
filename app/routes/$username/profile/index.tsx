@@ -19,12 +19,12 @@ export default function Profile() {
     return (
             <div className='profile'>
                 <div className="profile-banner">
-                    <div className="">
+                    <div className="">  
                         <h2>Welcome back, {profile?.firstName}!</h2>
                         <div className="profile-btn-group">
                             <Link to="edit" className='btn edit-profile-btn'>Edit Profile</Link>
                             <Link to={`/${username}/change-password`} className="btn edit-profile-btn">Change Password</Link>
-                            <Link to={`/${username}/profile/email`} className="btn edit-profile-btn">Change Email</Link>
+                            <Link to={`/${username}/profile/change-email/email`} className="btn edit-profile-btn">Change Email</Link>
                         </div>
                     </div>
                 </div>

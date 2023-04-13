@@ -1,16 +1,18 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { Form, useActionData, useCatch, useLoaderData } from '@remix-run/react'
+import { Form, Link, useActionData, useCatch, useLoaderData } from '@remix-run/react'
 import jwtDecode from 'jwt-decode'
 import jwt from 'jsonwebtoken'
 import { changeEmail } from '~/models/user.server'
 import { string } from 'zod'
 import { logout } from '~/session.server'
 
+
 type Token = {
     data?: {
-        userId: number,
+        userId: number
+        email: string
     }
     exp: number
 }
@@ -19,9 +21,9 @@ export async function loader({ request }: LoaderArgs) {
     const url = new URL(request.url)
     const token = url.searchParams.get('token')
     const userId = url.searchParams.get('id')
+    const email = url.searchParams.get('email')
 
-
-    if (!userId || !token) {
+    if (!userId || !token || !email) {
         throw new Response('Not Found', { status: 404 })
     }
 
@@ -46,7 +48,7 @@ export async function action({ request }: ActionArgs) {
     const email = formData.get('email')
     const exp = formData.get('token')
 
-    if (!userId || !exp) {
+    if (!userId || !exp || !email) {
         throw new Response('Unexpected Error', { status: 500 })
     }
 
@@ -55,13 +57,13 @@ export async function action({ request }: ActionArgs) {
     }
 
     // await changePassword({ userId: parseInt(userId as string), password })
-    const emailValue = email as string | null
-    if (!emailValue) {
-        throw new Response('Invalid email', { status: 400 })
-    }
-    await changeEmail({ userId: parseInt(userId as string), email: emailValue })
+    // const emailValue = email as string | null
+    // if (!emailValue) {
+    //     throw new Response('Invalid email', { status: 400 })
+    // }
+    await changeEmail({ userId: parseInt(userId as string), email:(email as string) })
 
-    return await logout(request) 
+     return await logout(request)
     // return redirect(`/${username}/profile`)
 }
 
@@ -76,19 +78,29 @@ export default function () {
             className="form-center"
         >
             <Form method="post">
-                <h1>Change Email</h1>
-                <div className="flex gap-3">
 
-                <input type="email" name="email" id="email" placeholder="Email" />
-                {/* <span className="error-text">{actionData?.errors?.password}</span> */}
-                <input type="email" name="confirm-email" id="confirm-email" placeholder="Confirm Email" />
-                <input type="hidden" name="user-id" value={userId} />
-                <input type="hidden" name="token" value={token.exp} />
-                {/* <span className="error-text">{actionData?.errors?.confirmPassword}</span> */}
-                <button className="btn" style={{ display: 'block' }} type="submit">
-                    Change Email
-                </button>
+
+                <h1>Change Email Address</h1>
+                <br></br>
+                <div>
+                    <label htmlFor="email">New Email:</label>
+                    <input type="text" name="email" id="email" placeholder="New Email Address" />
                 </div>
+                {/* <div>
+                    <label htmlFor="email">Confirm Email</label>
+                    <input type="text" name="email" id="email" placeholder="Confirm Email Address" />
+                </div> */}
+                <div className='flex gap-3'>
+                    
+                    <input type="hidden" name="user-id" value={userId} />
+                    <input type="hidden" name="token" value={token.exp} />
+                    <button className="btn" style={{ display: 'block' }} type="submit">
+                        Change Email
+                    </button>
+                    <Link style={{ color: 'white' }} className="btn" to={`/profile`}>
+                        Cancel
+                    </Link>
+                    </div>
             </Form>
         </div>
     )
