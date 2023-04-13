@@ -62,9 +62,10 @@ export async function action({ request }: ActionArgs) {
     //     throw new Response('Invalid email', { status: 400 })
     // }
     await changeEmail({ userId: parseInt(userId as string), email:(email as string) })
+    const username = request.url.split('/')[2]
 
-     return await logout(request)
-    // return redirect(`/${username}/profile`)
+    return redirect(`/${username}/profile`)
+    //  return await logout(request) Unsure if we want to logout after successful change or redirect back to profile like changePass
 }
 
 export default function () {
