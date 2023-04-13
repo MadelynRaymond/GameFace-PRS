@@ -128,7 +128,7 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             <span class="il">the Gameface Performace Review System</span>. Please do not forward this
                             email to others because
                             you have been given a unique URL that can change your
-                            account&nbsp;${email_req_msg}.<br />
+                            account&nbsp;${email_req_msg}<br />
                             <br />
                             Please do not reply directly to this email as all
                             replies go to an unattended inbox. If you’d like to
