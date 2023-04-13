@@ -75,7 +75,6 @@ export async function action({ request }: ActionArgs) {
     return redirect(`/${username}/profile/change-email/$confirm`)
 }
 
-
 export default function Index() {
     const { username, email } = useLoaderData<typeof loader>()
     const transition = useTransition()

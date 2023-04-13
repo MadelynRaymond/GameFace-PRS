@@ -49,23 +49,6 @@ export async function sendEmail(
 }
 
 //TODO: change secret
-export async function createEmailConfirmToken(userEmail: string): Promise<string | undefined> {
-    const user = await getUserByEmail(userEmail)
-    if (!user) {
-      return undefined
-    }
-  
-    return jwt.sign(
-      {
-        data: {
-            userId: user.id,
-        },
-      },
-      'SECRET',
-      { expiresIn: '1h' }
-    )
-  }
-
 export async function createResetToken(userEmail: string): Promise<string | undefined> {
     const user = await getUserByEmail(userEmail)
     if (!user) {
