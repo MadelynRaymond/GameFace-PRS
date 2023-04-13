@@ -1,4 +1,5 @@
-export async function passwordResetTemplate(recipient: string, resetLink: string): Promise<string> {
+export async function passwordResetTemplate(recipient: string, resetLink: string, email_req_msg:string): Promise<string> {
+
   const htmlTemplate = `
   <html>
   <body>
@@ -47,8 +48,8 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-weight: bold;
                           margin: 0 0 27px 0;
                         ">
-                              <span class="il">There was a request to change your password!
-                              </span>
+                              <span class="il">There was a request to change your ${email_req_msg}!</span>
+
                             </h1>
                             If you did not initiate this request, please disregard
                             this email and take no further action. However, if you
