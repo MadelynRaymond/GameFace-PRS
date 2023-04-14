@@ -54,6 +54,7 @@ export async function loader({ request }: LoaderArgs) {
     }
 
     throw new Response('Not Authorized', { status: 400 })
+    
 }
 
 export async function action({ request }: ActionArgs) {
@@ -152,3 +153,28 @@ export default function () {
         </div>
     )
 }
+
+//The CatchBoundary component only handles errors that are thrown during rendering
+export function CatchBoundary() {
+    const caught = useCatch()
+
+    if (caught.status === 400) {
+        return (
+            <div
+            style={{
+                height: '75vh',
+            }}
+            className="form-center"
+        >
+            <Form>
+                <h1>Not Authorized: Unique URL Modified</h1>
+                <p style={{ fontSize: '22px' }}>Email-Address-Update: Not Authorized</p>
+            
+            </Form>
+            </div>
+        )
+    }
+
+    throw new Error(`Unexpected caught response with status: ${caught.status}`)
+}
+
