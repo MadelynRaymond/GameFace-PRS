@@ -60,7 +60,7 @@ export async function action({ request }: ActionArgs) {
     }
 
 
-    const resetLink = `http://${process.env.BASE_URL || 'localhost:3002'}/profile/reset-email/change?email=${user.email}&id=${user.id}&token=${token.token}`
+    const resetLink = `http://${process.env.BASE_URL || 'localhost:3000'}/profile/reset-email/change?email=${user.email}&id=${user.id}&token=${token.token}`
     await sendEmail(
         {
             subject: 'Change Email Address',
