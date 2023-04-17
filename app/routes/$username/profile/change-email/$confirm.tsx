@@ -32,7 +32,7 @@ export default function ChangeEmail() {
             form.action = '/logout'
             document.body.appendChild(form)
             form.submit()
-        }, 15000)
+        }, 5000)
 
         return () => clearTimeout(redirectTimer)
     }, [])

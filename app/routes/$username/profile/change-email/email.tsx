@@ -33,15 +33,6 @@ export async function action({ request }: ActionArgs) {
         )
     }
 
-    if (!isProbablyEmail(email)) {
-        return json(
-            {
-                error: 'Please enter a valid email',
-            },
-            { status: 400 }
-        )
-    }
-
     const user = await getUserByEmail(email)
 
     if (!user) {
@@ -64,18 +55,25 @@ export async function action({ request }: ActionArgs) {
     await sendEmail(
         {
             subject: 'Change Email Address',
-            reqMsg: 'Email-Address',
+            reqMsg: 'There was a request to change your Email-Address',
+            reqMsg_Body:`If you did initiate this request, please disregard this email and take no further action. However, if you did, please click on the following link to securely change your email`,
+            tok_exp_txt:'This request to change your email will expire after 5 mins',
             body: `
                 <a  href="${resetLink}" 
                 style="background-color:#df7861; border:2px solid black; color:white; padding:1rem 1.5rem; margin:auto; margin-top:6px; display:block; width:183px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">
                   Confirm Email Address
-                </a>`,
+                </a>`
+                ,
+                
         },
         email
     )
     const username = request.url.split('/')[3]
     return redirect(`/${username}/profile/change-email/$confirm`)
+    
 }
+
+
 
 export default function Index() {
     const { username, email } = useLoaderData<typeof loader>()
