@@ -81,9 +81,9 @@ export async function action({ request }: ActionArgs) {
             {
                 subject: 'Email Successfully Updated',
                 reqMsg: 'Your email has been successfully updated',
-                reqMsg_Body:`If you did initiate this request, please disregard this email and take no further action. However, if you didn't, please contact support`,
-                body:`Filler Text`,
-                tok_exp_txt:'This request to change your email will expire after 5 mins',
+                reqMsg_Body:`If you did initiate this request, please disregard this email and take no further action. However, if you didn't please contact support`,
+                body:``,
+                tok_exp_txt:'This request to change your email was verified !',
             },
             validatedEmailData.newEmail
         )
@@ -149,8 +149,8 @@ export function CatchBoundary() {
                 className="form-center"
             >
                 <Form>
-                    <h1>Not Authorized: Unique URL Modified</h1>
-                    <p style={{ fontSize: '22px' }}>Email-Address-Update: Not Authorized</p>
+                <h1>Request Not Authorized: Unique URL Modified</h1>
+                    <h2 style={{ fontSize: '28px', color:'red' }}>Status Code: 400</h2>
                 </Form>
             </div>
         )
