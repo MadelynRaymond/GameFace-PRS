@@ -8,6 +8,8 @@ export async function sendEmail(
         subject: string
         body: string
         reqMsg: string
+        reqMsg_Body:string
+        tok_exp_txt:string
     },
     recipient: string
 ) {
@@ -28,7 +30,7 @@ export async function sendEmail(
             }
         })
 
-        const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body, email.reqMsg)
+        const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body,email.reqMsg,email.reqMsg_Body,email.tok_exp_txt)
 
         transporter.sendMail({
             from: 'GameFace 413 <foo@gamefaceprs.com>',

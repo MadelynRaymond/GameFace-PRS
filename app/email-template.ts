@@ -1,4 +1,4 @@
-export async function passwordResetTemplate(recipient: string, resetLink: string, email_req_msg:string): Promise<string> {
+export async function passwordResetTemplate(recipient: string, resetLink: string,email_req_msg:string,email_h1_txt:string,email_expire: string): Promise<string> {
 
   const htmlTemplate = `
   <html>
@@ -48,13 +48,9 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-weight: bold;
                           margin: 0 0 27px 0;
                         ">
-                              <span class="il">There was a request to change your ${email_req_msg}!</span>
+                              <span class="il"> ${email_req_msg}!</span>
 
-                            </h1>
-                            If you did not initiate this request, please disregard
-                            this email and take no further action. However, if you
-                            did, please click on the following link to securely
-                            update your ${email_req_msg}.
+                            </h1> ${email_h1_txt}.
                           </td>
                         </tr>
                         <tr>
@@ -114,8 +110,7 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-size: 18px;
                           line-height: 27px;
                           font-style: normal;
-                        ">This request to change your ${email_req_msg} will expire
-                              after 5 mins</strong><br />
+                        "> ${email_expire}</strong><br />
                             <br />
                             This email is conducted on behalf of
                             <span class="il">Gameface 4:13 Training Academy.</span>
