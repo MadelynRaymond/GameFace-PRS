@@ -79,9 +79,11 @@ export async function action({ request }: ActionArgs) {
         await changeEmail({ userId: parseInt(userId as string), email: validatedEmailData.newEmail })
         await sendEmail(
             {
-                subject: 'Email Successfully Changed',
-                body: 'Example Body',
-                reqMsg: 'Your email has been changed successfully!',
+                subject: 'Email Successfully Updated',
+                reqMsg: 'Your email has been successfully updated',
+                reqMsg_Body:`If you did initiate this request, please disregard this email and take no further action. However, if you didn't, please contact support`,
+                body:`Filler Text`,
+                tok_exp_txt:'This request to change your email will expire after 5 mins',
             },
             validatedEmailData.newEmail
         )
