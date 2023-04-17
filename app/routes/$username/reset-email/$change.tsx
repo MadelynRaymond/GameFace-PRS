@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'
 import { changeEmail } from '~/models/user.server'
 import { z } from 'zod'
 import { logout } from '~/session.server'
+import { sendEmail } from '~/mailer'
 
 //ZOD-ERROR-MSGS: ChangeEmail Form Validation Data
 const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
@@ -32,7 +33,7 @@ type Token = {
         email: string
         userId: number
     }
-    exp: number 
+    exp: number
 }
 export async function loader({ request }: LoaderArgs) {
     //URL contains these three query parameters, to ensure that they are present in the URL.
@@ -40,7 +41,7 @@ export async function loader({ request }: LoaderArgs) {
     const token = url.searchParams.get('token')
     const userId = url.searchParams.get('id')
     const email = url.searchParams.get('email')
-
+    
     if (!userId || !token || !email) {
         throw new Response('Not Found', { status: 404 })
     }
@@ -66,32 +67,6 @@ export async function action({ request }: ActionArgs) {
     const userId = formData.get('user-id')
     const exp = formData.get('token')
 
-    //Zod Not Showing Up Because of this code, (Last if statement)
-    // if (typeof newEmail !== 'string' || newEmail.length === 0) {
-    //     return json(
-    //         {
-    //             error: 'Email not provided',
-    //         },
-    //         { status: 400 }
-    //     )
-    // }
-    // if (typeof confirmEmail !== 'string' || confirmEmail.length === 0) {
-    //     return json(
-    //         {
-    //             error: 'Email not provided',
-    //         },
-    //         { status: 400 }
-    //     )
-    // }
-    // if (!isProbablyEmail(newEmail) || !isProbablyEmail(confirmEmail)) {
-    //     return json(
-    //         {
-    //             error: 'Please enter a valid email',
-    //         },
-    //         { status: 400 }
-    //     )
-    // }
-
     if (!userId || !exp) {
         throw new Response('Unexpected Error', { status: 500 })
     }
@@ -102,15 +77,24 @@ export async function action({ request }: ActionArgs) {
     try {
         const validatedEmailData = await ChangeEmailSchema.parseAsync(data)
         await changeEmail({ userId: parseInt(userId as string), email: validatedEmailData.newEmail })
+        await sendEmail(
+            {
+                subject: 'Email Successfully Changed',
+                body: 'Example Body',
+                reqMsg: 'Your email has been changed successfully!',
+            },
+            validatedEmailData.newEmail
+        )
+        const username = request.url.split('/')[2]
+        return redirect(`/${username}/profile`)
     } catch (error) {
         if (error instanceof z.ZodError) {
             return json({ errors: error.flatten() as ChangeEmailErrors })
         }
     }
-    // await changeEmail({ userId: parseInt(userId as string), email: newEmail as string })
-    const username = request.url.split('/')[2]
-    return redirect(`/${username}/profile`)
-    //  return await logout(request) Unsure if we want to logout after successful change or redirect back to profile like changePass
+    // const username = request.url.split('/')[2]
+    // return redirect(`/${username}/profile`)
+    return await logout(request)
 }
 
 export default function ChangeEmail() {
@@ -126,20 +110,24 @@ export default function ChangeEmail() {
         >
             <Form method="post" style={{ maxWidth: '600px', padding: '1rem' }}>
                 <h1>Change Email Address</h1>
+                <br></br>
                 <div>
                     <label htmlFor="newEmail">New Email:</label>
                     <input type="text" name="newEmail" id="newEmail" placeholder="New Email Address" />
                     {actionData?.errors?.fieldErrors.newEmail && <span className="error-text">{actionData.errors.fieldErrors.newEmail[0]}</span>}
-
-                    <label htmlFor="confirmEmail">Confirm Email</label>
+                    <br></br>
+                    <label htmlFor="confirmEmail">Confirm Email:</label>
                     <input type="text" name="confirmEmail" id="confirmEmail" placeholder="Confirm Email Address" />
                     {actionData?.errors?.fieldErrors.confirmEmail && <span className="error-text">{actionData.errors.fieldErrors.confirmEmail[0]}</span>}
+                    <br></br>
                     <input type="hidden" name="user-id" value={userId} />
                     <input type="hidden" name="token" value={token.exp} />
                 </div>
-                <button className="btn" type="submit">
-                    Change Email
-                </button>
+                <div className="login-btn-group">
+                    <button className="btn login-btn" type="submit">
+                        Change Email
+                    </button>
+                </div>
                 {actionData?.errors?.formErrors && <span className="error-text">{actionData.errors.formErrors[0]}</span>}
             </Form>
         </div>
