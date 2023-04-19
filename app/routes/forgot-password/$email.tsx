@@ -1,11 +1,12 @@
 import type { LoaderArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Form, useLoaderData } from '@remix-run/react'
+import { json, redirect } from '@remix-run/node'
+import { Form, useLoaderData, useSubmit } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { sendEmail } from '~/mailer'
 import { createTokenForUser } from '~/models/token.server'
 import email from '../$username/profile/change-email/email'
+import { action } from '.'
 
 export async function loader({ params }: LoaderArgs) {
     return json({
@@ -14,33 +15,25 @@ export async function loader({ params }: LoaderArgs) {
 }
 export default function Email() {
     const { email } = useLoaderData<typeof loader>()
-    // The countdown state is initialized with a value of 15.
-    const [countdown, setCountdown] = useState(15)
+    const submit = useSubmit()
+    const [countdown, setCountdown] = useState(5)
 
-    // This useEffect hook is used to update the countdown and redirect the user after 15 seconds.
     useEffect(() => {
-        // Set a countdown timer to update the countdown value every 1 second using setTimeout.
-        if (countdown > 0) {
-            const countdownTimer = setTimeout(() => {
-                setCountdown(countdown - 1)
-            }, 1000)
-            return () => clearTimeout(countdownTimer)
-        } else {
-            window.location.href = `/login`
+        if (countdown < 1) {
+            submit(null, { action: '/login', method: 'get', replace: true})
         }
-    }, [countdown, email])
+        const countdownTimer = setTimeout(() => {
+            setCountdown((countdown) => countdown - 1)
+        }, 1000)
+        return () => clearTimeout(countdownTimer)
+    }, [countdown])
 
     return (
-        <div
-            style={{
-                height: '75vh',
-            }}
-            className="form-center"
-        >
-            <Form method="post">
+        <div style={{ height: '75vh' }} className="form-center">
+            <div>
                 <h1> A Password reset link has been sent to: {email}</h1>
-                <p style={{ fontSize: '22px' }}>You will be redirected back to your profile in {countdown} seconds.</p>
-            </Form>
+                <p style={{ fontSize: '22px' }}>You will now be redirected to the login page in {countdown} seconds.</p>
+            </div>
         </div>
     )
 }

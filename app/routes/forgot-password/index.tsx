@@ -46,7 +46,7 @@ export async function action({ request }: ActionArgs) {
             subject: 'Reset Password',
             reqMsg: 'There was a request to change your Password',
             reqMsg_Body:'If you did not initiate this request, please disregard this email and take no further action. However, if you did, please click on the following link to securely reset your password',
-            tok_exp_txt:'This request to change your your password will expire after 5 mins',
+            tok_exp_txt:'This request to change your password will expire after 5 mins',
             body: `
                 <a  href="${resetLink}" 
                 style="background-color:#df7861; border:2px solid black; color:white; padding:1rem 1.5rem; margin:auto; margin-top:6px; display:block; width:183px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">

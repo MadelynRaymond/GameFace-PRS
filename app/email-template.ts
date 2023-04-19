@@ -79,9 +79,6 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             soon on the Gameface PRS!
 
                             <br />
-                            <!-- <br />
-                      This request to reset your password will expire after 5 mins
-                      <br /> -->
                             <br />
                             Sincerely,<br />
                             Ashanti Jackson<br />
