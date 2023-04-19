@@ -68,8 +68,7 @@ export async function action({ request }: ActionArgs) {
         email
     )
     const username = request.url.split('/')[3]
-    return redirect(`/${username}/profile/change-email/confirm`)
-    
+    return redirect(`/${username}/profile/change-email/confirm`) 
 }
 
 
@@ -90,7 +89,6 @@ export default function Index() {
                 <div>
                     <label htmlFor="email">Current Email: {email} </label>
                     <input type="text" name="email" placeholder="email" defaultValue={email} readOnly />
-                    {/* <span className="error-text">{actionData?.error}</span> */}
                 </div>
                 <div className="flex gap-3">
                     <input className="btn" disabled={transition.state === 'loading'} type="submit" value="Send Confirmation Email" />

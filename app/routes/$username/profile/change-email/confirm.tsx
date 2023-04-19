@@ -35,7 +35,7 @@ export default function ChangeEmailRedirect() {
         <div style={{ height: '75vh' }} className="form-center">
             <div>
                 <h1>A link to change your account email has been sent to: {email}</h1>
-                <p style={{ fontSize: '22px' }}>You will be redirected back to your profile in {countdown} seconds.</p>
+                <p style={{ fontSize: '22px' }}>You now will now be logged out in {countdown} seconds.</p>
             </div>
         </div>
     )
