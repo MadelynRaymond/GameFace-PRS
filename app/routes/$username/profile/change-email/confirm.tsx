@@ -12,7 +12,7 @@ export async function loader({ request }: LoaderArgs) {
     })
 }
 
-export default function ChangeEmail() {
+export default function ChangeEmailRedirect() {
     const { email } = useLoaderData<typeof loader>()
     const submit = useSubmit()
 

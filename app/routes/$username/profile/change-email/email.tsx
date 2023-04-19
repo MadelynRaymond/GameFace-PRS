@@ -44,7 +44,7 @@ export async function action({ request }: ActionArgs) {
     }
 
     const token = await createTokenForUser(email)
-
+    
     if (!token) {
         throw new Response('Unexpected Error Occured', { status: 500 })
     }
@@ -68,7 +68,7 @@ export async function action({ request }: ActionArgs) {
         email
     )
     const username = request.url.split('/')[3]
-    return redirect(`/${username}/profile/change-email/$confirm`)
+    return redirect(`/${username}/profile/change-email/confirm`)
     
 }
 

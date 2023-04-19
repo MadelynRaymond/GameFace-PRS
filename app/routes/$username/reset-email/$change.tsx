@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
-import { Form, Link, useActionData, useCatch, useLoaderData } from '@remix-run/react'
+import { Form, Link, useActionData, useCatch, useLoaderData, useSubmit } from '@remix-run/react'
 import jwtDecode from 'jwt-decode'
 import jwt from 'jsonwebtoken'
 import { changeEmail } from '~/models/user.server'
@@ -10,14 +10,13 @@ import { logout } from '~/session.server'
 import { sendEmail } from '~/mailer'
 
 //ZOD-ERROR-MSGS: ChangeEmail Form Validation Data
-const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const INVALID_EMAIL_ERROR = 'Must be a valid email address'
 const EMAILS_DO_NOT_MATCH_ERROR = 'Emails must match'
 
 const ChangeEmailSchema = z
     .object({
-        newEmail: z.string().email().regex(EMAIL_REGEX, INVALID_EMAIL_ERROR),
-        confirmEmail: z.string().email().regex(EMAIL_REGEX, INVALID_EMAIL_ERROR),
+        newEmail: z.string().email(INVALID_EMAIL_ERROR),
+        confirmEmail: z.string().email(INVALID_EMAIL_ERROR),
     })
     .refine((data) => data.newEmail === data.confirmEmail, EMAILS_DO_NOT_MATCH_ERROR)
 
@@ -41,7 +40,7 @@ export async function loader({ request }: LoaderArgs) {
     const token = url.searchParams.get('token')
     const userId = url.searchParams.get('id')
     const email = url.searchParams.get('email')
-    
+
     if (!userId || !token || !email) {
         throw new Response('Not Found', { status: 404 })
     }
@@ -74,6 +73,7 @@ export async function action({ request }: ActionArgs) {
     if (Date.now() >= parseInt(exp as string) * 1000) {
         throw new Response('Not Authorized', { status: 400 })
     }
+    
     try {
         const validatedEmailData = await ChangeEmailSchema.parseAsync(data)
         await changeEmail({ userId: parseInt(userId as string), email: validatedEmailData.newEmail })
@@ -81,21 +81,17 @@ export async function action({ request }: ActionArgs) {
             {
                 subject: 'Email Successfully Updated',
                 reqMsg: 'Your email has been successfully updated',
-                reqMsg_Body:`If you did initiate this request, please disregard this email and take no further action. However, if you didn't please contact support`,
-                body:``,
-                tok_exp_txt:'This request to change your email was verified !',
+                reqMsg_Body: `If you did initiate this request, please disregard this email and take no further action. However, if you didn't please contact support`,
+                body: ``,
+                tok_exp_txt: 'This request to change your email was verified !',
             },
             validatedEmailData.newEmail
         )
-        const username = request.url.split('/')[2]
-        return redirect(`/${username}/profile`)
     } catch (error) {
         if (error instanceof z.ZodError) {
             return json({ errors: error.flatten() as ChangeEmailErrors })
         }
     }
-    // const username = request.url.split('/')[2]
-    // return redirect(`/${username}/profile`)
     return await logout(request)
 }
 
@@ -104,12 +100,7 @@ export default function ChangeEmail() {
     const { userId, token } = useLoaderData<typeof loader>()
 
     return (
-        <div
-            style={{
-                height: '75vh',
-            }}
-            className="form-center"
-        >
+        <div style={{height: '75vh', }} className="form-center">
             <Form method="post" style={{ maxWidth: '600px', padding: '1rem' }}>
                 <h1>Change Email Address</h1>
                 <br></br>
@@ -142,16 +133,11 @@ export function CatchBoundary() {
 
     if (caught.status === 400) {
         return (
-            <div
-                style={{
-                    height: '75vh',
-                }}
-                className="form-center"
-            >
-                <Form>
-                <h1>Request Not Authorized: Unique URL Modified</h1>
-                    <h2 style={{ fontSize: '28px', color:'red' }}>Status Code: 400</h2>
-                </Form>
+            <div style={{ height: '75vh' }} className="form-center">
+                <div>
+                    <h1>Request Not Authorized: Unique URL Modified</h1>
+                    <h2 style={{ fontSize: '28px', color: 'red' }}>Status Code: 400</h2>
+                </div>
             </div>
         )
     }
