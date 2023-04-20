@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node'
+import { LoaderArgs, redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { NavLink, Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import invariant from 'tiny-invariant'
@@ -11,6 +11,8 @@ export async function loader({ request, params }: LoaderArgs) {
     if (!athlete) {
         throw new Response('Not Found', { status: 404 })
     }
+
+    if (athlete.role === 'STAFF') return redirect('/staff/athletes')
 
     return json({
         username: athlete.username,

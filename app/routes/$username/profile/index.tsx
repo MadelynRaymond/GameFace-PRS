@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node'
+import { LoaderArgs, redirect } from '@remix-run/node'
 import { json, Response } from '@remix-run/node'
 import { Link, useLoaderData, useLocation } from '@remix-run/react'
 import { requireUser } from '~/session.server'
@@ -9,6 +9,8 @@ export async function loader({ request }: LoaderArgs) {
     if (!user) {
         throw new Response('Not Found', { status: 404 })
     }
+
+    if (user.role === 'STAFF') return redirect('/staff/athletes')
 
     const { profile, email, username } = user
 
