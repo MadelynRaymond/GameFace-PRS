@@ -1,4 +1,5 @@
-export async function passwordResetTemplate(recipient: string, resetLink: string): Promise<string> {
+export async function passwordResetTemplate(recipient: string, resetLink: string,email_req_msg:string,email_h1_txt:string,email_expire: string): Promise<string> {
+
   const htmlTemplate = `
   <html>
   <body>
@@ -47,13 +48,9 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-weight: bold;
                           margin: 0 0 27px 0;
                         ">
-                              <span class="il">There was a request to change your password!
-                              </span>
-                            </h1>
-                            If you did not initiate this request, please disregard
-                            this email and take no further action. However, if you
-                            did, please click on the following link to securely
-                            update your password.
+                              <span class="il"> ${email_req_msg}!</span>
+
+                            </h1> ${email_h1_txt}.
                           </td>
                         </tr>
                         <tr>
@@ -82,9 +79,6 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             soon on the Gameface PRS!
 
                             <br />
-                            <!-- <br />
-                      This request to reset your password will expire after 5 mins
-                      <br /> -->
                             <br />
                             Sincerely,<br />
                             Ashanti Jackson<br />
@@ -113,13 +107,12 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                           font-size: 18px;
                           line-height: 27px;
                           font-style: normal;
-                        ">This request to reset your password will expire
-                              after 5 mins</strong><br />
+                        "> ${email_expire}</strong><br />
                             <br />
                             This email is conducted on behalf of
                             <span class="il">Gameface 4:13 Training Academy.</span>
                             You have received this
-                            <span class="il">Password Reset</span> email link
+                            <span class="il">${email_req_msg}</span> email link
                             because you provided
                             <span class="il">GameFace</span> your email address,
                             either in person or via their web site, and you
@@ -127,7 +120,7 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             <span class="il">the Gameface Performace Review System</span>. Please do not forward this
                             email to others because
                             you have been given a unique URL that can change your
-                            account password.<br />
+                            account&nbsp;${email_req_msg}<br />
                             <br />
                             Please do not reply directly to this email as all
                             replies go to an unattended inbox. If you’d like to

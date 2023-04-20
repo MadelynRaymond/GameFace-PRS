@@ -7,11 +7,13 @@ export async function sendEmail(
     email: {
         subject: string
         body: string
+        reqMsg: string
+        reqMsg_Body:string
+        tok_exp_txt:string
     },
     recipient: string
 ) {
     try {
-
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -28,16 +30,14 @@ export async function sendEmail(
             }
         })
 
-const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body);
+        const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body,email.reqMsg,email.reqMsg_Body,email.tok_exp_txt)
 
         transporter.sendMail({
-            
             from: 'GameFace 413 <foo@gamefaceprs.com>',
             to: recipient,
             subject: email.subject,
             html: passwordResetEmailHtml,
-
-        });
+        })
     } catch (error: unknown) {
         if (error instanceof Error) {
             return error
@@ -48,6 +48,7 @@ const passwordResetEmailHtml = await passwordResetTemplate(recipient, email.body
 }
 
 //TODO: change secret
+
 export async function createResetToken(userEmail: string): Promise<string | undefined> {
     const user = await getUserByEmail(userEmail)
     if (!user) {
@@ -57,6 +58,7 @@ export async function createResetToken(userEmail: string): Promise<string | unde
     return jwt.sign(
         {
             data: {
+                email: user.email,
                 userId: user.id,
             },
         },
