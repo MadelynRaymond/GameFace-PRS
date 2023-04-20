@@ -1,11 +1,11 @@
 export async function passwordResetTemplate(
-  recipient: string,
-  resetLink: string,
-  email_req_msg: string,
-  email_h1_txt: string,
-  email_expire: string
+    recipient: string,
+    resetLink: string,
+    email_req_msg: string,
+    email_h1_txt: string,
+    email_expire: string
 ): Promise<string> {
-  const htmlTemplate = `
+    const htmlTemplate = `
 <html>
 <body>
   <table align="center" bgcolor="#e6e6e6" border="0" cellpadding="0" cellspacing="0" style="padding-top: 10px"
@@ -166,5 +166,5 @@ export async function passwordResetTemplate(
 </body>
 
 </html>`
-  return htmlTemplate
+    return htmlTemplate
 }

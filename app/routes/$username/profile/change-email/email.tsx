@@ -59,7 +59,7 @@ export async function action({ request }: ActionArgs) {
             tok_exp_txt:'This request to change your email will expire after 5 mins',
             body: `
                 <a  href="${resetLink}" 
-                style="background-color:#df7861; border:2px solid black; color:white; padding:1rem 1.5rem; margin:auto; margin-top:6px; display:block; width:183px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">
+                style="background-color:#df7861; border:2px solid black; color:white; padding:1.2rem 1.5rem; margin:auto; margin-top:6px; display:block; width:200px; font-family:'Montserrat',sans-serif!important; border-radius:12px; text-align:center; text-decoration:none; font-size:1rem;">
                   Confirm Email Address
                 </a>`
                 ,
