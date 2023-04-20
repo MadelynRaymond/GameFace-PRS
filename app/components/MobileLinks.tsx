@@ -26,15 +26,15 @@ export default function MobileLinks({
                 <Link onClick={close} className="orange-background" to={''}>
                     Main Site
                 </Link>
-                <Link onClick={close} className="purple-background" to={`/${user.username}/stats`}>
+                {user.role !== 'STAFF' && <Link onClick={close} className="purple-background" to={`/${user.username}/stats`}>
                     My Stats
-                </Link>
+                </Link>}
                 <li className="logout-btn orange-background" onClick={handleLogout}>
                     Logout
                 </li>
-                <Link onClick={close} className="red-background" to={`/${user.username}/profile`}>
+                {user.role !== 'STAFF' && <Link onClick={close} className="red-background" to={`/${user.username}/profile`}>
                     Profile
-                </Link>
+                </Link>}
             </ul>
         )
     }

@@ -6,11 +6,11 @@ export default function NavLinks({user}: {user: Omit<User, 'createdAt' | 'update
     return (
     <ul className="nav-links">
         <Link className="orange-background" to={''}>Main Site</Link>
-        <Link className="purple-background" to={`/${user.username}/stats`}>My Stats</Link>
+        {user.role !== 'STAFF' && <Link className="purple-background" to={`/${user.username}/stats`}>My Stats</Link>}
         <Form className="logout-btn orange-background" method="post" action="/logout">
           <button style={{width: '100%', height: '100%'}} type="submit">Logout</button>
         </Form>
-        <Link className="red-background"to={`/${user.username}/profile`}>Profile</Link>
+        {user.role !== 'STAFF' && <Link className="red-background"to={`/${user.username}/profile`}>Profile</Link>}
     </ul>
     )
   }
