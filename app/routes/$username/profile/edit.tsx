@@ -1,6 +1,6 @@
-import { ActionArgs, json, LoaderArgs, redirect } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs} from '@remix-run/node';
+import { json, redirect } from '@remix-run/node'
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
-import { useNavigate } from 'react-router-dom'
 import { requireUser } from '~/session.server'
 import { z } from 'zod'
 import invariant from 'tiny-invariant'
@@ -9,13 +9,6 @@ import { updateAthleteProfile } from '~/models/athlete.server'
 const phoneRegex = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
 const EditSchema = z.object({
     id: z.coerce.number(),
-    email: z.optional(
-        z
-            .string()
-            .email()
-            .or(z.literal(''))
-            .transform((d) => (d === '' ? undefined : d))
-    ),
     age: z
         .optional(z.coerce.number().min(8, 'Age must be at least 8'))
         .or(z.literal(''))
@@ -111,9 +104,6 @@ export default function EditProfile() {
             <Form method="post">
                 <div className="">
                     <div className="edit-group">
-                        <label htmlFor="email">Email</label>
-                        <input type="text" name="email" placeholder="email" defaultValue={email}/>
-                        <span className="error-text">{actionData?.errors?.fieldErrors.email && actionData.errors.fieldErrors.email[0]}</span>
                         <label htmlFor="age">Age</label>
                         <input type="text" name="age" placeholder="age" defaultValue={profile?.age} />
                         <span className="error-text">{actionData?.errors?.fieldErrors.age && actionData.errors.fieldErrors.age[0]}</span>
