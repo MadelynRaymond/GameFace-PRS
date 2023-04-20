@@ -1,6 +1,11 @@
-export async function passwordResetTemplate(recipient: string, resetLink: string,email_req_msg:string,email_h1_txt:string,email_expire: string): Promise<string> {
-
-  const htmlTemplate = `
+export async function passwordResetTemplate(
+    recipient: string,
+    resetLink: string,
+    email_req_msg: string,
+    email_h1_txt: string,
+    email_expire: string
+): Promise<string> {
+    const htmlTemplate = `
   <html>
   <body>
     <table align="center" bgcolor="#e6e6e6" border="0" cellpadding="0" cellspacing="0" style="padding-top: 10px"
@@ -125,8 +130,8 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             Please do not reply directly to this email as all
                             replies go to an unattended inbox. If you’d like to
                             contact <span class="il">GameFace 4:13</span>, please
-                            <a href="" style="color: #0070c0; text-decoration: underline" target="_blank"
-                              data-saferedirecturl="">submit
+                            <a href="https://www.gameface413.org/contact" style="color: #0070c0; text-decoration: underline" target="_blank"
+                              data-saferedirecturl="https://www.gameface413.org/contact">submit
                               a request</a>
                             online.<br />
                             <br />
@@ -139,13 +144,13 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
                             <span class="il">GameFace 4:13 Training Academy.</span>
                             All rights reserved.<br />
                             <br />
-                            <span style="font-style: normal"><a href=""
+                            <span style="font-style: normal"><a href="https://www.gameface413.org/?utm_source=BenchmarkEmail&utm_campaign=March_Newsletter_-_FINAL&utm_medium=email"
                                 style="color: #0070c0; text-decoration: underline" target="_blank"
                                 data-saferedirecturl="https://www.gameface413.org/?utm_source=BenchmarkEmail&utm_campaign=March_Newsletter_-_FINAL&utm_medium=email"><span
                                   class="il">GameFace</span>.com</a>
-                              <a href="" style="color: #0070c0; text-decoration: underline" target="_blank"
-                                data-saferedirecturl="">Privacy
-                                Policy</a></span>
+                              <!-- <a href="https://www.gameface413.org/" style="color: #0070c0; text-decoration: underline" target="_blank"
+                                data-saferedirecturl="https://www.gameface413.org/">Privacy
+                                Policy</a></span> -->
                           </td>
                         </tr>
                       </tbody>
@@ -161,5 +166,5 @@ export async function passwordResetTemplate(recipient: string, resetLink: string
   </body>
 
   </html>`
-  return htmlTemplate
-  }
+    return htmlTemplate
+}
