@@ -1,7 +1,7 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
@@ -23,8 +23,10 @@ const PassesEntrySchema = z
     .array()
     .transform((data) => data.map((s) => ({ completed: s.value, attempted: s.outOf, created_at: s.created_at })))
 
-export async function loader({ request }: LoaderArgs) {
-    const { id, ...athleteInfo } = await requireUser(request)
+export async function loader({ request, params }: LoaderArgs) {
+    const user = await requireUser(request)
+    const athlete = await fetchAthlete(user, params.username as string)
+    const {id, ...athleteInfo} = athlete!
     const userId = id
 
     const url = new URL(request.url)

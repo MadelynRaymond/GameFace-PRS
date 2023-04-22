@@ -4,8 +4,9 @@ import { useFetcher, useLoaderData } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 import { CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getAthleteById } from '~/models/athlete.server'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesTotal } from '~/models/drill-entry.server'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
 let orange = '#EDA75C'
@@ -13,9 +14,11 @@ let orangeAccent = '#E58274'
 let black = '#000000'
 let strokeWidth = 4
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
     const user = await requireUser(request)
-    const { id, ...athleteInfo } = user
+    const athlete = await fetchAthlete(user, params.username as string)
+
+    const {id, ...athleteInfo} = athlete!
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null

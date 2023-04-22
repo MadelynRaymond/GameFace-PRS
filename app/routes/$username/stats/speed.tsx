@@ -1,7 +1,7 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Line, LineChart } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
 import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
@@ -19,9 +19,10 @@ const SpeedEntrySchema = z
     .array()
     .transform((data) => data.map((s) => ({ time: s.value, created_at: s.created_at })))
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
     const user = await requireUser(request)
-    const { id, ...athleteInfo } = user
+    const athlete = await fetchAthlete(user, params.username as string)
+    const { id, ...athleteInfo } = athlete!
     const userId = id
 
     //fetch time interval from url
