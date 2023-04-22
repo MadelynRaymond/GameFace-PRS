@@ -3,7 +3,7 @@ import { fetchAthlete, requireUser } from '~/session.server'
 import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral } from '~/models/drill-entry.server'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
@@ -79,6 +79,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function Strength() {
     const {athleteInfo, pushUpEntries, pushUpMax, squatEntries, squatAverage, pullUpEntries, pullUpMax} = useLoaderData<typeof loader>()
     const {profile, username} = athleteInfo
+    const params = useParams()
     
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -100,7 +101,7 @@ export default function Strength() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/strength?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/strength?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])

@@ -2,7 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { fetchAthlete, requireUser } from '~/session.server'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMin } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 import { useEffect, useReducer } from 'react'
@@ -75,6 +75,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function Speed() {
     const { lastSessionSpeed, averageSpeed, bestSpeed, lastSevenSessionsWithBest, athleteInfo, speedEntries, averageSpeedWithOverallAverage } = useLoaderData<typeof loader>()
     const {profile, username} = athleteInfo
+    const params = useParams()
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -95,7 +96,7 @@ export default function Speed() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/speed?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/speed?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])

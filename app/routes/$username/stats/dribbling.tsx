@@ -2,7 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { fetchAthlete, requireUser } from '~/session.server'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports } from '~/models/drill-entry.server'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
@@ -62,6 +62,7 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function Dribbling() {
     const { averageTime, bestTime, dribblingSpeedEntries, lastSessionAverage, athleteInfo, lastSevenSessions} = useLoaderData<typeof loader>()
     const {profile, username} = athleteInfo
+    const params = useParams()
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -82,7 +83,7 @@ export default function Dribbling() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/dribbling?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/dribbling?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])

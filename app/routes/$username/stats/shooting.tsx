@@ -3,7 +3,7 @@ import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { fetchAthlete, requireUser } from '~/session.server'
 import { getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesTotal } from '~/models/drill-entry.server'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useEffect, useReducer, useState } from 'react'
 import { z } from 'zod'
@@ -72,6 +72,8 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function Shooting() {
     const { scored, attempted, successPercentage, athleteInfo, lastSevenSessions, shootingEntries } = useLoaderData<typeof loader>()
     const {profile, username} = athleteInfo
+    const params = useParams()
+
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
             throw new Error('Unknown action')
@@ -92,7 +94,7 @@ export default function Shooting() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/shooting?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/shooting?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])
