@@ -1,9 +1,9 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesLastNReports, getEntriesMax } from '~/models/drill-entry.server'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
@@ -27,8 +27,10 @@ const JumpHeightEntrySchema = z
     .array()
     .transform((data) => data.map((s) => ({ height: s.value, created_at: s.created_at })))
 
-export async function loader({ request }: LoaderArgs) {
-    const { id, ...athleteInfo } = await requireUser(request)
+export async function loader({ request, params }: LoaderArgs) {
+    const user = await requireUser(request)
+    const athlete = await fetchAthlete(user, params.username as string)
+    const {id, ...athleteInfo} = athlete!
     const userId = id
 
     const url = new URL(request.url)
@@ -76,6 +78,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function Jumping() {
     const { jumpHeightAverage, jumpHeightBest, jumpDistanceEntries, jumpHeightEntries, lastSevenSessions, athleteInfo, longestJump } = useLoaderData<typeof loader>()
     const {username, profile} = athleteInfo
+    const params = useParams()
    
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -97,7 +100,7 @@ export default function Jumping() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/jumping?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/jumping?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])

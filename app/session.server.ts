@@ -2,6 +2,8 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node'
 
 import type { User } from '~/models/user.server'
 import { getUserById } from '~/models/user.server'
+import { getAthleteById } from './models/athlete.server'
+import { StudentProfile } from '@prisma/client'
 
 export const sessionStorage = createCookieSessionStorage({
     cookie: {
@@ -44,6 +46,10 @@ export async function requireUserId(request: Request, redirectTo: string = new U
         throw redirect(`/login`)
     }
     return userId
+}
+
+export async function fetchAthlete(user: User & {profile: StudentProfile | null}, username: string) {
+    return user.role === 'STAFF' ? await getAthleteById(parseInt(username)) : user
 }
 
 export async function requireUser(request: Request) {

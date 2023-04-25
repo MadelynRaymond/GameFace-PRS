@@ -1,9 +1,9 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, BarChart, Bar, Label } from 'recharts'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { getEntriesAggregate, getEntriesAverage, getEntriesByDrillLiteral } from '~/models/drill-entry.server'
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useCatch, useFetcher, useLoaderData } from '@remix-run/react'
+import { useCatch, useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { dateFromDaysOptional, toDateString } from '~/util'
 import { useReducer, useEffect } from 'react'
 import { z } from 'zod'
@@ -27,8 +27,10 @@ const CalisthenicEntrySchema = z
     .array()
     .transform((data) => data.map((s) => ({ amount: s.value, created_at: s.created_at })))
 
-export async function loader({ request }: LoaderArgs) {
-    const {id, ...athleteInfo} = await requireUser(request)
+export async function loader({ request, params }: LoaderArgs) {
+    const user = await requireUser(request)
+    const athlete = await fetchAthlete(user, params.username as string)
+    const {id, ...athleteInfo} = athlete!
     const userId = id
 
     const url = new URL(request.url)
@@ -77,6 +79,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function Strength() {
     const {athleteInfo, pushUpEntries, pushUpMax, squatEntries, squatAverage, pullUpEntries, pullUpMax} = useLoaderData<typeof loader>()
     const {profile, username} = athleteInfo
+    const params = useParams()
     
     const intervalReducer = (_state: { text: string, touched: boolean }, action: { type: 'update'; payload?: number }): { text: string, touched: boolean, interval?: number } => {
         if (action.type !== 'update') {
@@ -98,7 +101,7 @@ export default function Strength() {
 
     useEffect(() => {
         if (state.touched) {
-            filter.load(`/${username}/stats/strength?interval=${state.interval}`)
+            filter.load(`/${params.username as string}/stats/strength?interval=${state.interval}`)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state])

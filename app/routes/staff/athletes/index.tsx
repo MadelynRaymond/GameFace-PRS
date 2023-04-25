@@ -107,6 +107,7 @@ function AthleteTableRow({ athlete }: { athlete: { profile: StudentProfile | nul
             </td>
             <td>
                 <div className="student-table-btn-group">
+                    <button onClick={() => navigate(`/${athlete.id}/stats`)} className='btn athlete-table-btn'>View Stats</button>
                     <button className="btn athlete-table-btn" onClick={() => navigate(`${location.pathname}/${athlete.id}`)}>
                         Update Stats
                     </button>

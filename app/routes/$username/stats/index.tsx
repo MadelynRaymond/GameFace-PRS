@@ -1,11 +1,12 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData, useParams } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 import { CartesianGrid, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getAthleteById } from '~/models/athlete.server'
 import { getEntriesAggregate, getEntriesByDrillLiteral, getEntriesTotal } from '~/models/drill-entry.server'
-import { requireUser } from '~/session.server'
+import { fetchAthlete, requireUser } from '~/session.server'
 import { dateFromDaysOptional, dbTimeToString, toDateString } from '~/util'
 
 let orange = '#EDA75C'
@@ -13,9 +14,11 @@ let orangeAccent = '#E58274'
 let black = '#000000'
 let strokeWidth = 4
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
     const user = await requireUser(request)
-    const { id, ...athleteInfo } = user
+    const athlete = await fetchAthlete(user, params.username as string)
+
+    const {id, ...athleteInfo} = athlete!
     const url = new URL(request.url)
     const filter = url.searchParams.get('interval')
     const intervalLiteral = filter ? parseInt(filter) : null
@@ -132,6 +135,7 @@ export default function Overall() {
     ]
 
     const {profile, username} = athleteInfo
+    const params = useParams()
 
     return (
         <div className='stats-summary'>
@@ -143,13 +147,13 @@ export default function Overall() {
                 <div className="button-group no-print">
                     <p className="filter-heading">Select Filter:</p>
                     <div className="filter-button-group">
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=30`)} className="filter-button month">
+                        <button onClick={() => filter.load(`/${params.username as string}/stats?index&interval=30`)} className="filter-button month">
                             Month
                         </button>
-                        <button onClick={() => filter.load(`/${username}/stats?index&interval=365`)} className="filter-button year">
+                        <button onClick={() => filter.load(`/${params.username as string}/stats?index&interval=365`)} className="filter-button year">
                             Year
                         </button>
-                        <button onClick={() => filter.load(`/${username}/stats?index`)} className="filter-button lifetime">
+                        <button onClick={() => filter.load(`/${params.username as string}/stats?index`)} className="filter-button lifetime">
                             Lifetime
                         </button>
                     </div>
