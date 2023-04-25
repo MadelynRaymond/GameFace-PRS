@@ -5,7 +5,8 @@ import { getUser, logout } from '~/session.server'
 export async function loader({ request }: LoaderArgs) {
     const user = await getUser(request)
 
-    if (user) return redirect(`/${user.username}/stats`)
+    if (user?.role === 'STAFF') return redirect('/staff/athletes')
+    if(user) return redirect(`/${user.username}/stats`)
 
     throw await logout(request)
 }
