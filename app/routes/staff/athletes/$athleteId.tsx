@@ -20,6 +20,11 @@ const EntrySchema = z.object({
     outOf: z.optional(z.coerce.number().gte(0)),
     drillId: z.coerce.number(),
     userId: z.coerce.number(),
+}).refine(data => {
+    if (data.outOf) {
+        return data.value <= data.outOf
+    }
+    return true
 })
 
 export const AthleteFormData = z.object({
@@ -63,7 +68,8 @@ export async function action({ request, params }: ActionArgs) {
 
     if (!result.success) {
         if (result.error instanceof ZodError) {
-            return json({ errors: 'Please fix form errors' })
+            console.log(result.error)
+            return json({ errors: 'Please make sure all fields are filled and the all value fields are greater than or equal to all outOf fields' })
         }
     }
 
