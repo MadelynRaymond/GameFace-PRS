@@ -5,7 +5,7 @@ export default function NavLinks({user}: {user: Omit<User, 'createdAt' | 'update
   if (user) {
     return (
     <ul className="nav-links">
-        <Link className="orange-background" to={''}>Main Site</Link>
+        {user.role === 'STAFF' && <Link  className="orange-background" to={'/staff/athletes'}>Athletes</Link>}
         {user.role !== 'STAFF' && <Link className="purple-background" to={`/${user.username}/stats`}>My Stats</Link>}
         <Form className="logout-btn orange-background" method="post" action="/logout">
           <button style={{width: '100%', height: '100%'}} type="submit">Logout</button>

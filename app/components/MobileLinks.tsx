@@ -23,9 +23,8 @@ export default function MobileLinks({
     if (user) {
         return (
             <ul ref={ref} className="nav-links-mobile">
-                <Link onClick={close} className="orange-background" to={''}>
-                    Main Site
-                </Link>
+                {user.role === 'STAFF' && <Link  className="orange-background" onClick={close} to={'/staff/athletes'}>Athletes</Link>}
+
                 {user.role !== 'STAFF' && <Link onClick={close} className="purple-background" to={`/${user.username}/stats`}>
                     My Stats
                 </Link>}
