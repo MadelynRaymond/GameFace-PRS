@@ -118,6 +118,7 @@ export default function AthleteDetails() {
     return (
         <div className="athlete-overview-container">
             <div className="athlete-reports">
+                <p style={{fontSize: '1.25rem', fontWeight: 'bold'}}>Reports</p>
                 <div className="report-list">
                     {reports.map((report) => (
                         <Report
@@ -133,6 +134,7 @@ export default function AthleteDetails() {
                 </div>
             </div>
             <div className="athlete-report-form">
+                <p style={{fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem'}}>{state.mode === 'new' ? 'New Report' : `Report From ${reportQuery.data?.created_at}`}</p>
                 <select style={{ marginBottom: '1rem' }} onChange={(e) => setCategory(parseInt(e.currentTarget.value))} name="" id="">
                     <option value="0">Filter Category</option>
                     {categories.map((category) => (
