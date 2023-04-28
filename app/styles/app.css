@@ -791,6 +791,7 @@
 .athlete-reports {
   padding: 1rem;
   height: 850px;
+  overflow-y: auto;
   width: 600px;
   border: 1px solid black;
   padding: 2rem;
