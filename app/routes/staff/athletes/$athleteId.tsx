@@ -158,7 +158,7 @@ export default function AthleteDetails() {
                             formMode={state.mode}
                         />
                     ))}
-                    <button type="submit">Submit</button>
+                    <button className='btn' type="submit">Submit</button>
                     <span className="error-text">{actionData?.errors}</span>
                 </Form>
             </div>
