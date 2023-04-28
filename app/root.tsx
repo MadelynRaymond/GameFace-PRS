@@ -53,7 +53,7 @@ function Navbar() {
 
     return (
         <nav className="navbar no-print">
-            <p className='nav-logo'>GameFace</p>
+            <Link to={'/'} className='nav-logo'>GameFace</Link>
             {open && <MobileLinks navigate={mobileNavigate} close={() => setOpen(false)} user={user}/>}
             <NavLinks user={user}/>
             <div className="hamburger" onClick={() => setOpen(!open)}>
