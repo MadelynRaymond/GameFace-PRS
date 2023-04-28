@@ -194,11 +194,11 @@ export default function Overall() {
                     <h4>Speed</h4>
                     <div className="stat-row-item">
                         <p className="table-stat-name">Fastest Drill</p>
-                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.min || speedAggregations.min)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.min || speedAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Drill Speed</p>
-                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.average || speedAggregations.average)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.speedAggregations.average || speedAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r">
@@ -216,11 +216,11 @@ export default function Overall() {
                     <h4>Dribbling</h4>
                     <div>
                         <p className="table-stat-name">Fastest Drill w/no Mistakes</p>
-                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.min || dribblingAggregations.min)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.min || dribblingAggregations.min)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Drill w/no Mistakes</p>
-                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.average || dribblingAggregations.average)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.dribblingAggregations.average || dribblingAggregations.average)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r accent">
@@ -238,22 +238,22 @@ export default function Overall() {
                     <h4>Strength</h4>
                     <div>
                         <p className="table-stat-name">Avg. Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.average || squatAggregations.average)}` || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Best Squat Duration w/Weights</p>
-                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'No data'}s</p>
+                        <p>{`${dbTimeToString(filter?.data?.squatAggregations.min || squatAggregations.min)}` || 'No data'}</p>
                     </div>
                 </div>
                 <div className="stat-row flex-r accent-2">
                     <h4>Jumping</h4>
                     <div>
                         <p className="table-stat-name">Highest Jump</p>
-                        <p>{filter?.data?.jumpingAggregations.max || jumpingAggregations.max || 'No data'}ft</p>
+                        <p>{filter?.data?.jumpingAggregations.max || jumpingAggregations.max || 'No data'}</p>
                     </div>
                     <div>
                         <p className="table-stat-name">Avg. Jump Height</p>
-                        <p>{filter?.data?.jumpingAggregations.average?.toFixed(1) || jumpingAggregations.average?.toFixed(1) || 'No data'}ft</p>
+                        <p>{filter?.data?.jumpingAggregations.average?.toFixed(1) || jumpingAggregations.average?.toFixed(1) || 'No data'}</p>
                     </div>
                 </div>
             </div>
