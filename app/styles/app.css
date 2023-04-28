@@ -905,6 +905,7 @@
 }
 
 .btn {
+  cursor: pointer !important;
   background-color: #DF7861;
   border: 2px solid black;
   margin: 2px;

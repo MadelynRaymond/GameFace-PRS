@@ -930,6 +930,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .btn {
+  cursor: pointer !important;
   background-color: #DF7861;
   border: 2px solid black;
   margin: 2px;
