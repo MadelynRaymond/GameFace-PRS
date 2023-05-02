@@ -8,19 +8,22 @@ export async function createEntryOnReport(reportId: number, data: AthleteFormDat
 
     //update report date
     const res = await prisma.athleteReport.update({where: {id: reportId}, data: {created_at}})
-    console.log(res)
+    console.log(created_at)
 
-    return prisma.drillEntry.createMany({
+    const row = prisma.drillEntry.createMany({
         data: entries.map((entry) => {
             const { userId, drillId, ...score } = entry
             return {
                 userId,
                 drillId,
                 reportId,
+                created_at,
                 ...score,
             }
         }),
     })
+
+    return row
 }
 
 export async function getEntriesLastNReports({ drillName, userId, sessions }: { drillName: Drill['name']; userId: User['id']; sessions: number }) {

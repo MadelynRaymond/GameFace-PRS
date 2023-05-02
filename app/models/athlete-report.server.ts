@@ -32,7 +32,7 @@ export async function updateAthleteReport(reportId: number, data: AthleteFormDat
     const transactions = [
         ...entries.map(
             (e) =>
-                prisma.$executeRaw`UPDATE DrillEntry SET value = ${e.value}, outOf = ${e.outOf || undefined} WHERE reportId = ${reportId} and drillId = ${
+                prisma.$executeRaw`UPDATE DrillEntry SET value = ${e.value}, outOf = ${e.outOf || undefined}, created_at = ${created_at} WHERE reportId = ${reportId} and drillId = ${
                     e.drillId
                 }`
         ),
