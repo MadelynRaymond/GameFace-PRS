@@ -27,7 +27,7 @@ const EditSchema = z.object({
     guardianName: z.optional(
         z
             .string()
-            .min(5, "Guardian name must be at least 5 characters")
+            .min(3, "Guardian name must be at least 5 characters")
             .max(30, "Guardian name must be at most 30 characters")
             .or(z.literal(''))
             .transform((d) => (d === '' ? undefined : d))

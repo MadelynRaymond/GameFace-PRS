@@ -221,7 +221,7 @@ function EntryField({
         const labelMap = {
             integral: ['Score', 'Out Of'],
             decimal: ['Score', 'none'],
-            time: ['Time', 'none'],
+            time: ['Time (seconds)', 'none'],
         }
         return labelMap[drillUnit]
     }
